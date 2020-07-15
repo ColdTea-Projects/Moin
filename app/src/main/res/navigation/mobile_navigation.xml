@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_alarms">
+
+    <fragment
+        android:id="@+id/navigation_alarms"
+        android:name="de.coldtea.moin.alarms.ui.FragmentAlarms"
+        android:label="@string/title_alarms"
+        tools:layout="@layout/moin_fragment_alarms" />
+
+    <fragment
+        android:id="@+id/navigation_playlists"
+        android:name="de.coldtea.moin.playlists.ui.FragmentPlaylists"
+        android:label="@string/title_playlists"
+        tools:layout="@layout/moin_fragment_playlists" />
+
+</navigation>
