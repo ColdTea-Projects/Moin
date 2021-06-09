@@ -46,4 +46,17 @@ dependencies {
     //SmplrAlarm
     implementation 'com.github.ColdTea-Projects:SmplrAlarm:v1.0.0'
 
+    //Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
+
+    // timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Koin
+    // Koin main features for Android (Scope,ViewModel ...)
+    implementation "io.insert-koin:koin-android:$koin_version"
+    // Koin Android - experimental builder extensions
+    implementation "io.insert-koin:koin-android-ext:$koin_version"
+    // Koin for Jetpack WorkManager
+    implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
 }
