@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Moin</string>
+    <string name="title_alarms">Alarms</string>
+    <string name="title_playlists">Playlists</string>
 </resources>
