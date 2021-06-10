@@ -1,32 +1,55 @@
 package de.coldtea.moin
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import de.coldtea.moin.databinding.ActivityMainBinding
 import de.coldtea.moin.services.SmplrAlarmService
+import de.coldtea.moin.ui.alarm.AlarmFragment
+import de.coldtea.moin.ui.playlist.PlaylistFragment
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
-    private val smplrAlarmService: SmplrAlarmService by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.moin_activity_main)
-        val notificationItem = NotificationItem(
-            R.drawable.ic_baseline_access_alarm_24,
-            "Welcome to MoinApp",
-            "Welcome to MoinApp",
-            "Welcome to MoinApp",
-            true,
-            null, null, null, null
-        )
+        val binding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        smplrAlarmService.setAlarm(
-            hour = 22, minute = 33, notificationItem = notificationItem, weekDays = listOf(WeekDays.WEDNESDAY)
-        )
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.host_fragment, AlarmFragment())
+            .commit()
+
+        binding.setupBottomNavigation()
     }
+
+    private fun ActivityMainBinding.setupBottomNavigation() =
+        navView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.navigation_alarms -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .add(R.id.host_fragment, AlarmFragment())
+                        .commit()
+
+                    true
+                }
+
+                R.id.navigation_playlists -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .add(R.id.host_fragment, PlaylistFragment())
+                        .commit()
+
+                    true
+                }
+
+                else -> false
+            }
+        }
+
 
 }

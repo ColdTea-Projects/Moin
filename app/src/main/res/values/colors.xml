@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="moinPrimary">#0079aa</color>
-    <color name="moinPrimaryDark">#003861</color>
+    <color name="moinPrimary">#BFE8FA</color>
+    <color name="moinPrimaryDark">#BFE8FA</color>
+    <color name="moinDark">#0079aa</color>
     <color name="moinAccent">#c3c1bc</color>
-    <color name="moinBackground">#f2f2f2</color>
+    <color name="moinPrimaryLight">#BFE8FA</color>
+    <color name="moinBlueWhite">#EFF6FA</color>
+    <color name="disabled">#4C4C4C</color>
+
 </resources>
