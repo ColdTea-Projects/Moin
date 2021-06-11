@@ -4,7 +4,6 @@
     <color name="moinAccent">@color/moinBlueTone4</color>
     <color name="moinPrimaryDark">@color/moinGrayTone4</color>
 
-
     <color name="moinBlueTone1">#FAFEFF</color>
     <color name="moinBlueTone2">#87c0cd</color>
     <color name="moinBlueTone3">#226597</color>

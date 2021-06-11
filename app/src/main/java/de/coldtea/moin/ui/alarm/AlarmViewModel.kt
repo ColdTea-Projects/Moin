@@ -16,7 +16,7 @@ class AlarmViewModel: ViewModel(){
 
     fun testAlarm(){
         val notificationItem = NotificationItem(
-            R.drawable.ic_baseline_access_alarm_24,
+            R.drawable.ic_alarm_24,
             "Welcome to MoinApp",
             "Welcome to MoinApp",
             "Welcome to MoinApp",
