@@ -7,6 +7,7 @@ import de.coldtea.moin.services.SmplrAlarmService
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 
@@ -16,7 +17,7 @@ class AlarmViewModel: ViewModel(){
 
     fun testAlarm(){
         val notificationItem = NotificationItem(
-            R.drawable.ic_alarm_24,
+            R.drawable.ic_alarm_36,
             "Welcome to MoinApp",
             "Welcome to MoinApp",
             "Welcome to MoinApp",
@@ -28,6 +29,9 @@ class AlarmViewModel: ViewModel(){
             smplrAlarmService.setAlarm(
                 hour = 22, minute = 33, notificationItem = notificationItem, weekDays = listOf(WeekDays.WEDNESDAY)
             )
+
+            delay(1000)
+            smplrAlarmService.callRequestAlarmList()
         }
 
     }

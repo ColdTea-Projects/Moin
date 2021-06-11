@@ -24,6 +24,7 @@
             android:id="@+id/host_fragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/moinBlueTone1"
             app:layout_constraintBottom_toTopOf="@id/nav_view"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

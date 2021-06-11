@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_alarm_item"
+        android:padding="15dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/moinBlueTone1"
+            android:textSize="50sp"
+            app:layout_constraintBottom_toTopOf="@id/days"
+            app:layout_constraintStart_toStartOf="@id/groupVisible"
+            app:layout_constraintTop_toTopOf="@id/groupVisible"
+            tools:text="19:23" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/moinBlueTone4"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@id/groupVisible"
+            app:layout_constraintStart_toStartOf="@+id/time"
+            app:layout_constraintTop_toBottomOf="@id/time"
+            tools:text="MON TU WED TH FR SAT SUN" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/is_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/days"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/time" />
+
+
+        <ImageView
+            android:id="@+id/down_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_down_arrow_18"
+            app:tint="@color/moinBlueTone4" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupVisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="down_button,time,days, is_active"
+            app:layout_constraintBottom_toTopOf="@id/groupHidden"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/days"
+            app:layout_constraintBottom_toTopOf="@id/down_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:srcCompat="@drawable/ic_delete_36"
+            app:tint="@color/moinBlueTone4" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupHidden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="delete"
+            android:visibility="visible"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
