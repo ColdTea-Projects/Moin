@@ -2,24 +2,31 @@ package de.coldtea.moin.services
 
 import android.content.Context
 import android.content.Intent
+import de.coldtea.moin.extensions.convertToAlarmList
+import de.coldtea.moin.services.model.AlarmList
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.smplrAlarmChangeOrRequestListener
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 
 class SmplrAlarmService(private val context: Context) {
 
     var smplrAlarmListRequestAPI: SmplrAlarmListRequestAPI? = null
 
-    private val _alarmListJson = MutableSharedFlow<String>()
-    val alarmListJson: SharedFlow<String> = _alarmListJson
+    private val _alarmList = MutableSharedFlow<AlarmList>()
+    val alarmList: SharedFlow<AlarmList> = _alarmList
 
     init {
         smplrAlarmChangeOrRequestListener(context){
-            _alarmListJson.tryEmit(it)
+            it.convertToAlarmList()?.let { alarmList ->
+                CoroutineScope(Dispatchers.IO).launch { _alarmList.emit(alarmList) }
+            }
         }.also {
             smplrAlarmListRequestAPI = it
         }

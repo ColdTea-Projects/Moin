@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import de.coldtea.moin.R
+import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.databinding.FragmentAlarmBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class AlarmFragment: Fragment(){
 
@@ -23,9 +25,30 @@ class AlarmFragment: Fragment(){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = FragmentAlarmBinding.inflate(inflater, container, false).also {
-        binding = it
-    }.root
+    ): View? {
+        binding = FragmentAlarmBinding.inflate(inflater, container, false)
+
+        binding?.addAlarm?.setOnClickListener {
+            viewModel.testAlarm()
+        }
+
+        binding?.getAlarms?.setOnClickListener {
+            viewModel.getAlarms()
+        }
+
+        return binding?.root
+    }
+
+    override fun onResume() {
+        startListenAndSetAlarm()
+        super.onResume()
+    }
+
+    fun startListenAndSetAlarm() = lifecycleScope.launch {
+        viewModel.smplrAlarmService.alarmList.collect {
+            binding?.text?.text = it.alarmItems.toString()
+        }
+    }
 
     // endregion
 }
