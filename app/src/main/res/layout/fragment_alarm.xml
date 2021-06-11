@@ -4,17 +4,39 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_background">
+        android:background="@color/moinGrayTone1">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/add_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/moinBlueTone2"
+            android:text="add alarm"
+            android:textColor="@color/moinBlueTone1"
+            android:layout_margin="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/get_alarms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/moinBlueTone2"
+            android:text="get alarms"
+            android:textColor="@color/moinBlueTone1"
+            android:layout_margin="10dp"
+            app:layout_constraintStart_toEndOf="@id/add_alarm"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ALARM FRAGMENT"
-            android:textColor="@color/moinDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:textColor="@color/moinBlueTone4"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@+id/add_alarm"
+            app:layout_constraintTop_toBottomOf="@+id/add_alarm">
 
         </androidx.appcompat.widget.AppCompatTextView>
     </androidx.constraintlayout.widget.ConstraintLayout>

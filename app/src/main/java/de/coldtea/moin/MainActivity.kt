@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         binding.setupBottomNavigation()
+
+        setSupportActionBar(binding.appToolbar)
     }
 
     private fun ActivityMainBinding.setupBottomNavigation() =

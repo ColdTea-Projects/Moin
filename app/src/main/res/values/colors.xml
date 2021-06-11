@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="moinPrimary">#BFE8FA</color>
-    <color name="moinPrimaryDark">#BFE8FA</color>
-    <color name="moinDark">#0079aa</color>
-    <color name="moinAccent">#c3c1bc</color>
-    <color name="moinPrimaryLight">#BFE8FA</color>
-    <color name="moinBlueWhite">#EFF6FA</color>
-    <color name="disabled">#4C4C4C</color>
+    <color name="moinPrimary">@color/moinGrayTone1</color>
+    <color name="moinAccent">@color/moinBlueTone4</color>
+    <color name="moinPrimaryDark">@color/moinGrayTone4</color>
 
+
+    <color name="moinBlueTone1">#FAFEFF</color>
+    <color name="moinBlueTone2">#87c0cd</color>
+    <color name="moinBlueTone3">#226597</color>
+    <color name="moinBlueTone4">#113f67</color>
+
+    <color name="moinGrayTone1">#FBFBFB</color>
+    <color name="moinGrayTone2">#A1A1A1</color>
+    <color name="moinGrayTone3">#575757</color>
+    <color name="moinGrayTone4">#393939</color>
 </resources>
