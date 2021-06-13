@@ -17,7 +17,7 @@ class AlarmViewModel: ViewModel(){
 
     fun testAlarm(){
         val notificationItem = NotificationItem(
-            R.drawable.ic_alarm_36,
+            R.drawable.ic_baseline_alarm_24,
             "Welcome to MoinApp",
             "Welcome to MoinApp",
             "Welcome to MoinApp",
@@ -27,10 +27,10 @@ class AlarmViewModel: ViewModel(){
 
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.setAlarm(
-                hour = 22, minute = 33, notificationItem = notificationItem, weekDays = listOf(WeekDays.WEDNESDAY)
+                hour = 22, minute = 33, notificationItem = notificationItem, weekDays = listOf(WeekDays.WEDNESDAY, WeekDays.SUNDAY)
             )
 
-            delay(1000)
+            delay(100)
             smplrAlarmService.callRequestAlarmList()
         }
 

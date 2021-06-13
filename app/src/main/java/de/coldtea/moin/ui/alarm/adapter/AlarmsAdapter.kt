@@ -6,9 +6,9 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import de.coldtea.moin.ui.alarm.adapter.delegates.AlarmDelegate
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 
-class AlarmsAdapter: ListDelegationAdapter<List<AlarmDelegateItem>>(){
+class AlarmsAdapter(items: List<AlarmDelegateItem>): ListDelegationAdapter<List<AlarmDelegateItem>>(){
 
-    fun alarmAdapter(items: List<AlarmDelegateItem>){
+    init{
         delegatesManager.addDelegate(AlarmDelegate())
     }
 

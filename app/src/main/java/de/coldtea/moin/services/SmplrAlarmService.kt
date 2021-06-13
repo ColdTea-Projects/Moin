@@ -7,6 +7,7 @@ import de.coldtea.moin.services.model.AlarmList
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
+import de.coldtea.smplr.smplralarm.smplrAlarmCancel
 import de.coldtea.smplr.smplralarm.smplrAlarmChangeOrRequestListener
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +40,12 @@ class SmplrAlarmService(private val context: Context) {
         notification { notificationItem }
         // intent { intent }
         //receiverIntent { receiverIntent }
+    }
+
+    fun cancelAlarm(requestId: Int){
+        smplrAlarmCancel(context){
+            requestCode { requestId }
+        }
     }
 
     fun callRequestAlarmList(): Unit? = smplrAlarmListRequestAPI?.requestAlarmList()

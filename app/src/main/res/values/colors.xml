@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="moinPrimary">@color/moinGrayTone1</color>
+    <color name="moinPrimary">@color/moinBlueTone4</color>
     <color name="moinAccent">@color/moinBlueTone4</color>
-    <color name="moinPrimaryDark">@color/moinGrayTone4</color>
+    <color name="moinPrimaryDark">@color/moinBlueTone4</color>
 
     <color name="moinBlueTone1">#FAFEFF</color>
-    <color name="moinBlueTone2">#87c0cd</color>
-    <color name="moinBlueTone3">#226597</color>
-    <color name="moinBlueTone4">#113f67</color>
+    <color name="moinBlueTone2">#d8e8f4</color>
+    <color name="moinBlueTone3">#90c3e1</color>
+    <color name="moinBlueTone4">#006595</color>
+    <color name="moinBlueTone5">#003a65</color>
+    <color name="moinBlueTone6">#09348d</color>
+    <color name="moinBlueTone7">#001525</color>
 
-    <color name="moinGrayTone1">#FBFBFB</color>
-    <color name="moinGrayTone2">#A1A1A1</color>
-    <color name="moinGrayTone3">#575757</color>
-    <color name="moinGrayTone4">#393939</color>
+    <color name="moinGray1">#d7dce6</color>
+    <color name="moinGray2">#f2f2f2</color>
+    <color name="moinGray3">#707070</color>
+
+    <color name="moinOrange1">#ff985a</color>
+    <color name="moinOrange2">#f7474f</color>
+    <color name="moinOrange3">#E1343C</color>
+
 </resources>

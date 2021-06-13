@@ -7,18 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentAlarmBinding
 import de.coldtea.moin.services.model.convertToDelegateItem
 import de.coldtea.moin.ui.alarm.adapter.AlarmsAdapter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class AlarmFragment: Fragment(){
+class AlarmFragment : Fragment() {
 
     // region properties
     private val viewModel: AlarmViewModel by viewModels()
 
-    private val alarmsAdapter = AlarmsAdapter()
+    private var alarmsAdapter = AlarmsAdapter(listOf())
 
     var binding: FragmentAlarmBinding? = null
     // endregion
@@ -27,8 +31,7 @@ class AlarmFragment: Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        startListenAndSetAlarm()
+        startListeningAlarms()
     }
 
     override fun onCreateView(
@@ -37,7 +40,7 @@ class AlarmFragment: Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlarmBinding.inflate(inflater, container, false)
-        binding?.setUIItems()
+        binding?.initUIItems()
 
         return binding?.root
     }
@@ -45,15 +48,15 @@ class AlarmFragment: Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getAlarms()
     }
 
     override fun onResume() {
-        startListenAndSetAlarm()
         super.onResume()
+
+        viewModel.getAlarms()
     }
 
-    fun startListenAndSetAlarm() = lifecycleScope.launch {
+    fun startListeningAlarms() = lifecycleScope.launch {
         viewModel.smplrAlarmService.alarmList.collect { alarmList ->
             alarmsAdapter.items = alarmList.alarmItems.map { it.convertToDelegateItem() }
             alarmsAdapter.notifyDataSetChanged()
@@ -62,14 +65,21 @@ class AlarmFragment: Fragment(){
 
     // endregion
 
-    // region setup
+    // region init
 
-    fun FragmentAlarmBinding.setUIItems(){
+    fun FragmentAlarmBinding.initUIItems() {
         setAlarm.setOnClickListener {
             viewModel.testAlarm()
         }
 
-        alarmList.adapter = alarmsAdapter
+        alarmList.apply {
+            layoutManager = LinearLayoutManager(context)
+            val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+            context.getDrawable(R.drawable.divider_alarm_list)?.let { itemDecoration.setDrawable(it) }
+            if (itemDecorationCount == 0) addItemDecoration(itemDecoration)
+
+            adapter = alarmsAdapter
+        }
     }
 
     // endregion
