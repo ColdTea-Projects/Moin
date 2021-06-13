@@ -15,18 +15,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SmplrAlarmService(private val context: Context) {
 
-    var smplrAlarmListRequestAPI: SmplrAlarmListRequestAPI? = null
+    private var smplrAlarmListRequestAPI: SmplrAlarmListRequestAPI? = null
 
-    private val _alarmList = MutableSharedFlow<AlarmList>()
+    val _alarmList = MutableSharedFlow<AlarmList>()
     val alarmList: SharedFlow<AlarmList> = _alarmList
 
     init {
         smplrAlarmChangeOrRequestListener(context){
             it.convertToAlarmList()?.let { alarmList ->
-                CoroutineScope(Dispatchers.IO).launch { _alarmList.emit(alarmList) }
+                CoroutineScope(Dispatchers.IO).launch {
+                    Timber.d("Moin --> _alarmList.emit(alarmList) ")
+                    _alarmList.emit(alarmList)
+                }
             }
         }.also {
             smplrAlarmListRequestAPI = it
@@ -38,6 +42,7 @@ class SmplrAlarmService(private val context: Context) {
         min { minute }
         if (weekDays != null) weekdays { weekDays }
         notification { notificationItem }
+        if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
         // intent { intent }
         //receiverIntent { receiverIntent }
     }
@@ -45,10 +50,14 @@ class SmplrAlarmService(private val context: Context) {
     fun cancelAlarm(requestId: Int){
         smplrAlarmCancel(context){
             requestCode { requestId }
+            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
         }
     }
 
-    fun callRequestAlarmList(): Unit? = smplrAlarmListRequestAPI?.requestAlarmList()
+    fun callRequestAlarmList() {
+        Timber.d("Moin --> callRequestAlarmList ")
+        smplrAlarmListRequestAPI?.requestAlarmList()
+    }
 
 
 }

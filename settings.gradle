@@ -1,2 +1,4 @@
 include ':app'
+include ':smplrAlarm'
 rootProject.name = "Moin"
+project(':smplrAlarm').projectDir = new File(settingsDir, '../SmplrAlarm/smplralarm')

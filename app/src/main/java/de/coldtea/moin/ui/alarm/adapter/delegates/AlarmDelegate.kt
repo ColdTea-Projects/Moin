@@ -45,7 +45,7 @@ class AlarmDelegate:
         payloads: MutableList<Any>
     ) = holder.bind(item)
 
-    class AlarmViewHolder(val binding: ViewAlarmDelegateItemBinding,  val smplrAlarmService: SmplrAlarmService) : RecyclerView.ViewHolder(binding.root) {
+    class AlarmViewHolder(private val binding: ViewAlarmDelegateItemBinding, val smplrAlarmService: SmplrAlarmService) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: AlarmDelegateItem){
             val time = item.hour to item.minute
             binding.time.text = time.getTimeText()
@@ -54,15 +54,9 @@ class AlarmDelegate:
 
             binding.delete.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch{
-                    cancelAlarm(item.requestId)
+                    smplrAlarmService.cancelAlarm(item.requestId)
                 }
             }
-        }
-
-        suspend fun cancelAlarm(requestId: Int){
-            smplrAlarmService.cancelAlarm(requestId = requestId)
-            delay(150)
-            smplrAlarmService.callRequestAlarmList()
         }
     }
 

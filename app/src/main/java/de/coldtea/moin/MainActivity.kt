@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_alarms -> {
                     supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.host_fragment, AlarmFragment())
+                        .replace(R.id.host_fragment, AlarmFragment())
                         .commit()
 
                     true
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_playlists -> {
                     supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.host_fragment, PlaylistFragment())
+                        .replace(R.id.host_fragment, PlaylistFragment())
                         .commit()
 
                     true
