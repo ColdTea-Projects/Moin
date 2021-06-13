@@ -13,7 +13,7 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/moinBlueTone1"
+            android:textColor="@color/moinBlueTone7"
             android:textSize="50sp"
             app:layout_constraintBottom_toTopOf="@id/days"
             app:layout_constraintStart_toStartOf="@id/groupVisible"
@@ -24,7 +24,7 @@
             android:id="@+id/days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/moinBlueTone4"
+            android:textColor="@color/moinBlueTone1"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="@id/groupVisible"
             app:layout_constraintStart_toStartOf="@+id/time"
@@ -48,7 +48,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_down_arrow_18"
-            app:tint="@color/moinBlueTone4" />
+            app:tint="@color/moinBlueTone7" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupVisible"
@@ -70,7 +70,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             app:srcCompat="@drawable/ic_baseline_delete_24"
-            app:tint="@color/moinBlueTone4" />
+            app:tint="@color/moinBlueTone7" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupHidden"
