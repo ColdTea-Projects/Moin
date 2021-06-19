@@ -4,9 +4,9 @@ import de.coldtea.smplr.smplralarm.models.WeekDays
 
 data class AlarmDelegateItem(
     val requestId: Int,
-    val hour: Int,
-    val minute: Int,
-    val weekDays: List<WeekDays>,
-    val isActive: Boolean,
+    var hour: Int,
+    var minute: Int,
+    var weekDays: List<WeekDays>,
+    var isActive: Boolean,
     var isExpanded: Boolean = false,
 )

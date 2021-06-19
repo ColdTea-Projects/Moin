@@ -10,6 +10,7 @@ import de.coldtea.smplr.smplralarm.models.WeekDays
 import de.coldtea.smplr.smplralarm.smplrAlarmCancel
 import de.coldtea.smplr.smplralarm.smplrAlarmChangeOrRequestListener
 import de.coldtea.smplr.smplralarm.smplrAlarmSet
+import de.coldtea.smplr.smplralarm.smplrAlarmUpdate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,7 +41,15 @@ class SmplrAlarmService(private val context: Context) {
     fun setAlarm(hour: Int, minute: Int, notificationItem: NotificationItem,intent: Intent? = null, receiverIntent: Intent? = null, weekDays: List<WeekDays>? = null): Int = smplrAlarmSet(context = context){
         hour { hour }
         min { minute }
-        if (weekDays != null) weekdays { weekDays }
+        if (weekDays != null) weekdays {
+            if(WeekDays.MONDAY in weekDays) monday()
+            if(WeekDays.TUESDAY in weekDays) tuesday()
+            if(WeekDays.WEDNESDAY in weekDays) wednesday()
+            if(WeekDays.THURSDAY in weekDays) thursday()
+            if(WeekDays.FRIDAY in weekDays) friday()
+            if(WeekDays.SATURDAY in weekDays) saturday()
+            if(WeekDays.SUNDAY in weekDays) sunday()
+        }
         notification { notificationItem }
         if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
         // intent { intent }
@@ -51,6 +60,26 @@ class SmplrAlarmService(private val context: Context) {
         smplrAlarmCancel(context){
             requestCode { requestId }
             if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
+        }
+    }
+
+    fun updateAlarm(requestId: Int, hour: Int? = null, minute: Int? = null, weekDays: List<WeekDays>? = null, isActive: Boolean? = null){
+        smplrAlarmUpdate(context){
+            requestCode { requestId }
+            if(hour != null) hour { hour }
+            if(minute != null) min { minute }
+            if (weekDays != null) weekdays {
+                if(WeekDays.MONDAY in weekDays) monday()
+                if(WeekDays.TUESDAY in weekDays) tuesday()
+                if(WeekDays.WEDNESDAY in weekDays) wednesday()
+                if(WeekDays.THURSDAY in weekDays) thursday()
+                if(WeekDays.FRIDAY in weekDays) friday()
+                if(WeekDays.SATURDAY in weekDays) saturday()
+                if(WeekDays.SUNDAY in weekDays) sunday()
+            }else {
+                listOf<WeekDays>()
+            }
+            if(isActive != null) isActive { isActive }
         }
     }
 

@@ -16,7 +16,8 @@
 
     <color name="moinGray1">#d7dce6</color>
     <color name="moinGray2">#f2f2f2</color>
-    <color name="moinGray3">#707070</color>
+    <color name="moinGray3">#CDC7C7</color>
+    <color name="moinGray4">#707070</color>
 
     <color name="moinOrange1">#ff985a</color>
     <color name="moinOrange2">#f7474f</color>
