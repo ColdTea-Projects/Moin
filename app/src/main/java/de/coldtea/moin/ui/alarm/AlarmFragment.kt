@@ -1,10 +1,12 @@
 package de.coldtea.moin.ui.alarm
 
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,16 +14,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentAlarmBinding
-import de.coldtea.moin.services.SmplrAlarmService
 import de.coldtea.moin.services.model.convertToDelegateItem
 import de.coldtea.moin.ui.alarm.adapter.AlarmsAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import org.koin.androidx.scope.fragmentScope
-import org.koin.java.KoinJavaComponent
 import timber.log.Timber
+import java.util.*
 
 class AlarmFragment : Fragment() {
 
@@ -49,7 +46,10 @@ class AlarmFragment : Fragment() {
     ): View? {
         Timber.d("Moin --> onCreateView")
         binding = FragmentAlarmBinding.inflate(inflater, container, false)
-        binding?.initUIItems()
+        binding?.apply {
+            initAlarmList()
+            initFAB()
+        }
 
         return binding?.root
     }
@@ -64,11 +64,7 @@ class AlarmFragment : Fragment() {
 
     // region init
 
-    fun FragmentAlarmBinding.initUIItems() {
-        setAlarm.setOnClickListener {
-            viewModel.testAlarm()
-        }
-
+    private fun FragmentAlarmBinding.initAlarmList() =
         alarmList.apply {
             layoutManager = LinearLayoutManager(context)
             val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
@@ -77,7 +73,25 @@ class AlarmFragment : Fragment() {
 
             adapter = alarmsAdapter
         }
-    }
+
+    private fun FragmentAlarmBinding.initFAB() =
+        setAlarm.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+                viewModel.setAlarm(hour, minute)
+            }
+
+            val alarmTime = getAlarmTime(alarmList.size + 1)
+            TimePickerDialog(
+                requireContext(),
+                timeSetListener,
+                alarmTime.first,
+                alarmTime.second,
+//                cal.get(Calendar.HOUR_OF_DAY),
+//                cal.get(Calendar.MINUTE),
+                true
+            ).show()
+        }
 
     private fun startListeningAlarms() = lifecycleScope.launchWhenCreated {
         viewModel.alarmList.collect { alarmList ->
@@ -85,5 +99,11 @@ class AlarmFragment : Fragment() {
             alarmsAdapter.notifyDataSetChanged()
         }
     }
+
+    private fun getAlarmTime(duration: Int): Pair<Int, Int>
+        = Calendar.getInstance().let {
+            it.add(Calendar.MINUTE, duration)
+            it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
+        }
     // endregion
 }

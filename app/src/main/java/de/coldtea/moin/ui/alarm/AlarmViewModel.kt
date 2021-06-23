@@ -17,9 +17,9 @@ import org.koin.java.KoinJavaComponent.inject
 
 class AlarmViewModel: ViewModel(){
 
-    val smplrAlarmService: SmplrAlarmService by inject(SmplrAlarmService::class.java)
+    private val smplrAlarmService: SmplrAlarmService by inject(SmplrAlarmService::class.java)
 
-    val _alarmList = MutableSharedFlow<AlarmList>()
+    private val _alarmList = MutableSharedFlow<AlarmList>()
     val alarmList: SharedFlow<AlarmList> = _alarmList
 
     init {
@@ -30,19 +30,19 @@ class AlarmViewModel: ViewModel(){
         }
     }
 
-    fun testAlarm(){
+    fun setAlarm(hour: Int, minute: Int){
         val notificationItem = NotificationItem(
             R.drawable.ic_baseline_alarm_24,
-            "Welcome to MoinApp",
-            "Welcome to MoinApp",
-            "Welcome to MoinApp",
+            "Alarm is ringing",
+            "Alarm is ringing",
+            "",
             true,
             null, null, null, null
         )
 
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.setAlarm(
-                hour = (Math.random()*23).toInt(), minute = (Math.random()*59).toInt(), notificationItem = notificationItem, weekDays = listOf(WeekDays.WEDNESDAY, WeekDays.SUNDAY)
+                hour = hour, minute = minute, notificationItem = notificationItem, weekDays = listOf()
             )
         }
 

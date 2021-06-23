@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import de.coldtea.moin.extensions.convertToAlarmList
 import de.coldtea.moin.services.model.AlarmList
+import de.coldtea.moin.ui.alarm.AlarmFragment
+import de.coldtea.moin.ui.alarm.lockscreen.LockScreenAlarmActivity
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
@@ -22,8 +24,18 @@ class SmplrAlarmService(private val context: Context) {
 
     private var smplrAlarmListRequestAPI: SmplrAlarmListRequestAPI? = null
 
-    val _alarmList = MutableSharedFlow<AlarmList>()
+    private val _alarmList = MutableSharedFlow<AlarmList>()
     val alarmList: SharedFlow<AlarmList> = _alarmList
+
+    private val onClickIntent = Intent(
+        context,
+        AlarmFragment::class.java
+    )
+
+    private val fullScreenIntent = Intent(
+        context,
+        LockScreenAlarmActivity::class.java
+    )
 
     init {
         smplrAlarmChangeOrRequestListener(context){
@@ -36,9 +48,10 @@ class SmplrAlarmService(private val context: Context) {
         }.also {
             smplrAlarmListRequestAPI = it
         }
+
     }
 
-    fun setAlarm(hour: Int, minute: Int, notificationItem: NotificationItem,intent: Intent? = null, receiverIntent: Intent? = null, weekDays: List<WeekDays>? = null): Int = smplrAlarmSet(context = context){
+    fun setAlarm(hour: Int, minute: Int, notificationItem: NotificationItem, weekDays: List<WeekDays>? = null): Int = smplrAlarmSet(context = context){
         hour { hour }
         min { minute }
         if (weekDays != null) weekdays {
@@ -52,8 +65,9 @@ class SmplrAlarmService(private val context: Context) {
         }
         notification { notificationItem }
         if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
-        // intent { intent }
-        //receiverIntent { receiverIntent }
+        intent { onClickIntent }
+        receiverIntent{ fullScreenIntent }
+
     }
 
     fun cancelAlarm(requestId: Int){
@@ -61,6 +75,7 @@ class SmplrAlarmService(private val context: Context) {
             requestCode { requestId }
             if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
         }
+
     }
 
     fun updateAlarm(requestId: Int, hour: Int? = null, minute: Int? = null, weekDays: List<WeekDays>? = null, isActive: Boolean? = null){
@@ -80,12 +95,15 @@ class SmplrAlarmService(private val context: Context) {
                 listOf<WeekDays>()
             }
             if(isActive != null) isActive { isActive }
+            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
         }
+
     }
 
     fun callRequestAlarmList() {
         Timber.d("Moin --> callRequestAlarmList ")
         smplrAlarmListRequestAPI?.requestAlarmList()
+
     }
 
 
