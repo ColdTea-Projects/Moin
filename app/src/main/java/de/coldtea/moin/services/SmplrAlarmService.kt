@@ -67,6 +67,13 @@ class SmplrAlarmService(private val context: Context) {
         if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
         intent { onClickIntent }
         receiverIntent{ fullScreenIntent }
+        infoPairs {
+            listOf(
+                "originalHour" to "$hour",
+                "originalMinute" to "$minute",
+                "isExpanded" to "false"
+            )
+        }
 
     }
 
@@ -78,7 +85,7 @@ class SmplrAlarmService(private val context: Context) {
 
     }
 
-    fun updateAlarm(requestId: Int, hour: Int? = null, minute: Int? = null, weekDays: List<WeekDays>? = null, isActive: Boolean? = null){
+    fun updateAlarm(requestId: Int, hour: Int? = null, minute: Int? = null, weekDays: List<WeekDays>? = null, isActive: Boolean? = null, infoPairs: List<Pair<String, String>>? = null){
         smplrAlarmUpdate(context){
             requestCode { requestId }
             if(hour != null) hour { hour }
@@ -96,6 +103,7 @@ class SmplrAlarmService(private val context: Context) {
             }
             if(isActive != null) isActive { isActive }
             if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
+            if (infoPairs != null) infoPairs { infoPairs }
         }
 
     }

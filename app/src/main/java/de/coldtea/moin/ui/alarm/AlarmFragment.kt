@@ -25,7 +25,7 @@ class AlarmFragment : Fragment() {
     // region properties
     private val viewModel: AlarmViewModel by viewModels()
 
-    private var alarmsAdapter = AlarmsAdapter(listOf())
+    private var alarmsAdapter = AlarmsAdapter()
 
     var binding: FragmentAlarmBinding? = null
 
@@ -69,6 +69,7 @@ class AlarmFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
             AppCompatResources.getDrawable(context, R.drawable.divider_alarm_list)?.let { itemDecoration.setDrawable(it) }
+
             if (itemDecorationCount == 0) addItemDecoration(itemDecoration)
 
             adapter = alarmsAdapter
@@ -96,7 +97,6 @@ class AlarmFragment : Fragment() {
     private fun startListeningAlarms() = lifecycleScope.launchWhenCreated {
         viewModel.alarmList.collect { alarmList ->
             alarmsAdapter.items = alarmList.alarmItems.map { it.convertToDelegateItem() }
-            alarmsAdapter.notifyDataSetChanged()
         }
     }
 

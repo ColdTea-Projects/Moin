@@ -5,12 +5,18 @@
 
     <data>
 
+        <import type="de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem" />
         <import type="kotlin.jvm.functions.Function0" />
         <import type="kotlin.Unit"/>
 
         <variable
             name="onWeekdayClicked"
             type="Function0&lt; Unit>"/>
+
+
+        <variable
+            name="item"
+            type="AlarmDelegateItem" />
 
     </data>
 
@@ -47,6 +53,7 @@
             android:id="@+id/is_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:checkedState="@{item.active}"
             app:layout_constraintBottom_toBottomOf="@+id/days"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/time" />
@@ -60,15 +67,6 @@
             app:srcCompat="@drawable/ic_down_arrow_18"
             app:tint="@color/moinBlueTone7" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupVisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="expand,time,days, is_active"
-            app:layout_constraintBottom_toTopOf="@id/groupHidden"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/delete"
             android:layout_width="wrap_content"
@@ -79,13 +77,6 @@
             android:layout_marginBottom="10dp"
             app:srcCompat="@drawable/ic_baseline_delete_24"
             app:tint="@color/moinBlueTone7" />
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupHidden"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="delete, repeat"
-            android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/repeat"
@@ -203,5 +194,21 @@
             android:text=" S"
             android:button="@null"
             android:background="@drawable/weekdays_radio_background"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupVisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="expand,time,days, is_active"
+            app:layout_constraintBottom_toTopOf="@id/groupHidden"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupHidden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="delete, repeat"
+            app:isVisible="@{item.expanded}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

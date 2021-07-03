@@ -1,5 +1,6 @@
 package de.coldtea.moin.ui.alarm.lockscreen
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -56,7 +57,6 @@ class LockScreenAlarmActivity : AppCompatActivity(){
         when(state){
             is Ringing -> {
                 viewModel.requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
-                Timber.d("RequestId : ${viewModel.requestId}")
             }
             is Done -> {
                 finish()

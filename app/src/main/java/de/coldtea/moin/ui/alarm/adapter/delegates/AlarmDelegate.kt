@@ -3,11 +3,9 @@ package de.coldtea.moin.ui.alarm.adapter.delegates
 import android.app.TimePickerDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
-import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ViewAlarmDelegateItemBinding
 import de.coldtea.moin.extensions.*
 import de.coldtea.moin.services.SmplrAlarmService
@@ -17,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
-import java.util.*
 
 class AlarmDelegate :
     AbsListItemAdapterDelegate<AlarmDelegateItem, AlarmDelegateItem, AlarmDelegate.AlarmViewHolder>() {
@@ -50,10 +47,10 @@ class AlarmDelegate :
         private val smplrAlarmService: SmplrAlarmService
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: AlarmDelegateItem) = with(binding) {
-            val hourMinute = item.hour to item.minute
+            val hourMinute = item.originalHour to item.originalMinute
+            binding.item = item
             time.text = hourMinute.getTimeText()
             days.text = item.weekDays.getWeekDaysText()
-            isActive.isChecked = item.isActive
 
             setupCheckList(item.weekDays)
 
@@ -74,6 +71,15 @@ class AlarmDelegate :
 
                 days.isVisible = !groupHidden.isVisible
                 days.text = weekdaysList.getWeekDaysText()
+
+                item.isExpanded = !item.isExpanded
+
+                val infoPairs = listOf(
+                    "originalHour" to "${item.originalHour}",
+                    "originalMinute" to "${item.originalMinute}",
+                    "isExpanded" to "${item.isExpanded}"
+                )
+                updateAlarm(item, infoPairs = infoPairs, weekDays = weekdaysList)
             }
 
             delete.setOnClickListener {
@@ -113,13 +119,15 @@ class AlarmDelegate :
             minute: Int? = null,
             isActive: Boolean? = null,
             weekDays: List<WeekDays>? = null,
+            infoPairs: List<Pair<String, String>>? = null
         ) = CoroutineScope(Dispatchers.IO).launch {
             smplrAlarmService.updateAlarm(
                 requestId = item.requestId,
                 hour = hour?:item.hour,
                 minute = minute?:item.minute,
                 isActive = isActive?:item.isActive,
-                weekDays = weekDays?:item.weekDays
+                weekDays = weekDays?:item.weekDays,
+                infoPairs = infoPairs
             )
         }
     }

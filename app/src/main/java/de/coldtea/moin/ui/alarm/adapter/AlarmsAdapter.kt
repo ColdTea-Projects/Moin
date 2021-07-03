@@ -1,12 +1,11 @@
 package de.coldtea.moin.ui.alarm.adapter
 
-import android.app.Activity
-import androidx.recyclerview.widget.RecyclerView
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
+import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import de.coldtea.moin.ui.alarm.adapter.delegates.AlarmDelegate
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback
 
-class AlarmsAdapter(items: List<AlarmDelegateItem>): ListDelegationAdapter<List<AlarmDelegateItem>>(){
+class AlarmsAdapter: AsyncListDifferDelegationAdapter<AlarmDelegateItem>(AlarmsDiffUtilCallback()){
 
     init{
         delegatesManager.addDelegate(AlarmDelegate())

@@ -9,4 +9,6 @@ data class AlarmDelegateItem(
     var weekDays: List<WeekDays>,
     var isActive: Boolean,
     var isExpanded: Boolean = false,
+    var originalHour: Int,
+    var originalMinute: Int
 )
