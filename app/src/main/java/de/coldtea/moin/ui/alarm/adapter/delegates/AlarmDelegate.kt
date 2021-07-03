@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
+import timber.log.Timber
 
 class AlarmDelegate :
     AbsListItemAdapterDelegate<AlarmDelegateItem, AlarmDelegateItem, AlarmDelegate.AlarmViewHolder>() {
@@ -40,44 +41,38 @@ class AlarmDelegate :
         item: AlarmDelegateItem,
         holder: AlarmViewHolder,
         payloads: MutableList<Any>
-    ) = holder.bind(item)
+    ) = holder.bind(item, payloads)
 
     class AlarmViewHolder(
         private val binding: ViewAlarmDelegateItemBinding,
         private val smplrAlarmService: SmplrAlarmService
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: AlarmDelegateItem) = with(binding) {
+        fun bind(item: AlarmDelegateItem, payloads: MutableList<Any>) = with(binding) {
+            Timber.i("Problem --> $payloads")
+
             val hourMinute = item.originalHour to item.originalMinute
             binding.item = item
             time.text = hourMinute.getTimeText()
             days.text = item.weekDays.getWeekDaysText()
 
+            snooze.text = "Snoozed until ${(item.hour to item.minute).getTimeText()}"
+            snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
+
             setupCheckList(item.weekDays)
 
             repeat.isChecked = item.weekDays.isNotEmpty()
 
-            isActive.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) activateAlarmUI()
-                else deactivateAlarmUI()
+            expand.scaleY = if(item.isExpanded) -1F else 1F
 
+            isActive.setOnCheckedChangeListener { _, isChecked ->
                 updateAlarm(item, isActive = isChecked, weekDays = weekdaysList)
             }
 
             expand.setOnClickListener {
-                groupHidden.isVisible = !groupHidden.isVisible
-                groupWeekdays.isVisible = repeat.isChecked && groupHidden.isVisible
-
-                expand.scaleY = expand.scaleY * -1
-
-                days.isVisible = !groupHidden.isVisible
-                days.text = weekdaysList.getWeekDaysText()
-
-                item.isExpanded = !item.isExpanded
-
                 val infoPairs = listOf(
                     "originalHour" to "${item.originalHour}",
                     "originalMinute" to "${item.originalMinute}",
-                    "isExpanded" to "${item.isExpanded}"
+                    "isExpanded" to "${!item.isExpanded}"
                 )
                 updateAlarm(item, infoPairs = infoPairs, weekDays = weekdaysList)
             }
@@ -89,7 +84,6 @@ class AlarmDelegate :
             }
 
             repeat.setOnClickListener {
-                groupWeekdays.isVisible = repeat.isChecked && groupHidden.isVisible
                 unifyChecklist(repeat.isChecked)
                 updateAlarm(item, isActive = true, weekDays = weekdaysList)
             }
@@ -100,7 +94,13 @@ class AlarmDelegate :
 
             time.setOnClickListener {
                 val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-                    updateAlarm(item, hour, minute)
+                    val infoPairs = listOf(
+                        "originalHour" to "${hour}",
+                        "originalMinute" to "${minute}",
+                        "isExpanded" to "${!item.isExpanded}"
+                    )
+
+                    updateAlarm(item = item, hour = hour, minute = minute, infoPairs = infoPairs)
                 }
                 TimePickerDialog(
                     time.context,

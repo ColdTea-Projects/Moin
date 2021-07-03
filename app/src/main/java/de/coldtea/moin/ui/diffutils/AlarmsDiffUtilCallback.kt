@@ -9,6 +9,6 @@ class AlarmsDiffUtilCallback : DiffUtil.ItemCallback<AlarmDelegateItem>() {
         oldItem.requestId == newItem.requestId
 
     override fun areContentsTheSame(oldItem: AlarmDelegateItem, newItem: AlarmDelegateItem): Boolean =
-        oldItem.requestId == newItem.requestId
+        oldItem.hashCode() == newItem.hashCode()
 
 }

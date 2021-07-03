@@ -43,18 +43,30 @@
             android:layout_height="wrap_content"
             android:textColor="@color/moinBlueTone7"
             android:layout_marginTop="15dp"
-            android:textSize="10sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/groupVisible"
             app:layout_constraintStart_toStartOf="@+id/time"
             app:layout_constraintTop_toBottomOf="@id/time"
+            app:isVisible="@{!item.expanded}"
             tools:text="MON TU WED TH FR SAT SUN" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/snooze"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/moinBlueTone7"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/time"
+            app:layout_constraintTop_toBottomOf="@id/monday"
+            tools:text="Snoozing Until : 19:19" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/is_active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:checkedState="@{item.active}"
-            app:layout_constraintBottom_toBottomOf="@+id/days"
+            app:layout_constraintBottom_toBottomOf="@+id/time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/time" />
 
@@ -89,13 +101,6 @@
             android:buttonTint="@color/moinBlueTone7"
             android:textColor="@color/moinBlueTone7"
             android:text="REPEAT"/>
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupWeekdays"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="monday, tuesday, wednesday, thursday, friday, saturday, sunday"
-            android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/sunday"
@@ -209,6 +214,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="delete, repeat"
+            app:isVisible="@{item.expanded}"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupWeekdays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="monday, tuesday, wednesday, thursday, friday, saturday, sunday"
             app:isVisible="@{item.expanded}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
