@@ -1,6 +1,9 @@
 package de.coldtea.moin.ui.alarm.lockscreen
 
-import android.content.Intent
+import android.media.AudioManager
+import android.media.Ringtone
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,13 +16,13 @@ import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class LockScreenAlarmActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityLockScreenAlarmBinding
     private val viewModel: LockScreenAlarmViewModel by viewModels()
+    private var ringtone: Ringtone? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,11 @@ class LockScreenAlarmActivity : AppCompatActivity(){
         lifecycleScope.launch {
             initStateObserver()
         }
+
+        val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+        ringtone = RingtoneManager.getRingtone(applicationContext, notification)
+        ringtone?.streamType = AudioManager.STREAM_ALARM
+        ringtone?.play()
     }
 
     override fun onStart() {
@@ -45,7 +53,7 @@ class LockScreenAlarmActivity : AppCompatActivity(){
 
     private fun setupUIItems() = with(binding){
         dismiss.setOnClickListener {
-            finish()
+            viewModel.dismissAlarm()
         }
 
         snooze.setOnClickListener {
@@ -59,6 +67,7 @@ class LockScreenAlarmActivity : AppCompatActivity(){
                 viewModel.requestId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
             }
             is Done -> {
+                ringtone?.stop()
                 finish()
             }
         }

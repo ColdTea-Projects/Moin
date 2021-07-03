@@ -2,16 +2,18 @@ package de.coldtea.moin.ui.alarm.lockscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.coldtea.moin.R
 import de.coldtea.moin.services.SmplrAlarmService
 import de.coldtea.moin.services.model.AlarmItem
-import de.coldtea.moin.services.model.AlarmList
+import de.coldtea.moin.services.model.DismissAlarmRequest
+import de.coldtea.moin.services.model.DismissAlarmUpdate
+import de.coldtea.moin.services.model.SnoozeAlarmUpdate
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
 import de.coldtea.moin.ui.alarm.lockscreen.models.LockScreenState
 import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
-import de.coldtea.smplr.smplralarm.models.NotificationItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import java.util.*
@@ -27,9 +29,34 @@ class LockScreenAlarmViewModel : ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.alarmList.collect {
-                _lockScreenState.emit(Done)
+                when (it.alarmEvent) {
+                    SnoozeAlarmUpdate,
+                    DismissAlarmUpdate -> _lockScreenState.emit(Done)
+                    DismissAlarmRequest -> it.alarmList.alarmItems
+                        .find { it.requestId == requestId }
+                        ?.let { alarmItem ->
+                            setAlarmForDismissal(alarmItem)
+                        }
+                }
+
             }
         }
+    }
+
+    fun dismissAlarm() {
+        viewModelScope.launch(Dispatchers.IO) {
+            smplrAlarmService.callRequestAlarmList(DismissAlarmRequest)
+        }
+    }
+
+    fun setAlarmForDismissal(alarmItem: AlarmItem) {
+        smplrAlarmService.updateAlarm(
+            requestId = requestId,
+            hour = alarmItem.info?.originalHour?.toIntOrNull(),
+            minute = alarmItem.info?.originalMinute?.toIntOrNull(),
+            isActive = false,
+            alarmEvent = DismissAlarmUpdate
+        )
     }
 
     fun snoozeAlarm() =
@@ -38,7 +65,8 @@ class LockScreenAlarmViewModel : ViewModel() {
                 requestId = requestId,
                 hour = snoozeTime.first,
                 minute = snoozeTime.second,
-                isActive = true
+                isActive = true,
+                alarmEvent = SnoozeAlarmUpdate
             )
         }
 

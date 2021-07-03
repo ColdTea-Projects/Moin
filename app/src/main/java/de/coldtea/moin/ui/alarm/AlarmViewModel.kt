@@ -6,9 +6,7 @@ import de.coldtea.moin.R
 import de.coldtea.moin.services.SmplrAlarmService
 import de.coldtea.moin.services.model.AlarmList
 import de.coldtea.smplr.smplralarm.models.NotificationItem
-import de.coldtea.smplr.smplralarm.models.WeekDays
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
@@ -25,7 +23,7 @@ class AlarmViewModel: ViewModel(){
     init {
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.alarmList.collect{
-                _alarmList.emit(it)
+                _alarmList.emit(it.alarmList)
             }
         }
     }

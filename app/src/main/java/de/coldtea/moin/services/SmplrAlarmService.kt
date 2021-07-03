@@ -3,7 +3,9 @@ package de.coldtea.moin.services
 import android.content.Context
 import android.content.Intent
 import de.coldtea.moin.extensions.convertToAlarmList
-import de.coldtea.moin.services.model.AlarmList
+import de.coldtea.moin.services.model.AlarmEvent
+import de.coldtea.moin.services.model.AlarmObject
+import de.coldtea.moin.services.model.SnoozeAlarmUpdate
 import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.alarm.lockscreen.LockScreenAlarmActivity
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
@@ -24,8 +26,10 @@ class SmplrAlarmService(private val context: Context) {
 
     private var smplrAlarmListRequestAPI: SmplrAlarmListRequestAPI? = null
 
-    private val _alarmList = MutableSharedFlow<AlarmList>()
-    val alarmList: SharedFlow<AlarmList> = _alarmList
+    private val _alarmList = MutableSharedFlow<AlarmObject>()
+    val alarmList: SharedFlow<AlarmObject> = _alarmList
+
+    private var lastAlarmEvent : AlarmEvent? = null
 
     private val onClickIntent = Intent(
         context,
@@ -42,7 +46,7 @@ class SmplrAlarmService(private val context: Context) {
             it.convertToAlarmList()?.let { alarmList ->
                 CoroutineScope(Dispatchers.IO).launch {
                     Timber.d("Moin --> _alarmList.emit(alarmList) ")
-                    _alarmList.emit(alarmList)
+                    _alarmList.emit(AlarmObject(alarmList, lastAlarmEvent))
                 }
             }
         }.also {
@@ -51,33 +55,38 @@ class SmplrAlarmService(private val context: Context) {
 
     }
 
-    fun setAlarm(hour: Int, minute: Int, notificationItem: NotificationItem, weekDays: List<WeekDays>? = null): Int = smplrAlarmSet(context = context){
-        hour { hour }
-        min { minute }
-        if (weekDays != null) weekdays {
-            if(WeekDays.MONDAY in weekDays) monday()
-            if(WeekDays.TUESDAY in weekDays) tuesday()
-            if(WeekDays.WEDNESDAY in weekDays) wednesday()
-            if(WeekDays.THURSDAY in weekDays) thursday()
-            if(WeekDays.FRIDAY in weekDays) friday()
-            if(WeekDays.SATURDAY in weekDays) saturday()
-            if(WeekDays.SUNDAY in weekDays) sunday()
-        }
-        notification { notificationItem }
-        if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
-        intent { onClickIntent }
-        receiverIntent{ fullScreenIntent }
-        infoPairs {
-            listOf(
-                "originalHour" to "$hour",
-                "originalMinute" to "$minute",
-                "isExpanded" to "false"
-            )
-        }
+    fun setAlarm(hour: Int, minute: Int, notificationItem: NotificationItem, weekDays: List<WeekDays>? = null, alarmEvent: AlarmEvent? = null): Int {
+        lastAlarmEvent = alarmEvent
 
+        return smplrAlarmSet(context = context){
+            hour { hour }
+            min { minute }
+            if (weekDays != null) weekdays {
+                if(WeekDays.MONDAY in weekDays) monday()
+                if(WeekDays.TUESDAY in weekDays) tuesday()
+                if(WeekDays.WEDNESDAY in weekDays) wednesday()
+                if(WeekDays.THURSDAY in weekDays) thursday()
+                if(WeekDays.FRIDAY in weekDays) friday()
+                if(WeekDays.SATURDAY in weekDays) saturday()
+                if(WeekDays.SUNDAY in weekDays) sunday()
+            }
+            notification { notificationItem }
+            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
+            intent { onClickIntent }
+            receiverIntent{ fullScreenIntent }
+            infoPairs {
+                listOf(
+                    "originalHour" to "$hour",
+                    "originalMinute" to "$minute",
+                    "isExpanded" to "false"
+                )
+            }
+
+        }
     }
 
-    fun cancelAlarm(requestId: Int){
+    fun cancelAlarm(requestId: Int, alarmEvent: AlarmEvent? = null){
+        lastAlarmEvent = alarmEvent
         smplrAlarmCancel(context){
             requestCode { requestId }
             if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
@@ -85,7 +94,9 @@ class SmplrAlarmService(private val context: Context) {
 
     }
 
-    fun updateAlarm(requestId: Int, hour: Int? = null, minute: Int? = null, weekDays: List<WeekDays>? = null, isActive: Boolean? = null, infoPairs: List<Pair<String, String>>? = null){
+    fun updateAlarm(requestId: Int, hour: Int? = null, minute: Int? = null, weekDays: List<WeekDays>? = null, isActive: Boolean? = null, infoPairs: List<Pair<String, String>>? = null, alarmEvent: AlarmEvent? = null){
+        lastAlarmEvent = alarmEvent
+
         smplrAlarmUpdate(context){
             requestCode { requestId }
             if(hour != null) hour { hour }
@@ -105,10 +116,12 @@ class SmplrAlarmService(private val context: Context) {
             if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
             if (infoPairs != null) infoPairs { infoPairs }
         }
+        lastAlarmEvent = SnoozeAlarmUpdate
 
     }
 
-    fun callRequestAlarmList() {
+    fun callRequestAlarmList(alarmEvent: AlarmEvent? = null) {
+        lastAlarmEvent = alarmEvent
         Timber.d("Moin --> callRequestAlarmList ")
         smplrAlarmListRequestAPI?.requestAlarmList()
 
