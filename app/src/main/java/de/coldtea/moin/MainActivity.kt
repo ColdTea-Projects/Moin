@@ -1,15 +1,16 @@
 package de.coldtea.moin
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import de.coldtea.moin.databinding.ActivityMainBinding
-import de.coldtea.moin.services.SmplrAlarmService
 import de.coldtea.moin.ui.alarm.AlarmFragment
+import de.coldtea.moin.ui.debugview.DebugActivity
 import de.coldtea.moin.ui.playlist.PlaylistFragment
-import de.coldtea.smplr.smplralarm.models.NotificationItem
-import de.coldtea.smplr.smplralarm.models.WeekDays
-import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +27,29 @@ class MainActivity : AppCompatActivity() {
         binding.setupBottomNavigation()
 
         setSupportActionBar(binding.appToolbar)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+
+        inflater.inflate(R.menu.action_bar_menu, menu)
+        menu.findItem(R.id.debug_menu)?.isVisible = BuildConfig.DEBUG
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.debug_menu -> {
+                if(!BuildConfig.DEBUG) return false
+
+                val intent = Intent(this, DebugActivity::class.java)
+                startActivity(intent)
+
+                true
+            }
+            else -> false
+        }
     }
 
     private fun ActivityMainBinding.setupBottomNavigation() =

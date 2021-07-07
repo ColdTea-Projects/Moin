@@ -1,7 +1,7 @@
 package de.coldtea.moin
 
 import android.app.Application
-import de.coldtea.moin.di.servicesModule
+import de.coldtea.moin.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -18,7 +18,12 @@ class MoinApp : Application() {
             androidLogger()
             androidContext(this@MoinApp)
 
-            modules(servicesModule)
+            modules(
+                appModule,
+                servicesModule,
+                networkModule,
+                forecastModule
+            )
         }
     }
 }
