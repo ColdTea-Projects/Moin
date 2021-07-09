@@ -27,7 +27,11 @@ class DebugActivity : AppCompatActivity() {
                 binding?.weatherText?.text = it.toString()
             }
         }
+        val city = debugViewModel.getCity(this)
 
-        debugViewModel.getWeatherForecast()
+        if(city == "") return
+        binding?.city?.text = city
+        debugViewModel.getWeatherForecast(city)
+
     }
 }

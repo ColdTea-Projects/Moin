@@ -21,14 +21,14 @@ android {
 
         debug{
             minifyEnabled false
-            buildConfigField "String", "ROOT_URL", "\"https://api.openweathermap.org/data/2.5/\""
-            buildConfigField "String", "API_KEY", "\"578069695474946dbf195013e3947c2b\""
+            buildConfigField "String", "ROOT_URL", "\"https://api.weatherapi.com/v1/\""
+            buildConfigField "String", "API_KEY", "\"a88a14454df547b7bdd205656210807\""
             debuggable true
         }
 
         release {
-            buildConfigField "String", "ROOT_URL", "\"https://api.openweathermap.org/data/2.5/\""
-            buildConfigField "String", "API_KEY", "\"578069695474946dbf195013e3947c2b\""
+            buildConfigField "String", "ROOT_URL", "\"https://api.weatherapi.com/v1/\""
+            buildConfigField "String", "API_KEY", "\"a88a14454df547b7bdd205656210807\""
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -63,6 +63,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.fragment:fragment-ktx:1.3.5'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.0'
 
