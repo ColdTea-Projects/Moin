@@ -112,9 +112,8 @@
             app:layout_constraintTop_toBottomOf="@id/repeat"
             app:layout_constraintStart_toStartOf="@id/repeat"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:text=" S"
             android:button="@null"
-            android:background="@drawable/weekdays_radio_background"/>
+            android:background="@drawable/monday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/monday"
@@ -126,9 +125,8 @@
             app:layout_constraintTop_toTopOf="@id/sunday"
             app:layout_constraintStart_toEndOf="@id/sunday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:text=" M"
             android:button="@null"
-            android:background="@drawable/weekdays_radio_background"/>
+            android:background="@drawable/tuesday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/tuesday"
@@ -140,9 +138,8 @@
             app:layout_constraintTop_toTopOf="@id/monday"
             app:layout_constraintStart_toEndOf="@id/monday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:text=" T"
             android:button="@null"
-            android:background="@drawable/weekdays_radio_background"/>
+            android:background="@drawable/wednesday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/wednesday"
@@ -154,9 +151,8 @@
             app:layout_constraintTop_toTopOf="@id/tuesday"
             app:layout_constraintStart_toEndOf="@id/tuesday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:text=" W"
             android:button="@null"
-            android:background="@drawable/weekdays_radio_background"/>
+            android:background="@drawable/thursday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/thursday"
@@ -168,9 +164,8 @@
             app:layout_constraintTop_toTopOf="@id/wednesday"
             app:layout_constraintStart_toEndOf="@id/wednesday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:text=" T"
             android:button="@null"
-            android:background="@drawable/weekdays_radio_background"/>
+            android:background="@drawable/friday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/friday"
@@ -182,9 +177,8 @@
             app:layout_constraintTop_toTopOf="@id/thursday"
             app:layout_constraintStart_toEndOf="@id/thursday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:text=" F"
             android:button="@null"
-            android:background="@drawable/weekdays_radio_background"/>
+            android:background="@drawable/saturday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/saturday"
@@ -196,9 +190,8 @@
             app:layout_constraintTop_toTopOf="@id/friday"
             app:layout_constraintStart_toEndOf="@id/friday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:text=" S"
             android:button="@null"
-            android:background="@drawable/weekdays_radio_background"/>
+            android:background="@drawable/sunday_radio_background"/>
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupVisible"
