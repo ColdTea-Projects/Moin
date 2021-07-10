@@ -7,7 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DebugActivity : AppCompatActivity() {
@@ -22,16 +21,25 @@ class DebugActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_debug)
 
-        lifecycleScope.launch {
-            debugViewModel.weatherResponse.collect{
-                binding?.weatherText?.text = it.toString()
-            }
-        }
+        initCurrentResponse()
+        initWeatherResponse()
+
         val city = debugViewModel.getCity(this)
 
         if(city == "") return
         binding?.city?.text = city
         debugViewModel.getWeatherForecast(city)
+    }
 
+    private fun initCurrentResponse() = lifecycleScope.launchWhenResumed {
+        debugViewModel.currentResponse.collect{
+            binding?.dailyWeather?.text = "Current weather : $it"
+        }
+    }
+
+    private fun initWeatherResponse() = lifecycleScope.launchWhenResumed {
+        debugViewModel.weatherResponse.collect{
+            binding?.weatherText?.text = "Weather for 3 days : $it"
+        }
     }
 }

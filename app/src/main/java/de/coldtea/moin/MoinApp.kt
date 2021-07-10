@@ -19,10 +19,11 @@ class MoinApp : Application() {
             androidContext(this@MoinApp)
 
             modules(
-                appModule,
+                databaseModule,
                 servicesModule,
                 networkModule,
-                forecastModule
+                forecastModule,
+                appModule
             )
         }
     }

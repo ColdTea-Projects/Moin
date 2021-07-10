@@ -4,5 +4,5 @@ import de.coldtea.moin.data.WeatherRepository
 import org.koin.dsl.module
 
 val forecastModule = module {
-    factory { WeatherRepository(get()) }
+    factory { WeatherRepository(get(), get()) }
 }
