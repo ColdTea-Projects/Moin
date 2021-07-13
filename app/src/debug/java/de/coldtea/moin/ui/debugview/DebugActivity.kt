@@ -24,11 +24,12 @@ class DebugActivity : AppCompatActivity() {
         initCurrentResponse()
         initWeatherResponse()
 
-        val city = debugViewModel.getCity(this)
+        val city = debugViewModel.getCity()
+        val location = debugViewModel.getLocation()
 
         if(city == "") return
         binding?.city?.text = city
-        debugViewModel.getWeatherForecast(city)
+        debugViewModel.getWeatherForecast(city, location)
     }
 
     private fun initCurrentResponse() = lifecycleScope.launchWhenResumed {

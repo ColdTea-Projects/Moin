@@ -1,27 +1,36 @@
 package de.coldtea.moin.data
 
 import de.coldtea.moin.data.database.MoinDatabase
-import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 import de.coldtea.moin.data.network.forecast.WeatherForecastApi
+import de.coldtea.moin.data.network.forecast.model.Weather
 import de.coldtea.moin.extensions.convertToEntitylist
+import de.coldtea.moin.extensions.getTopOfTheHour
+import de.coldtea.moin.services.model.LatLong
 
 class WeatherRepository(
     private val weatherForecastApi: WeatherForecastApi,
     private val moinDatabase: MoinDatabase
 ) {
-    suspend fun getWeatherForecast(cityName: String): List<HourlyForecastEntity> {
+    suspend fun updateWeatherForecast(cityName: String) {
         val forecast = getWeatherForThreeDays(cityName)
 
-        forecast.convertToEntitylist().map { hourlyForecastEntity ->
+        forecast?.updateForecastsDatabase(cityName)
+    }
+
+    suspend fun getHourlyForecast() = moinDatabase.daoHourlyForecast.getHourlyForecasts()
+
+    suspend fun Weather.updateForecastsDatabase(cityName: String) {
+        convertToEntitylist(cityName).map { hourlyForecastEntity ->
             moinDatabase.daoHourlyForecast.insert(hourlyForecastEntity)
         }
 
-        return moinDatabase.daoHourlyForecast.getHourlyForecasts()
+        moinDatabase.daoHourlyForecast.removeOutdatedForecasts(getTopOfTheHour())
     }
 
     suspend fun getWeatherForThreeDays(cityName: String) =
         weatherForecastApi.getForecast(cityName, 3)
 
-    suspend fun getCurrent(cityName: String) = weatherForecastApi.getCurrent(cityName)
+    suspend fun getCurrentByLatLong(latLong: LatLong?) = latLong?.let { weatherForecastApi.getCurrent("${latLong.lat},${latLong.long}") }
+
 
 }

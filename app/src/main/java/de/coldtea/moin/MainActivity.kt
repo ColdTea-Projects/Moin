@@ -1,18 +1,25 @@
 package de.coldtea.moin
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import de.coldtea.moin.databinding.ActivityMainBinding
 import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.debugview.DebugActivity
 import de.coldtea.moin.ui.playlist.PlaylistFragment
+import de.coldtea.moin.workmanager.ForecastUpdateWorkManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
+
+    val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         binding.setupBottomNavigation()
 
         setSupportActionBar(binding.appToolbar)
+
+        if(mainViewModel.geolocationService.isNotPermitted) ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION), 225)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -41,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.debug_menu -> {
-                if(!BuildConfig.DEBUG) return false
+                if (!BuildConfig.DEBUG) return false
 
                 val intent = Intent(this, DebugActivity::class.java)
                 startActivity(intent)
@@ -50,6 +59,11 @@ class MainActivity : AppCompatActivity() {
             }
             else -> false
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!mainViewModel.geolocationService.isNotPermitted && !mainViewModel.sharedPreferencesRepository.didWorksStart) startWeatherForecastPeriodicalUpdateWork()
     }
 
     private fun ActivityMainBinding.setupBottomNavigation() =
@@ -77,5 +91,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    private fun startWeatherForecastPeriodicalUpdateWork() {
+        ForecastUpdateWorkManager.startPeriodicalForecastUpdate(applicationContext)
+        mainViewModel.sharedPreferencesRepository.didWorksStart = true
+    }
 
 }

@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
-import timber.log.Timber
 
 class AlarmDelegate :
     AbsListItemAdapterDelegate<AlarmDelegateItem, AlarmDelegateItem, AlarmDelegate.AlarmViewHolder>() {
@@ -48,8 +47,6 @@ class AlarmDelegate :
         private val smplrAlarmService: SmplrAlarmService
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: AlarmDelegateItem, payloads: MutableList<Any>) = with(binding) {
-            Timber.i("Problem --> $payloads")
-
             val hourMinute = item.originalHour to item.originalMinute
             binding.item = item
             time.text = hourMinute.getTimeText()

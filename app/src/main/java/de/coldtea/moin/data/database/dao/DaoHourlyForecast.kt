@@ -9,7 +9,11 @@ import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 abstract class DaoHourlyForecast : DaoBase<HourlyForecastEntity> {
 
     @Transaction
-    @Query("SELECT * From hourly_forecast")
+    @Query("SELECT * FROM hourly_forecast")
     abstract suspend fun getHourlyForecasts() : List<HourlyForecastEntity>
+
+    @Transaction
+    @Query("DELETE FROM hourly_forecast WHERE time_epoch < :nowEpoch")
+    abstract suspend fun removeOutdatedForecasts(nowEpoch: Int)
 
 }

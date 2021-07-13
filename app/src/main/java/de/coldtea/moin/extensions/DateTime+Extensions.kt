@@ -3,8 +3,7 @@ package de.coldtea.moin.extensions
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Calendar.HOUR_OF_DAY
-import java.util.Calendar.MINUTE
+import java.util.Calendar.*
 
 //TODO: Write tests
 fun Pair<Int, Int>.getTimeText(): String {
@@ -29,3 +28,12 @@ fun List<WeekDays>.getWeekDaysText(): String {
 
     return weekdays.trim()
 }
+
+fun getTopOfTheHour() = Calendar.getInstance().apply {
+    set(MILLISECOND, 0)
+    set(SECOND, 0)
+    set(MINUTE, 0)
+}.timeInSeconds()
+
+fun Calendar.timeInSeconds(): Int =
+    (this.timeInMillis / 1000).toInt()

@@ -9,10 +9,14 @@ data class HourlyForecastEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "hourly_forecast_id")
     val hourlyForecastId: Int = 0,
+    @ColumnInfo(name = "city")
+    val city: String,
     @ColumnInfo(name = "date")
     val date: String,
     @ColumnInfo(name = "time")
     val time: String,
+    @ColumnInfo(name = "time_epoch")
+    val timeEpoch: Int,
     @ColumnInfo(name = "temp_c")
     val tempC: Double,
     @ColumnInfo(name = "temp_f")
