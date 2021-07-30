@@ -108,4 +108,10 @@ dependencies {
     // Work managers
     implementation "androidx.work:work-runtime:2.6.0-beta01"
     implementation "androidx.work:work-runtime-ktx:2.6.0-beta01"
+
+    //Spotify
+    implementation files('../libs/spotify-app-remote.aar')
+
+    //Gson
+    implementation "com.google.code.gson:gson:2.8.6"
 }

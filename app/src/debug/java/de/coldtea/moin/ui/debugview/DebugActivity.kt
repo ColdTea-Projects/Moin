@@ -6,6 +6,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
+import de.coldtea.moin.services.model.ConnectionFailed
+import de.coldtea.moin.services.model.ConnectionSuccess
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,6 +25,7 @@ class DebugActivity : AppCompatActivity() {
 
         initCurrentResponse()
         initWeatherResponse()
+        initSpotify()
 
         val city = debugViewModel.getCity()
         val location = debugViewModel.getLocation()
@@ -30,6 +33,20 @@ class DebugActivity : AppCompatActivity() {
         if(city == "") return
         binding?.city?.text = city
         debugViewModel.getWeatherForecast(city, location)
+
+        binding?.play?.setOnClickListener {
+            debugViewModel.playPlaylist()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        debugViewModel.connectSpotify(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        debugViewModel.disconnectSpotify()
     }
 
     private fun initCurrentResponse() = lifecycleScope.launchWhenResumed {
@@ -41,6 +58,15 @@ class DebugActivity : AppCompatActivity() {
     private fun initWeatherResponse() = lifecycleScope.launchWhenResumed {
         debugViewModel.weatherResponse.collect{
             binding?.weatherText?.text = "Weather for 3 days : $it"
+        }
+    }
+
+    private fun initSpotify() = lifecycleScope.launchWhenResumed {
+        debugViewModel.spotifyState.collect{
+            when(it){
+                ConnectionSuccess -> binding?.play?.isEnabled = true
+                ConnectionFailed -> binding?.play?.isEnabled = false
+            }
         }
     }
 }
