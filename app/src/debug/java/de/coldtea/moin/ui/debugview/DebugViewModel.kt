@@ -12,10 +12,7 @@ import de.coldtea.moin.data.network.forecast.model.CurrentWeather
 import de.coldtea.moin.services.GeolocationService
 import de.coldtea.moin.services.SpotifyService.CLIENT_ID
 import de.coldtea.moin.services.SpotifyService.REDIRECT_URI
-import de.coldtea.moin.services.model.ConnectionFailed
-import de.coldtea.moin.services.model.ConnectionSuccess
-import de.coldtea.moin.services.model.LatLong
-import de.coldtea.moin.services.model.SpotifyState
+import de.coldtea.moin.services.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -28,7 +25,7 @@ class DebugViewModel(
     private val geolocationService: GeolocationService
 ) : ViewModel() {
 
-    private var mSpotifyAppRemote: SpotifyAppRemote? = null
+    private var _spotifyAppRemote: SpotifyAppRemote? = null
 
     private var _weatherResponse = MutableSharedFlow<List<HourlyForecastEntity>>()
     val weatherResponse: SharedFlow<List<HourlyForecastEntity>> = _weatherResponse
@@ -41,8 +38,8 @@ class DebugViewModel(
 
     private val connectionListener = object: ConnectionListener {
         override fun onConnected(spotifyAppRemote: SpotifyAppRemote?){
-            mSpotifyAppRemote = spotifyAppRemote
-            Timber.d("MoinApp --> Spotify Connected!")
+            _spotifyAppRemote = spotifyAppRemote
+            Timber.d("Moin --> Spotify Connected!")
             viewModelScope.launch(Dispatchers.IO) {
                 _spotifyState.emit(ConnectionSuccess)
             }
@@ -50,7 +47,7 @@ class DebugViewModel(
 
         override fun onFailure(error: Throwable?){
             viewModelScope.launch(Dispatchers.IO) {
-                Timber.d("MoinApp --> $error")
+                Timber.d("Moin --> $error")
                 _spotifyState.emit(ConnectionFailed)
             }
         }
@@ -95,7 +92,14 @@ class DebugViewModel(
         connectionListener
     )
 
-    fun disconnectSpotify() = SpotifyAppRemote.disconnect(mSpotifyAppRemote)
+    fun disconnectSpotify() = SpotifyAppRemote.disconnect(_spotifyAppRemote)
 
-    fun playPlaylist() = mSpotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL")
+    fun playPlaylist() = _spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL").also { subscribePlayerState() }
+
+    private fun subscribePlayerState() = _spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.d("Moin --> Player state: $playerState")
+            _spotifyState.emit(Play(playerState))
+        }
+    }
 }

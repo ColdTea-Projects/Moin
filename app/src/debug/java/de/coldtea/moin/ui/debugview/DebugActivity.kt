@@ -8,6 +8,7 @@ import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
 import de.coldtea.moin.services.model.ConnectionFailed
 import de.coldtea.moin.services.model.ConnectionSuccess
+import de.coldtea.moin.services.model.Play
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -66,6 +67,9 @@ class DebugActivity : AppCompatActivity() {
             when(it){
                 ConnectionSuccess -> binding?.play?.isEnabled = true
                 ConnectionFailed -> binding?.play?.isEnabled = false
+                is Play -> {
+                    binding?.spotify?.text = it.playerState.toString()
+                }
             }
         }
     }
