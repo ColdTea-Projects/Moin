@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector.ConnectionListener
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.WeatherRepository
 import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 import de.coldtea.moin.data.network.forecast.model.CurrentWeather
+import de.coldtea.moin.services.AuthenticationService
 import de.coldtea.moin.services.GeolocationService
 import de.coldtea.moin.services.SpotifyService.CLIENT_ID
 import de.coldtea.moin.services.SpotifyService.REDIRECT_URI
@@ -22,7 +24,9 @@ import timber.log.Timber
 
 class DebugViewModel(
     private val weatherRepo: WeatherRepository,
-    private val geolocationService: GeolocationService
+    private val geolocationService: GeolocationService,
+    private val authenticationService: AuthenticationService,
+    private val sharedPreferencesRepository: SharedPreferencesRepository
 ) : ViewModel() {
 
     private var _spotifyAppRemote: SpotifyAppRemote? = null
@@ -36,8 +40,14 @@ class DebugViewModel(
     private var _spotifyState = MutableSharedFlow<SpotifyState>()
     val spotifyState: SharedFlow<SpotifyState> = _spotifyState
 
-    private val connectionListener = object: ConnectionListener {
-        override fun onConnected(spotifyAppRemote: SpotifyAppRemote?){
+    val authorizationCodeExist: Boolean
+        get() = sharedPreferencesRepository.authorizationCode != null
+
+    val authorizationCode: String
+        get() = sharedPreferencesRepository.authorizationCode.orEmpty()
+
+    private val connectionListener = object : ConnectionListener {
+        override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
             _spotifyAppRemote = spotifyAppRemote
             Timber.d("Moin --> Spotify Connected!")
             viewModelScope.launch(Dispatchers.IO) {
@@ -45,7 +55,7 @@ class DebugViewModel(
             }
         }
 
-        override fun onFailure(error: Throwable?){
+        override fun onFailure(error: Throwable?) {
             viewModelScope.launch(Dispatchers.IO) {
                 Timber.d("Moin --> $error")
                 _spotifyState.emit(ConnectionFailed)
@@ -85,6 +95,7 @@ class DebugViewModel(
 
     fun getCity() = geolocationService.getCityName()
     fun getLocation() = geolocationService.getLatLong()
+    fun getAuthorizationIntent() = authenticationService.getAuthorizationIntent()
 
     fun connectSpotify(context: Context) = SpotifyAppRemote.connect(
         context,
@@ -94,12 +105,26 @@ class DebugViewModel(
 
     fun disconnectSpotify() = SpotifyAppRemote.disconnect(_spotifyAppRemote)
 
-    fun playPlaylist() = _spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL").also { subscribePlayerState() }
+    fun playPlaylist() =
+        _spotifyAppRemote?.playerApi?.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL")
+            .also { subscribePlayerState() }
 
-    private fun subscribePlayerState() = _spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
-        viewModelScope.launch(Dispatchers.IO) {
-            Timber.d("Moin --> Player state: $playerState")
-            _spotifyState.emit(Play(playerState))
+    private fun subscribePlayerState() =
+        _spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
+            viewModelScope.launch(Dispatchers.IO) {
+                Timber.d("Moin --> Player state: $playerState")
+                _spotifyState.emit(Play(playerState))
+            }
+        }
+
+    fun registerAuthorizationCode(response: AuthorizationResponse?){
+        if (response == null) return
+        if (response.error == null) Timber.i("Moin --> ${response.error}")
+
+        if (response.state == authenticationService.state && response.code != null){
+            sharedPreferencesRepository.authorizationCode = response.code
         }
     }
+
+    fun getAccessToken(code: String){}
 }

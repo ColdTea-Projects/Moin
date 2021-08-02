@@ -8,7 +8,7 @@ import org.koin.dsl.module
 val appModule = module {
 
     // ViewModel for Detail View
-    viewModel { DebugViewModel(get(), get()) }
+    viewModel { DebugViewModel(get(), get(), get(), get()) }
     viewModel { MainViewModel(get(), get()) }
 
 }

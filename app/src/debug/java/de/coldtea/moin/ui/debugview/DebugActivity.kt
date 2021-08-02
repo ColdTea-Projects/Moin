@@ -1,16 +1,22 @@
 package de.coldtea.moin.ui.debugview
 
+import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
+import de.coldtea.moin.extensions.convertToAuthorizationResponse
+import de.coldtea.moin.services.SpotifyService.REDIRECT_URI_ROOT
 import de.coldtea.moin.services.model.ConnectionFailed
 import de.coldtea.moin.services.model.ConnectionSuccess
 import de.coldtea.moin.services.model.Play
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
+
 
 class DebugActivity : AppCompatActivity() {
 
@@ -37,6 +43,19 @@ class DebugActivity : AppCompatActivity() {
 
         binding?.play?.setOnClickListener {
             debugViewModel.playPlaylist()
+        }
+        val data: Uri? = intent.data
+        if(debugViewModel.authorizationCodeExist){
+            Timber.d("Moin --> Player state: ${debugViewModel.authorizationCode}")
+            binding?.spotify?.text = debugViewModel.authorizationCode
+        }
+        else if (data != null && !TextUtils.isEmpty(data.scheme)) {
+            if (REDIRECT_URI_ROOT == data.scheme) {
+                binding?.spotify?.text = data.toString()
+                debugViewModel.registerAuthorizationCode(data.toString().convertToAuthorizationResponse())
+            }
+        }else{
+            startActivity(debugViewModel.getAuthorizationIntent())
         }
     }
 

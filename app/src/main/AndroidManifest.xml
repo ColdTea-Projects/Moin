@@ -33,6 +33,12 @@
         <activity
             android:name=".ui.debugview.DebugActivity"
             android:label="@string/debug_menu_title">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="de.coldtea.moin" />
+            </intent-filter>
         </activity>
     </application>
 
