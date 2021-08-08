@@ -1,16 +1,17 @@
 package de.coldtea.moin.ui.debugview
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector.ConnectionListener
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import de.coldtea.moin.data.SharedPreferencesRepository
+import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.WeatherRepository
 import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 import de.coldtea.moin.data.network.forecast.model.CurrentWeather
-import de.coldtea.moin.services.AuthenticationService
 import de.coldtea.moin.services.GeolocationService
 import de.coldtea.moin.services.SpotifyService.CLIENT_ID
 import de.coldtea.moin.services.SpotifyService.REDIRECT_URI
@@ -24,8 +25,8 @@ import timber.log.Timber
 
 class DebugViewModel(
     private val weatherRepo: WeatherRepository,
+    private val spotifyAuthRepo: SpotifyAuthRepository,
     private val geolocationService: GeolocationService,
-    private val authenticationService: AuthenticationService,
     private val sharedPreferencesRepository: SharedPreferencesRepository
 ) : ViewModel() {
 
@@ -40,8 +41,8 @@ class DebugViewModel(
     private var _spotifyState = MutableSharedFlow<SpotifyState>()
     val spotifyState: SharedFlow<SpotifyState> = _spotifyState
 
-    val authorizationCodeExist: Boolean
-        get() = sharedPreferencesRepository.authorizationCode != null
+    val refreshTokenExist: Boolean
+        get() = sharedPreferencesRepository.refreshToken != null
 
     val authorizationCode: String
         get() = sharedPreferencesRepository.authorizationCode.orEmpty()
@@ -70,7 +71,7 @@ class DebugViewModel(
             .build()
     }
 
-    fun getWeatherForecast(cityName: String, latLong: LatLong?) {
+    fun getWeatherForecast(cityName: String, latLong: LatLong?) =
         viewModelScope.launch(Dispatchers.IO) {
 
             try {
@@ -91,11 +92,11 @@ class DebugViewModel(
                 Timber.e("Moin-getWeatherForecast- Error: $ex")
             }
         }
-    }
+
 
     fun getCity() = geolocationService.getCityName()
     fun getLocation() = geolocationService.getLatLong()
-    fun getAuthorizationIntent() = authenticationService.getAuthorizationIntent()
+    fun getAuthorizationIntent(): Intent? = spotifyAuthRepo.getAuthorizationIntent()
 
     fun connectSpotify(context: Context) = SpotifyAppRemote.connect(
         context,
@@ -117,14 +118,21 @@ class DebugViewModel(
             }
         }
 
-    fun registerAuthorizationCode(response: AuthorizationResponse?){
-        if (response == null) return
-        if (response.error == null) Timber.i("Moin --> ${response.error}")
+    fun registerAuthorizationCode(response: AuthorizationResponse?) =
+        spotifyAuthRepo.registerAuthorizationCode(response)
 
-        if (response.state == authenticationService.state && response.code != null){
-            sharedPreferencesRepository.authorizationCode = response.code
+    fun getAccessToken(code: String?) = viewModelScope.launch(Dispatchers.IO) {
+        if (code == null) return@launch
+        try {
+            val tokenResponse = spotifyAuthRepo.getAccessToken(code)
+            sharedPreferencesRepository.refreshToken = tokenResponse?.refreshToken
+
+            _spotifyState.emit(AccessTokenReceived(tokenResponse))
+        }catch (ex: HttpException){
+            Timber.e("Moin -->  $ex")
+        }catch (ex: Exception){
+            Timber.e("Moin -->  $ex")
         }
-    }
 
-    fun getAccessToken(code: String){}
+    }
 }

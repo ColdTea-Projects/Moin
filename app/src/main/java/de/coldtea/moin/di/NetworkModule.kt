@@ -3,6 +3,7 @@ package de.coldtea.moin.di
 import de.coldtea.moin.BuildConfig
 import de.coldtea.moin.data.network.forecast.WeatherForecastApi
 import de.coldtea.moin.data.network.interceptors.AuthInterceptor
+import de.coldtea.moin.data.network.spotify.SpotifyAuthApi
 import de.coldtea.moin.services.AuthenticationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,6 +17,7 @@ val networkModule = module {
     factory { HttpLoggingInterceptor() }
     factory { provideOkHttpClient(get(), get()) }
     factory { provideForecastApi(get(named("WeatherApiRetrofit"))) }
+    factory { provideSpotifyAuthApi(get(named("SpotifyAuthRetrofit"))) }
     single(named("WeatherApiRetrofit")) { provideRetrofitWeatherApi(get()) }
     single(named("SpotifyAuthRetrofit")) { provideRetrofitSpotifyAuth(get()) }
     single {AuthenticationService()}
@@ -42,3 +44,5 @@ fun provideOkHttpClient(authInterceptor: AuthInterceptor, httpLoggingInterceptor
 }
 
 fun provideForecastApi(retrofit: Retrofit): WeatherForecastApi = retrofit.create(WeatherForecastApi::class.java)
+
+fun provideSpotifyAuthApi(retrofit: Retrofit): SpotifyAuthApi = retrofit.create(SpotifyAuthApi::class.java)

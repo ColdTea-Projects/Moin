@@ -10,12 +10,12 @@ import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
 import de.coldtea.moin.extensions.convertToAuthorizationResponse
 import de.coldtea.moin.services.SpotifyService.REDIRECT_URI_ROOT
+import de.coldtea.moin.services.model.AccessTokenReceived
 import de.coldtea.moin.services.model.ConnectionFailed
 import de.coldtea.moin.services.model.ConnectionSuccess
 import de.coldtea.moin.services.model.Play
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class DebugActivity : AppCompatActivity() {
@@ -45,16 +45,15 @@ class DebugActivity : AppCompatActivity() {
             debugViewModel.playPlaylist()
         }
         val data: Uri? = intent.data
-        if(debugViewModel.authorizationCodeExist){
-            Timber.d("Moin --> Player state: ${debugViewModel.authorizationCode}")
-            binding?.spotify?.text = debugViewModel.authorizationCode
-        }
-        else if (data != null && !TextUtils.isEmpty(data.scheme)) {
+
+        if (data != null && !TextUtils.isEmpty(data.scheme)) {
             if (REDIRECT_URI_ROOT == data.scheme) {
                 binding?.spotify?.text = data.toString()
-                debugViewModel.registerAuthorizationCode(data.toString().convertToAuthorizationResponse())
+                val authorizationResponse = data.toString().convertToAuthorizationResponse()
+                debugViewModel.registerAuthorizationCode(authorizationResponse)
+                debugViewModel.getAccessToken(authorizationResponse?.code)
             }
-        }else{
+        }else if(debugViewModel.refreshTokenExist.not()){
             startActivity(debugViewModel.getAuthorizationIntent())
         }
     }
@@ -86,8 +85,9 @@ class DebugActivity : AppCompatActivity() {
             when(it){
                 ConnectionSuccess -> binding?.play?.isEnabled = true
                 ConnectionFailed -> binding?.play?.isEnabled = false
-                is Play -> {
-                    binding?.spotify?.text = it.playerState.toString()
+                is Play -> binding?.spotify?.text = it.playerState.toString()
+                is AccessTokenReceived -> {
+                    binding?.spotify?.text = it.tokenResponse.toString()
                 }
             }
         }

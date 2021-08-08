@@ -14,14 +14,6 @@ class AuthenticationService {
     private val encoding = Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
     val state = UUID.randomUUID().toString()
 
-    private fun generateCodeVerifier() : String {
-        val secureRandom = SecureRandom()
-        val bytes = ByteArray(64)
-        secureRandom.nextBytes(bytes)
-
-        return Base64.encodeToString(bytes, encoding)
-    }
-
     private fun generateCodeChallenge(codeVerifier: String): String{
         val bytes = codeVerifier.toByteArray()
         val messageDigest = MessageDigest.getInstance("SHA-256")
@@ -31,12 +23,20 @@ class AuthenticationService {
         return Base64.encodeToString(digest, encoding)
     }
 
-    fun getAuthorizationIntent(): Intent = Uri.parse(ROOT_URL_SPOTIFY_AUTH + "authorize").buildUpon()
+    fun generateCodeVerifier() : String {
+        val secureRandom = SecureRandom()
+        val bytes = ByteArray(64)
+        secureRandom.nextBytes(bytes)
+
+        return Base64.encodeToString(bytes, encoding)
+    }
+
+    fun getAuthorizationIntent(codeVerifier: String): Intent = Uri.parse(ROOT_URL_SPOTIFY_AUTH + "authorize").buildUpon()
         .appendQueryParameter("response_type", "code")
         .appendQueryParameter("client_id", CLIENT_ID)
         .appendQueryParameter("redirect_uri", REDIRECT_URI)
         .appendQueryParameter("state", state)
-        .appendQueryParameter("code_challenge", generateCodeChallenge(generateCodeVerifier()))
+        .appendQueryParameter("code_challenge", generateCodeChallenge(codeVerifier))
         .appendQueryParameter("code_challenge_method", "S256")
         .build().let {
             Intent(Intent.ACTION_VIEW, it)

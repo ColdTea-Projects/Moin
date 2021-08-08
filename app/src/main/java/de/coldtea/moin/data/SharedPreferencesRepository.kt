@@ -24,10 +24,24 @@ class SharedPreferencesRepository(val context: Context) {
             putString(AUTHORIZATION_CODE, value)
         }.apply()
 
+    var codeVerifier: String?
+        get() = sharedPreferences.getString(CODE_VERIFIER,null)
+        set(value) = sharedPreferences.edit().apply {
+            putString(CODE_VERIFIER, value)
+        }.apply()
+
+    var refreshToken: String?
+        get() = sharedPreferences.getString(REFRESH_TOKEN,null)
+        set(value) = sharedPreferences.edit().apply {
+            putString(REFRESH_TOKEN, value)
+        }.apply()
+
     companion object {
         const val MOIN_APP_SHARED_PREFERENCES = "moin_app_shared_preferences"
         const val DID_WORKS_START = "did_works_start"
         const val AUTHORIZATION_CODE = "authorization_code"
+        const val CODE_VERIFIER = "code_verifier"
+        const val REFRESH_TOKEN = "refresh_token"
     }
 
 }

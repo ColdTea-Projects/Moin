@@ -22,7 +22,7 @@ class MoinApp : Application() {
                 dataModule,
                 servicesModule,
                 networkModule,
-                forecastModule,
+                repositoryModule,
                 appModule
             )
         }
