@@ -12,12 +12,12 @@ fun Pair<Int, Int>.getTimeText(): String {
         set(MINUTE, second)
     }
 
-    val dateFormat = SimpleDateFormat("HH:mm")
+    val dateFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
     return dateFormat.format(time.time)
 }
 
 fun List<WeekDays>.getWeekDaysText(): String {
-    var weekdays: String = ""
+    var weekdays = ""
     if (WeekDays.MONDAY in this) weekdays += "MON "
     if (WeekDays.TUESDAY in this) weekdays += "TUE "
     if (WeekDays.WEDNESDAY in this) weekdays += "WED "

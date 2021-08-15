@@ -14,7 +14,7 @@ import timber.log.Timber
 import java.util.*
 
 class GeolocationService(val context: Context) {
-    val geocoder = Geocoder(context, Locale.getDefault())
+    private val geocoder = Geocoder(context, Locale.getDefault())
     private val locationManager: LocationManager by lazy { context.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
 
     fun getCityName(): String? {

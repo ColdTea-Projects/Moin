@@ -28,12 +28,12 @@ class LockScreenAlarmViewModel : ViewModel() {
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            smplrAlarmService.alarmList.collect {
-                when (it.alarmEvent) {
+            smplrAlarmService.alarmList.collect { alarmObject ->
+                when (alarmObject.alarmEvent) {
                     SnoozeAlarmUpdate,
                     DismissAlarmUpdate -> _lockScreenState.emit(Done)
-                    DismissAlarmRequest -> it.alarmList.alarmItems
-                        .find { it.requestId == requestId }
+                    DismissAlarmRequest -> alarmObject.alarmList.alarmItems
+                        .find { alarmItem ->  alarmItem.requestId == requestId }
                         ?.let { alarmItem ->
                             setAlarmForDismissal(alarmItem)
                         }
@@ -49,7 +49,7 @@ class LockScreenAlarmViewModel : ViewModel() {
         }
     }
 
-    fun setAlarmForDismissal(alarmItem: AlarmItem) {
+    private fun setAlarmForDismissal(alarmItem: AlarmItem) {
         smplrAlarmService.updateAlarm(
             requestId = requestId,
             hour = alarmItem.info?.originalHour?.toIntOrNull(),

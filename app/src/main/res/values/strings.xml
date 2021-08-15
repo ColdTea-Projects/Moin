@@ -6,6 +6,7 @@
 
     <string name="alarm_item_repeat_checkbox">Repeat</string>
 
+    <string name="snooze_display_text">Snoozed until %s</string>
 
 
     <!-- Content Descriptions-->

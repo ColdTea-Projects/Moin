@@ -40,13 +40,13 @@ class AlarmDelegate :
         item: AlarmDelegateItem,
         holder: AlarmViewHolder,
         payloads: MutableList<Any>
-    ) = holder.bind(item, payloads)
+    ) = holder.bind(item)
 
     class AlarmViewHolder(
         private val binding: ViewAlarmDelegateItemBinding,
         private val smplrAlarmService: SmplrAlarmService
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: AlarmDelegateItem, payloads: MutableList<Any>) = with(binding) {
+        fun bind(item: AlarmDelegateItem) = with(binding) {
             val hourMinute = item.originalHour to item.originalMinute
             binding.item = item
             time.text = hourMinute.getTimeText()
@@ -92,8 +92,8 @@ class AlarmDelegate :
             time.setOnClickListener {
                 val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                     val infoPairs = listOf(
-                        "originalHour" to "${hour}",
-                        "originalMinute" to "${minute}",
+                        "originalHour" to "$hour",
+                        "originalMinute" to "$minute",
                         "isExpanded" to "${!item.isExpanded}"
                     )
 

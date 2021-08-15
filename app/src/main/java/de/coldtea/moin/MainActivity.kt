@@ -19,7 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    val mainViewModel: MainViewModel by viewModel()
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun ActivityMainBinding.setupBottomNavigation() =
-        navView.setOnNavigationItemSelectedListener {
+        navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_alarms -> {
                     supportFragmentManager

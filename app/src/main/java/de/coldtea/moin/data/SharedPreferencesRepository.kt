@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 
 class SharedPreferencesRepository(val context: Context) {
 
-    val sharedPreferences: SharedPreferences by lazy {
+    private val sharedPreferences: SharedPreferences by lazy {
         context.getSharedPreferences(
             MOIN_APP_SHARED_PREFERENCES,
             Context.MODE_PRIVATE

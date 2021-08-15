@@ -19,7 +19,7 @@ class WeatherRepository(
 
     suspend fun getHourlyForecast() = moinDatabase.daoHourlyForecast.getHourlyForecasts()
 
-    suspend fun Weather.updateForecastsDatabase(cityName: String) {
+    private suspend fun Weather.updateForecastsDatabase(cityName: String) {
         convertToEntitylist(cityName).map { hourlyForecastEntity ->
             moinDatabase.daoHourlyForecast.insert(hourlyForecastEntity)
         }
@@ -27,7 +27,7 @@ class WeatherRepository(
         moinDatabase.daoHourlyForecast.removeOutdatedForecasts(getTopOfTheHour())
     }
 
-    suspend fun getWeatherForThreeDays(cityName: String) =
+    private suspend fun getWeatherForThreeDays(cityName: String) =
         weatherForecastApi.getForecast(cityName, 3)
 
     suspend fun getCurrentByLatLong(latLong: LatLong?) = latLong?.let { weatherForecastApi.getCurrent("${latLong.lat},${latLong.long}") }

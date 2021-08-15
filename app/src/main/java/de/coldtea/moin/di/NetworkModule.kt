@@ -13,16 +13,20 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+private const val WEATHER_API_RETROFIT = "WeatherApiRetrofit"
+private const val SPOTIFY_AUTH_API_RETROFIT = "SpotifyAuthRetrofit"
+private const val SPOTIFY_API_RETROFIT = "SpotifyRetrofit"
+
 val networkModule = module {
     factory { AuthInterceptor() }
     factory { HttpLoggingInterceptor() }
     factory { provideOkHttpClient(get(), get()) }
-    factory { provideForecastApi(get(named("WeatherApiRetrofit"))) }
-    factory { provideSpotifyAuthApi(get(named("SpotifyAuthRetrofit"))) }
-    factory { provideSpotifyApi(get(named("SpotifyRetrofit"))) }
-    single(named("WeatherApiRetrofit")) { provideRetrofitWeatherApi(get()) }
-    single(named("SpotifyAuthRetrofit")) { provideRetrofitSpotifyAuth(get()) }
-    single(named("SpotifyRetrofit")) { provideRetrofitSpotify(get()) }
+    factory { provideForecastApi(get(named(WEATHER_API_RETROFIT))) }
+    factory { provideSpotifyAuthApi(get(named(SPOTIFY_AUTH_API_RETROFIT))) }
+    factory { provideSpotifyApi(get(named(SPOTIFY_API_RETROFIT))) }
+    single(named(WEATHER_API_RETROFIT)) { provideRetrofitWeatherApi(get()) }
+    single(named(SPOTIFY_AUTH_API_RETROFIT)) { provideRetrofitSpotifyAuth(get()) }
+    single(named(SPOTIFY_API_RETROFIT)) { provideRetrofitSpotify(get()) }
     single {AuthenticationService()}
 }
 
