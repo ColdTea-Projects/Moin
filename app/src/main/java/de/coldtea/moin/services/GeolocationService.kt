@@ -8,6 +8,7 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import de.coldtea.moin.extensions.getCityName
 import de.coldtea.moin.services.model.LatLong
 import timber.log.Timber
 import java.util.*
@@ -16,7 +17,7 @@ class GeolocationService(val context: Context) {
     val geocoder = Geocoder(context, Locale.getDefault())
     private val locationManager: LocationManager by lazy { context.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
 
-    fun getCityName(): String {
+    fun getCityName(): String? {
         val longLat = getLatLong() ?: return ""
 
 
@@ -25,7 +26,7 @@ class GeolocationService(val context: Context) {
         val addresses = geocoder.getFromLocation(longLat.lat, longLat.long, 1)
 
         Timber.i("Moin --> address: $addresses")
-        return addresses.first().locality
+        return addresses.first().getCityName()
     }
 
     fun getLatLong(): LatLong? {

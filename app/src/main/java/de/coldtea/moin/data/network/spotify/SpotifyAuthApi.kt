@@ -17,4 +17,12 @@ interface SpotifyAuthApi {
         @Query("code_verifier") codeVerifier: String
     ): TokenResponse?
 
+    @Headers("Content-Type: application/x-www-form-urlencoded")
+    @POST("api/token")
+    suspend fun getAccessTokenByRefreshToken(
+        @Query("grant_type") grantType: String,
+        @Query("refresh_token") code: String,
+        @Query("client_id") clientId: String
+    ): TokenResponse?
+
 }

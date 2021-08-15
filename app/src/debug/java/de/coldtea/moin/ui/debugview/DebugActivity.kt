@@ -10,10 +10,7 @@ import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
 import de.coldtea.moin.extensions.convertToAuthorizationResponse
 import de.coldtea.moin.services.SpotifyService.REDIRECT_URI_ROOT
-import de.coldtea.moin.services.model.AccessTokenReceived
-import de.coldtea.moin.services.model.ConnectionFailed
-import de.coldtea.moin.services.model.ConnectionSuccess
-import de.coldtea.moin.services.model.Play
+import de.coldtea.moin.services.model.*
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,9 +34,12 @@ class DebugActivity : AppCompatActivity() {
         val city = debugViewModel.getCity()
         val location = debugViewModel.getLocation()
 
-        if(city == "") return
-        binding?.city?.text = city
-        debugViewModel.getWeatherForecast(city, location)
+        if(!city.isNullOrEmpty())
+        {
+            binding?.city?.text = city
+            binding?.search?.setOnClickListener { onSearchClicked() }
+            debugViewModel.getWeatherForecast(city, location)
+        }
 
         binding?.play?.setOnClickListener {
             debugViewModel.playPlaylist()
@@ -68,6 +68,10 @@ class DebugActivity : AppCompatActivity() {
         debugViewModel.disconnectSpotify()
     }
 
+    private fun onSearchClicked(){
+        debugViewModel.getAccessTokenByRefreshToken()
+    }
+
     private fun initCurrentResponse() = lifecycleScope.launchWhenResumed {
         debugViewModel.currentResponse.collect{
             binding?.dailyWeather?.text = "Current weather : $it"
@@ -88,7 +92,13 @@ class DebugActivity : AppCompatActivity() {
                 is Play -> binding?.spotify?.text = it.playerState.toString()
                 is AccessTokenReceived -> {
                     binding?.spotify?.text = it.tokenResponse.toString()
+
+                    val keyword = binding?.keyword?.text.toString()
+                    if (keyword.isNotEmpty() && it.tokenResponse?.accessToken != null){
+                        debugViewModel.search(it.tokenResponse.accessToken, keyword)
+                    }
                 }
+                is SearchResultReceived ->  binding?.spotify?.text = it.searchResponse.toString()
             }
         }
     }

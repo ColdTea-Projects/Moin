@@ -6,13 +6,13 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class TokenResponse(
     @Json(name = "access_token")
-    val accessToken: String,
+    val accessToken: String?,
     @Json(name = "token_type")
-    val tokenType: String,
+    val tokenType: String?,
     @Json(name = "scope")
-    val scope: String,
+    val scope: String?,
     @Json(name = "expires_in")
-    val expiresIn: Int,
+    val expiresIn: Int?,
     @Json(name = "refresh_token")
-    val refreshToken: String
+    val refreshToken: String?
 )

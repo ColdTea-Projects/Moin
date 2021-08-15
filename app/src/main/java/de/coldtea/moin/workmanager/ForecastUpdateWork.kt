@@ -14,7 +14,7 @@ class ForecastUpdateWork(context: Context, workerParameters: WorkerParameters): 
     private val geolocationService: GeolocationService by inject(GeolocationService::class.java)
 
     override suspend fun doWork(): Result {
-        val city = geolocationService.getCityName()
+        val city = geolocationService.getCityName() ?: return Result.failure()
 
         Timber.i("Moin geolocationService --> $geolocationService")
         Timber.i("Moin city --> $city")

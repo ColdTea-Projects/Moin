@@ -37,14 +37,24 @@ class SpotifyAuthRepository(
     ): TokenResponse? = sharedPreferencesRepository.codeVerifier?.let {
         spotifyAuthApi.getAccessToken(
             CLIENT_ID,
-            GRANT_TYPE,
+            GRANT_TYPE_AUTHORIZATION,
             code,
             REDIRECT_URI,
             it
         )
     }
 
+    suspend fun getAccessTokenByRefreshToken(
+        refreshToken: String
+    ): TokenResponse? =
+        spotifyAuthApi.getAccessTokenByRefreshToken(
+            GRANT_TYPE_REFRESH,
+            refreshToken,
+            CLIENT_ID
+        )
+
     companion object {
-        const val GRANT_TYPE = "authorization_code"
+        const val GRANT_TYPE_AUTHORIZATION = "authorization_code"
+        const val GRANT_TYPE_REFRESH = "refresh_token"
     }
 }

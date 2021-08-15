@@ -23,6 +23,7 @@ android {
             minifyEnabled false
             buildConfigField "String", "ROOT_URL_WEATHER_API", "\"https://api.weatherapi.com/v1/\""
             buildConfigField "String", "ROOT_URL_SPOTIFY_AUTH", "\"https://accounts.spotify.com/\""
+            buildConfigField "String", "ROOT_URL_SPOTIFY", "\"https://api.spotify.com/\""
             buildConfigField "String", "API_KEY", "\"a88a14454df547b7bdd205656210807\""
             debuggable true
         }
@@ -30,6 +31,7 @@ android {
         release {
             buildConfigField "String", "ROOT_URL_WEATHER_API", "\"https://api.weatherapi.com/v1/\""
             buildConfigField "String", "ROOT_URL_SPOTIFY_AUTH", "\"https://accounts.spotify.com/\""
+            buildConfigField "String", "ROOT_URL_SPOTIFY", "\"https://api.spotify.com/\""
             buildConfigField "String", "API_KEY", "\"a88a14454df547b7bdd205656210807\""
 
             minifyEnabled false
