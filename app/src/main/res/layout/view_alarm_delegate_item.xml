@@ -24,14 +24,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_alarm_item"
-        android:padding="15dp">
+        android:padding="@dimen/margin_s">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/moinBlueTone7"
-            android:textSize="50sp"
+            android:textSize="@dimen/alarm_item_clock_font_size"
             app:layout_constraintBottom_toTopOf="@id/days"
             app:layout_constraintStart_toStartOf="@id/groupVisible"
             app:layout_constraintTop_toTopOf="@id/groupVisible"
@@ -42,8 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/moinBlueTone7"
-            android:layout_marginTop="15dp"
-            android:textSize="12sp"
+            android:layout_marginTop="@dimen/margin_s"
+            android:textSize="@dimen/alarm_item_weekdays_font_size"
             app:layout_constraintBottom_toBottomOf="@id/groupVisible"
             app:layout_constraintStart_toStartOf="@+id/time"
             app:layout_constraintTop_toBottomOf="@id/time"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:textColor="@color/moinBlueTone7"
-            android:textSize="12sp"
+            android:textSize="@dimen/alarm_item_snooze_font_size"
             app:layout_constraintStart_toStartOf="@+id/time"
             app:layout_constraintTop_toBottomOf="@id/monday"
             tools:text="Snoozing Until : 19:19" />
@@ -70,7 +70,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/time" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/expand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,14 +79,14 @@
             app:srcCompat="@drawable/ic_down_arrow_18"
             app:tint="@color/moinBlueTone7" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/monday"
             app:layout_constraintBottom_toTopOf="@id/expand"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/margin_s"
             app:srcCompat="@drawable/ic_baseline_delete_24"
             app:tint="@color/moinBlueTone7" />
 
@@ -96,19 +96,19 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/days"
             app:layout_constraintTop_toBottomOf="@+id/days"
-            android:layout_marginTop="20dp"
-            android:textSize="10sp"
+            android:layout_marginTop="@dimen/margin_s"
+            android:textSize="@dimen/alarm_item_repeat_font_size"
             android:buttonTint="@color/moinBlueTone7"
             android:textColor="@color/moinBlueTone7"
-            android:text="REPEAT"/>
+            android:text="@string/alarm_item_repeat_checkbox"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/sunday"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/weekday_radio_button_size"
+            android:layout_height="@dimen/weekday_radio_button_size"
             android:checked="true"
             android:pointerIcon="@null"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_s"
             app:layout_constraintTop_toBottomOf="@id/repeat"
             app:layout_constraintStart_toStartOf="@id/repeat"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
@@ -117,11 +117,11 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/monday"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/weekday_radio_button_size"
+            android:layout_height="@dimen/weekday_radio_button_size"
             android:checked="true"
             android:pointerIcon="@null"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/weekday_radio_button_distance"
             app:layout_constraintTop_toTopOf="@id/sunday"
             app:layout_constraintStart_toEndOf="@id/sunday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
@@ -130,11 +130,11 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/tuesday"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/weekday_radio_button_size"
+            android:layout_height="@dimen/weekday_radio_button_size"
             android:checked="true"
             android:pointerIcon="@null"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/weekday_radio_button_distance"
             app:layout_constraintTop_toTopOf="@id/monday"
             app:layout_constraintStart_toEndOf="@id/monday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
@@ -143,11 +143,11 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/wednesday"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/weekday_radio_button_size"
+            android:layout_height="@dimen/weekday_radio_button_size"
             android:checked="true"
             android:pointerIcon="@null"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/weekday_radio_button_distance"
             app:layout_constraintTop_toTopOf="@id/tuesday"
             app:layout_constraintStart_toEndOf="@id/tuesday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
@@ -156,11 +156,11 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/thursday"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/weekday_radio_button_size"
+            android:layout_height="@dimen/weekday_radio_button_size"
             android:checked="true"
             android:pointerIcon="@null"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/weekday_radio_button_distance"
             app:layout_constraintTop_toTopOf="@id/wednesday"
             app:layout_constraintStart_toEndOf="@id/wednesday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
@@ -169,11 +169,11 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/friday"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/weekday_radio_button_size"
+            android:layout_height="@dimen/weekday_radio_button_size"
             android:checked="true"
             android:pointerIcon="@null"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/weekday_radio_button_distance"
             app:layout_constraintTop_toTopOf="@id/thursday"
             app:layout_constraintStart_toEndOf="@id/thursday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
@@ -182,11 +182,11 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/saturday"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/weekday_radio_button_size"
+            android:layout_height="@dimen/weekday_radio_button_size"
             android:checked="true"
             android:pointerIcon="@null"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/weekday_radio_button_distance"
             app:layout_constraintTop_toTopOf="@id/friday"
             app:layout_constraintStart_toEndOf="@id/friday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"

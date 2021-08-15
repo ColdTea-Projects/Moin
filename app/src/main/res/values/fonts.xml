@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Alarm view-->
+    <dimen name="clock_font_size">70sp</dimen>
+    <!-- Alarm item-->
+    <dimen name="alarm_item_clock_font_size">50sp</dimen>
+    <dimen name="alarm_item_weekdays_font_size">12sp</dimen>
+    <dimen name="alarm_item_snooze_font_size">12sp</dimen>
+    <dimen name="alarm_item_repeat_font_size">12sp</dimen>
+
+</resources>
