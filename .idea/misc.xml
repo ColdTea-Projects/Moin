@@ -5,6 +5,8 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.33958333333333335" />
         <entry key="app/src/debug/res/layout/activity_debug.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable/background_alarm_item.xml" value="0.33611111111111114" />
+        <entry key="app/src/main/res/drawable/background_playlist_item.xml" value="0.33611111111111114" />
         <entry key="app/src/main/res/layout/activity_lock_screen_alarm.xml" value="0.15670289855072464" />
         <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.15670289855072464" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.15670289855072464" />
