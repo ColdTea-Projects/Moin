@@ -6,12 +6,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import de.coldtea.moin.data.database.dao.DaoHourlyForecast
+import de.coldtea.moin.data.database.dao.DaoSong
 import de.coldtea.moin.data.database.entity.HourlyForecastEntity
+import de.coldtea.moin.data.database.entity.SongEntity
 
 @SuppressLint("RestrictedApi")
 @Database(
     entities = [
-        HourlyForecastEntity::class
+        HourlyForecastEntity::class,
+        SongEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -19,6 +22,7 @@ import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 abstract class MoinDatabase : RoomDatabase() {
 
     abstract val daoHourlyForecast: DaoHourlyForecast
+    abstract val daoSong: DaoSong
 
     companion object {
         @Volatile

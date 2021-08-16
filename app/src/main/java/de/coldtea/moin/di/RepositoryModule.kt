@@ -1,5 +1,6 @@
 package de.coldtea.moin.di
 
+import de.coldtea.moin.data.SongRepository
 import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.data.WeatherRepository
@@ -9,4 +10,5 @@ val repositoryModule = module {
     factory { WeatherRepository(get(), get()) }
     factory { SpotifyAuthRepository(get(), get(), get()) }
     factory { SpotifyRepository(get(), get()) }
+    factory { SongRepository(get()) }
 }
