@@ -8,8 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
+import de.coldtea.moin.domain.services.SpotifyService.REDIRECT_URI_ROOT
 import de.coldtea.moin.extensions.convertToAuthorizationResponse
-import de.coldtea.moin.services.SpotifyService.REDIRECT_URI_ROOT
 import de.coldtea.moin.services.model.*
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentAlarmBinding
-import de.coldtea.moin.services.model.convertToDelegateItem
+import de.coldtea.moin.domain.model.alarm.convertToDelegateItem
 import de.coldtea.moin.ui.alarm.adapter.AlarmsAdapter
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
@@ -77,7 +77,7 @@ class AlarmFragment : Fragment() {
 
     private fun FragmentAlarmBinding.initFAB() =
         setAlarm.setOnClickListener {
-            val cal = Calendar.getInstance()
+//            val cal = Calendar.getInstance()
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 viewModel.setAlarm(hour, minute)
             }

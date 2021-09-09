@@ -1,4 +1,4 @@
-package de.coldtea.moin.model.song
+package de.coldtea.moin.domain.model.playlist
 
 enum class Playlist {
     SUNNY,

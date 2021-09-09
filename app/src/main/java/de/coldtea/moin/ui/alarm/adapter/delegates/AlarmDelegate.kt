@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
+import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ViewAlarmDelegateItemBinding
+import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.moin.extensions.*
-import de.coldtea.moin.services.SmplrAlarmService
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import kotlinx.coroutines.CoroutineScope
@@ -52,7 +53,7 @@ class AlarmDelegate :
             time.text = hourMinute.getTimeText()
             days.text = item.weekDays.getWeekDaysText()
 
-            snooze.text = "Snoozed until ${(item.hour to item.minute).getTimeText()}"
+            snooze.text = root.context?.getString(R.string.snooze_until, (item.hour to item.minute).getTimeText())
             snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
 
             setupCheckList(item.weekDays)

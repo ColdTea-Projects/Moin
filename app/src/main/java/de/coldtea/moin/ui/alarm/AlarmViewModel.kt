@@ -3,8 +3,8 @@ package de.coldtea.moin.ui.alarm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.coldtea.moin.R
-import de.coldtea.moin.services.SmplrAlarmService
-import de.coldtea.moin.services.model.AlarmList
+import de.coldtea.moin.domain.model.alarm.AlarmList
+import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

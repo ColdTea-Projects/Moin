@@ -2,7 +2,7 @@ package de.coldtea.moin
 
 import androidx.lifecycle.ViewModel
 import de.coldtea.moin.data.SharedPreferencesRepository
-import de.coldtea.moin.services.GeolocationService
+import de.coldtea.moin.domain.services.GeolocationService
 
 class MainViewModel(
     val sharedPreferencesRepository: SharedPreferencesRepository,

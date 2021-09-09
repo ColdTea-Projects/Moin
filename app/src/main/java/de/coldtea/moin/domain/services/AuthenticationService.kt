@@ -1,11 +1,11 @@
-package de.coldtea.moin.services
+package de.coldtea.moin.domain.services
 
 import android.content.Intent
 import android.net.Uri
 import android.util.Base64
 import de.coldtea.moin.BuildConfig.ROOT_URL_SPOTIFY_AUTH
-import de.coldtea.moin.services.SpotifyService.CLIENT_ID
-import de.coldtea.moin.services.SpotifyService.REDIRECT_URI
+import de.coldtea.moin.domain.services.SpotifyService.CLIENT_ID
+import de.coldtea.moin.domain.services.SpotifyService.REDIRECT_URI
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.*

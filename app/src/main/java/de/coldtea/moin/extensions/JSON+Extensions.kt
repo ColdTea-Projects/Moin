@@ -2,8 +2,8 @@ package de.coldtea.moin.extensions
 
 import com.squareup.moshi.Moshi
 import de.coldtea.moin.data.network.spotify.model.AccessTokenRequestParameters
-import de.coldtea.moin.services.model.AlarmList
-import de.coldtea.moin.services.model.InfoPairs
+import de.coldtea.moin.domain.model.alarm.AlarmList
+import de.coldtea.moin.domain.model.alarm.InfoPairs
 
 fun String.convertToAlarmList(): AlarmList? =
     Moshi

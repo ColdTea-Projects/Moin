@@ -1,11 +1,11 @@
-package de.coldtea.moin.services
+package de.coldtea.moin.domain.services
 
 import android.content.Context
 import android.content.Intent
+import de.coldtea.moin.domain.model.alarm.AlarmEvent
+import de.coldtea.moin.domain.model.alarm.AlarmObject
+import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
 import de.coldtea.moin.extensions.convertToAlarmList
-import de.coldtea.moin.services.model.AlarmEvent
-import de.coldtea.moin.services.model.AlarmObject
-import de.coldtea.moin.services.model.SnoozeAlarmUpdate
 import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.alarm.lockscreen.LockScreenAlarmActivity
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI

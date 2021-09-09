@@ -5,7 +5,7 @@ import de.coldtea.moin.data.network.forecast.WeatherForecastApi
 import de.coldtea.moin.data.network.interceptors.AuthInterceptor
 import de.coldtea.moin.data.network.spotify.SpotifyApi
 import de.coldtea.moin.data.network.spotify.SpotifyAuthApi
-import de.coldtea.moin.services.AuthenticationService
+import de.coldtea.moin.domain.services.AuthenticationService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
@@ -27,7 +27,7 @@ val networkModule = module {
     single(named(WEATHER_API_RETROFIT)) { provideRetrofitWeatherApi(get()) }
     single(named(SPOTIFY_AUTH_API_RETROFIT)) { provideRetrofitSpotifyAuth(get()) }
     single(named(SPOTIFY_API_RETROFIT)) { provideRetrofitSpotify(get()) }
-    single {AuthenticationService()}
+    single { AuthenticationService() }
 }
 
 fun provideRetrofitWeatherApi(okHttpClient: OkHttpClient): Retrofit {

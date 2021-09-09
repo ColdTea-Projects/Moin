@@ -13,9 +13,11 @@ import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.data.WeatherRepository
 import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 import de.coldtea.moin.data.network.forecast.model.CurrentWeather
-import de.coldtea.moin.services.GeolocationService
-import de.coldtea.moin.services.SpotifyService.CLIENT_ID
-import de.coldtea.moin.services.SpotifyService.REDIRECT_URI
+import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
+import de.coldtea.moin.domain.model.alarm.LatLong
+import de.coldtea.moin.domain.services.GeolocationService
+import de.coldtea.moin.domain.services.SpotifyService.CLIENT_ID
+import de.coldtea.moin.domain.services.SpotifyService.REDIRECT_URI
 import de.coldtea.moin.services.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

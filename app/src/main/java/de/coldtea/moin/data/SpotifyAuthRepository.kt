@@ -3,10 +3,10 @@ package de.coldtea.moin.data
 import android.content.Intent
 import de.coldtea.moin.data.network.spotify.SpotifyAuthApi
 import de.coldtea.moin.data.network.spotify.model.TokenResponse
-import de.coldtea.moin.services.AuthenticationService
-import de.coldtea.moin.services.SpotifyService.CLIENT_ID
-import de.coldtea.moin.services.SpotifyService.REDIRECT_URI
-import de.coldtea.moin.services.model.AuthorizationResponse
+import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
+import de.coldtea.moin.domain.services.AuthenticationService
+import de.coldtea.moin.domain.services.SpotifyService.CLIENT_ID
+import de.coldtea.moin.domain.services.SpotifyService.REDIRECT_URI
 import timber.log.Timber
 
 class SpotifyAuthRepository(

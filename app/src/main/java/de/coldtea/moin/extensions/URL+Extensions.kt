@@ -1,7 +1,7 @@
 package de.coldtea.moin.extensions
 
 import android.net.Uri
-import de.coldtea.moin.services.model.AuthorizationResponse
+import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
 
 fun String.convertToAuthorizationResponse(): AuthorizationResponse? {
     val uri = Uri.parse(this)

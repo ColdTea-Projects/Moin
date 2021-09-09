@@ -1,4 +1,4 @@
-package de.coldtea.moin.workmanager
+package de.coldtea.moin.domain.workmanager
 
 import android.content.Context
 import androidx.work.*

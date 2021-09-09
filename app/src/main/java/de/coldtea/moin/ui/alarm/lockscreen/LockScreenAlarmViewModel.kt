@@ -2,11 +2,11 @@ package de.coldtea.moin.ui.alarm.lockscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.coldtea.moin.services.SmplrAlarmService
-import de.coldtea.moin.services.model.AlarmItem
-import de.coldtea.moin.services.model.DismissAlarmRequest
-import de.coldtea.moin.services.model.DismissAlarmUpdate
-import de.coldtea.moin.services.model.SnoozeAlarmUpdate
+import de.coldtea.moin.domain.model.alarm.AlarmItem
+import de.coldtea.moin.domain.model.alarm.DismissAlarmRequest
+import de.coldtea.moin.domain.model.alarm.DismissAlarmUpdate
+import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
+import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
 import de.coldtea.moin.ui.alarm.lockscreen.models.LockScreenState
 import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing

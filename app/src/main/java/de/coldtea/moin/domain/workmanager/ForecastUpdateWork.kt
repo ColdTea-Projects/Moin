@@ -1,10 +1,10 @@
-package de.coldtea.moin.workmanager
+package de.coldtea.moin.domain.workmanager
 
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import de.coldtea.moin.data.WeatherRepository
-import de.coldtea.moin.services.GeolocationService
+import de.coldtea.moin.domain.services.GeolocationService
 import org.koin.java.KoinJavaComponent.inject
 import retrofit2.HttpException
 import timber.log.Timber

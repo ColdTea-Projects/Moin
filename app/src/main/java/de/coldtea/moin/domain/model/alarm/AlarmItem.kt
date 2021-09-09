@@ -1,4 +1,4 @@
-package de.coldtea.moin.services.model
+package de.coldtea.moin.domain.model.alarm
 
 import com.squareup.moshi.JsonClass
 import de.coldtea.moin.extensions.convertToInfoPairs
@@ -14,7 +14,7 @@ data class AlarmItem(
     val isActive: Boolean,
     val infoPairs: String
 ){
-    val info:InfoPairs?
+    val info: InfoPairs?
         get() = infoPairs.convertToInfoPairs()
 }
 

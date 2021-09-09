@@ -2,8 +2,8 @@ package de.coldtea.moin.data
 
 import de.coldtea.moin.data.database.MoinDatabase
 import de.coldtea.moin.data.database.entity.SongEntity
-import de.coldtea.moin.model.song.Playlist
-import de.coldtea.moin.model.song.Song
+import de.coldtea.moin.domain.model.playlist.Playlist
+import de.coldtea.moin.domain.model.playlist.Song
 
 class SongRepository(
     moinDatabase: MoinDatabase

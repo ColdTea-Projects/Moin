@@ -11,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import de.coldtea.moin.databinding.ActivityMainBinding
+import de.coldtea.moin.domain.workmanager.ForecastUpdateWorkManager
 import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.debugview.DebugActivity
 import de.coldtea.moin.ui.playlist.PlaylistFragment
-import de.coldtea.moin.workmanager.ForecastUpdateWorkManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {

@@ -15,4 +15,8 @@
     <string name="debug_search">SEARCH</string>
     <string name="debug_placeholder_text">Hello</string>
     <string name="debug_play">PLAY</string>
+
+
+    <!-- Alarm delegate -->
+    <string name="snooze_until">Snoozed until %1$s!</string>
 </resources>

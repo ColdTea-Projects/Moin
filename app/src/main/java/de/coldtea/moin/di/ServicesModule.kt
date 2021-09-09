@@ -1,7 +1,7 @@
 package de.coldtea.moin.di
 
-import de.coldtea.moin.services.GeolocationService
-import de.coldtea.moin.services.SmplrAlarmService
+import de.coldtea.moin.domain.services.GeolocationService
+import de.coldtea.moin.domain.services.SmplrAlarmService
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

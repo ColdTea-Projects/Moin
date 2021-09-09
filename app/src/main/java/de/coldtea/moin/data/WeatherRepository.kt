@@ -3,9 +3,9 @@ package de.coldtea.moin.data
 import de.coldtea.moin.data.database.MoinDatabase
 import de.coldtea.moin.data.network.forecast.WeatherForecastApi
 import de.coldtea.moin.data.network.forecast.model.Weather
+import de.coldtea.moin.domain.model.alarm.LatLong
 import de.coldtea.moin.extensions.convertToEntitylist
 import de.coldtea.moin.extensions.getTopOfTheHour
-import de.coldtea.moin.services.model.LatLong
 
 class WeatherRepository(
     private val weatherForecastApi: WeatherForecastApi,

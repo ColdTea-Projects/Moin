@@ -1,4 +1,4 @@
-package de.coldtea.moin.services.model
+package de.coldtea.moin.domain.model.alarm
 
 import com.squareup.moshi.JsonClass
 

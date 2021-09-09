@@ -1,4 +1,4 @@
-package de.coldtea.moin.services
+package de.coldtea.moin.domain.services
 
 import android.Manifest.permission.*
 import android.content.Context
@@ -8,8 +8,8 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import de.coldtea.moin.domain.model.alarm.LatLong
 import de.coldtea.moin.extensions.getCityName
-import de.coldtea.moin.services.model.LatLong
 import timber.log.Timber
 import java.util.*
 
