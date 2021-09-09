@@ -4,6 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Condition(
-    val code: Int,
-    val text: String
+    val code: Int?,
+    val text: String?
 )

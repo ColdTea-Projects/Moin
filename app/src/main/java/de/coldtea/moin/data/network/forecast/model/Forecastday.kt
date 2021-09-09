@@ -5,8 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Forecastday(
-    val date: String,
+    val date: String?,
     @Json(name = "date_epoch")
-    val dateEpoch: Int,
-    val hour: List<Hour>
+    val dateEpoch: Int?,
+    val hour: List<Hour>?
 )

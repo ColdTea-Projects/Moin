@@ -9,7 +9,7 @@ data class Item(
     @Json(name = "album")
     val album: Album?,
     @Json(name = "artists")
-    val artists: List<ArtistX?>?,
+    val artists: List<Artist?>?,
     @Json(name = "available_markets")
     val availableMarkets: List<String?>?,
     @Json(name = "disc_number")
@@ -21,7 +21,7 @@ data class Item(
     @Json(name = "external_ids")
     val externalIds: ExternalIds?,
     @Json(name = "external_urls")
-    val externalUrls: ExternalUrlsXXX?,
+    val externalUrls: ExternalUrls?,
     @Json(name = "href")
     val href: String?,
     @Json(name = "id")

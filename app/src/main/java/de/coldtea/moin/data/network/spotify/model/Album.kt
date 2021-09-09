@@ -13,7 +13,7 @@ data class Album(
     @Json(name = "available_markets")
     val availableMarkets: List<String?>?,
     @Json(name = "external_urls")
-    val externalUrls: ExternalUrlsX?,
+    val externalUrls: ExternalUrls?,
     @Json(name = "href")
     val href: String?,
     @Json(name = "id")

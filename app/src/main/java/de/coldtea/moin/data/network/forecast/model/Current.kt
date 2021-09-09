@@ -5,18 +5,18 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Current(
-    val cloud: Int,
-    val condition: Condition,
+    val cloud: Int?,
+    val condition: Condition?,
     @Json(name = "precip_in")
-    val precipIn: Double,
+    val precipIn: Double?,
     @Json(name = "precip_mm")
-    val precipMm: Double,
+    val precipMm: Double?,
     @Json(name = "temp_c")
-    val tempC: Double,
+    val tempC: Double?,
     @Json(name = "temp_f")
-    val tempF: Double,
+    val tempF: Double?,
     @Json(name = "wind_kph")
-    val windKph: Double,
+    val windKph: Double?,
     @Json(name = "wind_mph")
-    val windMph: Double
+    val windMph: Double?
 )
