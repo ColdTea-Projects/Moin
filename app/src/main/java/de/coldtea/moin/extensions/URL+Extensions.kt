@@ -5,6 +5,7 @@ import de.coldtea.moin.services.model.AuthorizationResponse
 
 fun String.convertToAuthorizationResponse(): AuthorizationResponse? {
     val uri = Uri.parse(this)
+
     val state = uri.getQueryParameter("state")
     val code = uri.getQueryParameter("code")
     val error = uri.getQueryParameter("error")
