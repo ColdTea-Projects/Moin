@@ -6,10 +6,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val servicesModule = module {
-    single {
-        SmplrAlarmService(androidContext())
-    }
-    single{
-        GeolocationService(androidContext())
-    }
+    single { SmplrAlarmService(androidContext()) }
+    single{ GeolocationService(androidContext()) }
 }

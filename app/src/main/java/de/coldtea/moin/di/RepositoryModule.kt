@@ -9,6 +9,6 @@ import org.koin.dsl.module
 val repositoryModule = module {
     factory { WeatherRepository(get(), get()) }
     factory { SpotifyAuthRepository(get(), get(), get()) }
-    factory { SpotifyRepository(get(), get()) }
+    factory { SpotifyRepository(get()) }
     factory { SongRepository(get()) }
 }
