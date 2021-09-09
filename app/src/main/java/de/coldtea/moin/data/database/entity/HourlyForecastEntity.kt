@@ -18,9 +18,9 @@ data class HourlyForecastEntity(
     @ColumnInfo(name = "time_epoch")
     val timeEpoch: Int,
     @ColumnInfo(name = "temp_c")
-    val tempC: Double,
+    val tempC: Double?,
     @ColumnInfo(name = "temp_f")
-    val tempF: Double,
+    val tempF: Double?,
     @ColumnInfo(name = "condition_code")
     val conditionCode: Int,
     @ColumnInfo(name = "condition_text")

@@ -23,13 +23,11 @@ class SpotifyAuthRepository(
         }
     }
 
-    fun registerAuthorizationCode(response: AuthorizationResponse?) {
-        if (response == null) return
-        if (response.error == null) Timber.i("Moin --> ${response.error}")
-
-        if (response.state == authenticationService.state && response.code != null) {
-            sharedPreferencesRepository.authorizationCode = response.code
-        }
+    fun registerAuthorizationCode(response: AuthorizationResponse?) = when{
+        response == null -> Timber.i("Moin --> AuthorizationResponse is null")
+        response.error != null -> Timber.i("Moin --> ${response.error}")
+        response.state == authenticationService.state && response.code != null -> sharedPreferencesRepository.authorizationCode = response.code
+        else -> Timber.i("Moin --> Something went wrong! Authorization code could not be registered")
     }
 
     suspend fun getAccessToken(

@@ -4,8 +4,7 @@ import de.coldtea.moin.data.network.spotify.SpotifyApi
 import de.coldtea.moin.data.network.spotify.model.SearchResponse
 
 class SpotifyRepository(
-    private val spotifyApi: SpotifyApi,
-    private val sharedPreferencesRepository: SharedPreferencesRepository
+    private val spotifyApi: SpotifyApi
 ) {
 
     suspend fun search(

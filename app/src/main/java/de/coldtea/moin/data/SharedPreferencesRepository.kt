@@ -37,11 +37,11 @@ class SharedPreferencesRepository(val context: Context) {
         }.apply()
 
     companion object {
-        const val MOIN_APP_SHARED_PREFERENCES = "moin_app_shared_preferences"
-        const val DID_WORKS_START = "did_works_start"
-        const val AUTHORIZATION_CODE = "authorization_code"
-        const val CODE_VERIFIER = "code_verifier"
-        const val REFRESH_TOKEN = "refresh_token"
+        private const val MOIN_APP_SHARED_PREFERENCES = "moin_app_shared_preferences"
+        private const val DID_WORKS_START = "did_works_start"
+        private const val AUTHORIZATION_CODE = "authorization_code"
+        private const val CODE_VERIFIER = "code_verifier"
+        private const val REFRESH_TOKEN = "refresh_token"
     }
 
 }
