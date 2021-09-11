@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.size
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -16,11 +15,12 @@ import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentAlarmBinding
 import de.coldtea.moin.domain.model.alarm.convertToDelegateItem
 import de.coldtea.moin.ui.alarm.adapter.AlarmsAdapter
+import de.coldtea.moin.ui.base.BaseFragment
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import java.util.*
 
-class AlarmFragment : Fragment() {
+class AlarmFragment : BaseFragment() {
 
     // region properties
     private val viewModel: AlarmViewModel by viewModels()
@@ -37,28 +37,32 @@ class AlarmFragment : Fragment() {
         Timber.d("Moin --> onCreate")
         super.onCreate(savedInstanceState)
         startListeningAlarms()
+
+        isActionBarVisible = true
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View = FragmentAlarmBinding.inflate(inflater, container, false).apply {
+        initAlarmList()
+        initFAB()
+    }.also{
         Timber.d("Moin --> onCreateView")
-        binding = FragmentAlarmBinding.inflate(inflater, container, false)
-        binding?.apply {
-            initAlarmList()
-            initFAB()
-        }
-
-        return binding?.root
-    }
+        binding = it
+    }.root
 
     override fun onResume() {
         Timber.d("Moin --> onResume")
         super.onResume()
 
         viewModel.getAlarms()
+    }
+
+    override fun onDestroy() {
+        binding = null
+        super.onDestroy()
     }
     // endregion
 

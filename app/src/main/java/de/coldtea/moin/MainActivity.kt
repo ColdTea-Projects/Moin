@@ -10,11 +10,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import de.coldtea.moin.databinding.ActivityMainBinding
 import de.coldtea.moin.domain.workmanager.ForecastUpdateWorkManager
 import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.debugview.DebugActivity
-import de.coldtea.moin.ui.playlist.PlaylistFragment
+import de.coldtea.moin.ui.playlists.PlaylistsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -70,6 +71,8 @@ class MainActivity : AppCompatActivity() {
         navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_alarms -> {
+
+                    supportFragmentManager.popBackStack(null, POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.host_fragment, AlarmFragment())
@@ -79,9 +82,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.navigation_playlists -> {
+
+                    supportFragmentManager.popBackStack(null, POP_BACK_STACK_INCLUSIVE)
                     supportFragmentManager
                         .beginTransaction()
-                        .replace(R.id.host_fragment, PlaylistFragment())
+                        .replace(R.id.host_fragment, PlaylistsFragment())
                         .commit()
 
                     true

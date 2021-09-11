@@ -10,7 +10,9 @@
         <entry key="app/src/main/res/layout/activity_lock_screen_alarm.xml" value="0.15670289855072464" />
         <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.15670289855072464" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.15670289855072464" />
+        <entry key="app/src/main/res/layout/fragment_search_spotify.xml" value="0.3015625" />
         <entry key="app/src/main/res/layout/view_alarm_delegate_item.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/action_bar_menu.xml" value="0.5231481481481481" />
       </map>
     </option>
   </component>

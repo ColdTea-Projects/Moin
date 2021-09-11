@@ -13,26 +13,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Weather"
-            android:textColor="@color/moinBlueTone4"
+            android:textColor="@color/moinBlueTone7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_song"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_s"
-            android:backgroundTint="@color/moinOrange2"
-            app:borderWidth="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:rippleColor="@color/moinOrange3"
-            app:srcCompat="@drawable/ic_baseline_add_alarm_24"
-            app:tint="@color/moinBlueTone1"
-            android:contentDescription="@string/content_description_add_alarm" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

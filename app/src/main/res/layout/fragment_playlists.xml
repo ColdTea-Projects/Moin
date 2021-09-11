@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/moinBlueTone1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sunny"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent=".25"
+            android:layout_margin="@dimen/margin_s"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/background_playlist_item"
+            android:clickable="true"
+            android:focusable="true">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/rainy"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent=".25"
+            android:padding="@dimen/margin_s"
+            app:layout_constraintTop_toBottomOf="@id/sunny"
+            app:srcCompat="@drawable/background_playlist_item"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cloudy"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent=".25"
+            android:padding="@dimen/margin_s"
+            app:layout_constraintTop_toBottomOf="@id/rainy"
+            app:srcCompat="@drawable/background_playlist_item"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/snowy"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent=".25"
+            android:padding="@dimen/margin_s"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/background_playlist_item"
+            android:clickable="true"
+            android:focusable="true"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
