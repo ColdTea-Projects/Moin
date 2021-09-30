@@ -37,8 +37,6 @@ class AlarmFragment : BaseFragment() {
         Timber.d("Moin --> onCreate")
         super.onCreate(savedInstanceState)
         startListeningAlarms()
-
-        isActionBarVisible = true
     }
 
     override fun onCreateView(
@@ -70,9 +68,9 @@ class AlarmFragment : BaseFragment() {
 
     private fun FragmentAlarmBinding.initAlarmList() =
         alarmList.apply {
-            layoutManager = LinearLayoutManager(context)
-            val itemDecoration = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
-            AppCompatResources.getDrawable(context, R.drawable.divider_alarm_list)?.let { itemDecoration.setDrawable(it) }
+            layoutManager = LinearLayoutManager(requireContext())
+            val itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+            AppCompatResources.getDrawable(requireContext(), R.drawable.divider_alarm_list)?.let { itemDecoration.setDrawable(it) }
 
             if (itemDecorationCount == 0) addItemDecoration(itemDecoration)
 

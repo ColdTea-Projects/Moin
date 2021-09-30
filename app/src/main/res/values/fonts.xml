@@ -8,4 +8,7 @@
     <dimen name="alarm_item_snooze_font_size">12sp</dimen>
     <dimen name="alarm_item_repeat_font_size">12sp</dimen>
 
+    <dimen name="song_name_size">18sp</dimen>
+    <dimen name="artist_name_size">14sp</dimen>
+
 </resources>

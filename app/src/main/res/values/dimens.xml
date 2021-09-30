@@ -2,8 +2,10 @@
     <dimen name="margin_xxl">120dp</dimen>
     <dimen name="margin_xl">60dp</dimen>
     <dimen name="margin_s">15dp</dimen>
+    <dimen name="margin_xs">5dp</dimen>
     <dimen name="weather_icon_size">150dp</dimen>
     <dimen name="alarm_control_icon_size">45dp</dimen>
     <dimen name="weekday_radio_button_size">20dp</dimen>
     <dimen name="weekday_radio_button_distance">5dp</dimen>
+    <dimen name="song_image_size">60dp</dimen>
 </resources>

@@ -20,12 +20,6 @@ class PlaylistsFragment : BaseFragment() {
     var alertDialog: AlertDialog? = null
     var binding: FragmentPlaylistsBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        isActionBarVisible = true
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

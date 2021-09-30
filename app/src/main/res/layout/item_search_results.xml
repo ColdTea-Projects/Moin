@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="searchItem"
+            type="de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultDelegateItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/moinBlueTone1">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/album_cover"
+            android:layout_width="@dimen/song_image_size"
+            android:layout_height="@dimen/song_image_size"
+            android:layout_margin="@dimen/margin_xs"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_baseline_library_music_24"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/song_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_xs"
+            android:textColor="@color/moinBlueTone7"
+            android:textSize="@dimen/song_name_size"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/album_cover"
+            app:layout_constraintTop_toTopOf="@id/album_cover"
+            android:maxLines="1"
+            android:text="@{searchItem.songName}"
+            tools:text="Sample Song" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/artist_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_xs"
+            android:textColor="@color/moinBlueTone4"
+            android:textSize="@dimen/artist_name_size"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/album_cover"
+            app:layout_constraintTop_toBottomOf="@id/song_name"
+            android:maxLines="1"
+            android:text="@{searchItem.artistName}"
+            tools:text="Sample Artist" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
