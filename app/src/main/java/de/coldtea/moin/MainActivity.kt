@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.host_fragment, AlarmFragment())
+            .replace(R.id.host_fragment, AlarmFragment())
             .commit()
 
         binding.setupBottomNavigation()

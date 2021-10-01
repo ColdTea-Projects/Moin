@@ -27,6 +27,6 @@ open class BaseFragment: Fragment() {
     }
 
     private fun setActionBarVisible() = (requireActivity() as AppCompatActivity).supportActionBar?.show()
-    private fun setActionBarInvisible() = (requireActivity() as AppCompatActivity).supportActionBar?.hide()//TODO: set action bar visibility
+    private fun setActionBarInvisible() = (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
 }

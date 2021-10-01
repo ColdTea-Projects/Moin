@@ -44,6 +44,8 @@ class DebugActivity : AppCompatActivity() {
         binding?.play?.setOnClickListener {
             debugViewModel.playPlaylist()
         }
+
+        //This part does not work from here anymore, please use actual use-case to get spotify authorization TODO:Remove authorization
         val data: Uri? = intent.data
 
         if (data != null && !TextUtils.isEmpty(data.scheme)) {
@@ -53,7 +55,7 @@ class DebugActivity : AppCompatActivity() {
                 debugViewModel.registerAuthorizationCode(authorizationResponse)
                 debugViewModel.getAccessToken(authorizationResponse?.code)
             }
-        }else if(debugViewModel.refreshTokenExist.not()){
+        }else if(!debugViewModel.refreshTokenExist){
             startActivity(debugViewModel.getAuthorizationIntent())
         }
     }

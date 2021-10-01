@@ -31,18 +31,27 @@ val networkModule = module {
 }
 
 fun provideRetrofitWeatherApi(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl(BuildConfig.ROOT_URL_WEATHER_API).client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create()).build()
+    return Retrofit.Builder()
+        .baseUrl(BuildConfig.ROOT_URL_WEATHER_API)
+        .client(okHttpClient)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
 }
 
 fun provideRetrofitSpotifyAuth(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl(BuildConfig.ROOT_URL_SPOTIFY_AUTH).client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create()).build()
+    return Retrofit.Builder()
+        .baseUrl(BuildConfig.ROOT_URL_SPOTIFY_AUTH)
+        .client(okHttpClient)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
 }
 
 fun provideRetrofitSpotify(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl(BuildConfig.ROOT_URL_SPOTIFY).client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create()).build()
+    return Retrofit.Builder()
+        .baseUrl(BuildConfig.ROOT_URL_SPOTIFY)
+        .client(okHttpClient)
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
 }
 
 fun provideOkHttpClient(authInterceptor: AuthInterceptor, httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {

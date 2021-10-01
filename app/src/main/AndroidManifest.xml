@@ -11,7 +11,7 @@
 
     <application
         android:name=".MoinApp"
-        android:allowBackup="true"
+        android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -22,7 +22,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +34,13 @@
         <activity
             android:name=".ui.debugview.DebugActivity"
             android:label="@string/debug_menu_title">
+        </activity>
+
+        <activity
+            android:name=".ui.searchspotify.SearchSpotifyActivity"
+            android:label="@string/debug_menu_title"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
