@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Image(
+data class ImageResponse(
     @Json(name = "height")
     val height: Int?,
     @Json(name = "url")

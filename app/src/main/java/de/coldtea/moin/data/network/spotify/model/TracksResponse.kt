@@ -5,11 +5,11 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Tracks(
+data class TracksResponse(
     @Json(name = "href")
     val href: String?,
     @Json(name = "items")
-    val items: List<Item?>?,
+    val items: List<ItemResponse?>?,
     @Json(name = "limit")
     val limit: Int?,
     @Json(name = "next")

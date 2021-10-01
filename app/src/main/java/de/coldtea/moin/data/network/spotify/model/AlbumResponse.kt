@@ -5,21 +5,21 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Album(
+data class AlbumResponse(
     @Json(name = "album_type")
     val albumType: String?,
     @Json(name = "artists")
-    val artists: List<Artist?>?,
+    val artists: List<ArtistResponse?>?,
     @Json(name = "available_markets")
     val availableMarkets: List<String?>?,
     @Json(name = "external_urls")
-    val externalUrls: ExternalUrls?,
+    val externalUrls: ExternalUrlsResponse?,
     @Json(name = "href")
     val href: String?,
     @Json(name = "id")
     val id: String?,
     @Json(name = "images")
-    val images: List<Image?>?,
+    val images: List<ImageResponse?>?,
     @Json(name = "name")
     val name: String?,
     @Json(name = "release_date")

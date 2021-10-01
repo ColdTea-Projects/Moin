@@ -5,9 +5,9 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Artist(
+data class ArtistResponse(
     @Json(name = "external_urls")
-    val externalUrls: ExternalUrls?,
+    val externalUrls: ExternalUrlsResponse?,
     @Json(name = "href")
     val href: String?,
     @Json(name = "id")

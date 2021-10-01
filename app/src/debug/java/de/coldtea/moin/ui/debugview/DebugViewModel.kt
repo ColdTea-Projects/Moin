@@ -160,12 +160,12 @@ class DebugViewModel(
 
     fun search(accessToken: String, query: String) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            val searchResponse = spotifyRepo.search(
+            val searchResult = spotifyRepo.search(
                 query,
                 accessToken
             )
 
-            _spotifyState.emit(SearchResultReceived(searchResponse))
+            _spotifyState.emit(SearchResultReceived(searchResult))
         }catch (ex: HttpException){
             Timber.e("Moin -->  $ex")
         }catch (ex: Exception){

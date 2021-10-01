@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ExternalIds(
+data class ExternalIdsResponse(
     @Json(name = "isrc")
     val isrc: String?
 )

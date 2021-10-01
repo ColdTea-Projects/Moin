@@ -1,7 +1,7 @@
 package de.coldtea.moin.extensions
 
 import com.squareup.moshi.Moshi
-import de.coldtea.moin.data.network.spotify.model.AccessTokenRequestParameters
+import de.coldtea.moin.data.network.spotify.model.AccessTokenRequestParametersResponse
 import de.coldtea.moin.domain.model.alarm.AlarmList
 import de.coldtea.moin.domain.model.alarm.InfoPairs
 
@@ -19,9 +19,9 @@ fun String.convertToInfoPairs(): InfoPairs? =
         .adapter(InfoPairs::class.java)
         .fromJson(this)
 
-fun AccessTokenRequestParameters.convertToString(): String? =
+fun AccessTokenRequestParametersResponse.convertToString(): String? =
     Moshi
         .Builder()
         .build()
-        .adapter(AccessTokenRequestParameters::class.java)
+        .adapter(AccessTokenRequestParametersResponse::class.java)
         .toJson(this)

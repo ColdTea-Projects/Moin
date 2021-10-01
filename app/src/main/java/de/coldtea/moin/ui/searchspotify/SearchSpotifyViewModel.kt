@@ -8,6 +8,7 @@ import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
 import de.coldtea.moin.services.model.AccessTokenReceived
+import de.coldtea.moin.services.model.SearchResultReceived
 import de.coldtea.moin.services.model.SpotifyState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -65,5 +66,20 @@ class SearchSpotifyViewModel(
             Timber.e("Moin -->  $ex")
         }
 
+    }
+
+    fun search(accessToken: String, query: String) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val searchResponse = spotifyRepo.search(
+                query,
+                accessToken
+            )
+
+            _spotifyState.emit(SearchResultReceived(searchResponse))
+        }catch (ex: HttpException){
+            Timber.e("Moin -->  $ex")
+        }catch (ex: Exception){
+            Timber.e("Moin -->  $ex")
+        }
     }
 }

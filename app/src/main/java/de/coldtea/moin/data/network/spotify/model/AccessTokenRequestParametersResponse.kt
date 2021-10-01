@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class AccessTokenRequestParameters (
+data class AccessTokenRequestParametersResponse (
     @Json(name = "client_id")
     val clientId: String?,
     @Json(name = "grant_type")

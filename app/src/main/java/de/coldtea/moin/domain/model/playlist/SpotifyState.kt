@@ -1,8 +1,8 @@
 package de.coldtea.moin.services.model
 
 import com.spotify.protocol.types.PlayerState
-import de.coldtea.moin.data.network.spotify.model.SearchResponse
 import de.coldtea.moin.data.network.spotify.model.TokenResponse
+import de.coldtea.moin.domain.model.spotify.SearchResult
 
 sealed class SpotifyState
 
@@ -11,4 +11,4 @@ object ConnectionFailed: SpotifyState()
 
 data class Play(val playerState: PlayerState): SpotifyState()
 data class AccessTokenReceived(val tokenResponse: TokenResponse?): SpotifyState()
-data class SearchResultReceived(val searchResponse: SearchResponse?): SpotifyState()
+data class SearchResultReceived(val searchResult: SearchResult?): SpotifyState()

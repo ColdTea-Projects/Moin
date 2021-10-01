@@ -100,7 +100,7 @@ class DebugActivity : AppCompatActivity() {
                         debugViewModel.search(it.tokenResponse.accessToken, keyword)
                     }
                 }
-                is SearchResultReceived ->  binding?.spotify?.text = it.searchResponse.toString()
+                is SearchResultReceived ->  binding?.spotify?.text = it.searchResult.toString()
             }
         }
     }
