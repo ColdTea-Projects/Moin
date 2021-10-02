@@ -1,15 +1,18 @@
 package de.coldtea.moin.ui.searchspotify
 
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.SpotifyAppRemote
 import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
-import de.coldtea.moin.services.model.AccessTokenReceived
-import de.coldtea.moin.services.model.SearchResultReceived
-import de.coldtea.moin.services.model.SpotifyState
+import de.coldtea.moin.domain.services.SpotifyService
+import de.coldtea.moin.services.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -26,6 +29,32 @@ class SearchSpotifyViewModel(
 
     private var _spotifyState = MutableSharedFlow<SpotifyState>()
     val spotifyState: SharedFlow<SpotifyState> = _spotifyState
+
+    private var _spotifyAppRemote: SpotifyAppRemote? = null
+
+    private val connectionListener = object : Connector.ConnectionListener {
+        override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
+            _spotifyAppRemote = spotifyAppRemote
+            Timber.d("Moin --> Spotify Connected!")
+            viewModelScope.launch(Dispatchers.IO) {
+                _spotifyState.emit(ConnectionSuccess)
+            }
+        }
+
+        override fun onFailure(error: Throwable?) {
+            viewModelScope.launch(Dispatchers.IO) {
+                Timber.d("Moin --> $error")
+                _spotifyState.emit(ConnectionFailed)
+            }
+        }
+    }
+
+    private val connectionParams by lazy {
+        ConnectionParams.Builder(SpotifyService.CLIENT_ID)
+            .setRedirectUri(SpotifyService.REDIRECT_URI)
+            .showAuthView(true)
+            .build()
+    }
 
     val refreshTokenExist: Boolean
         get() = sharedPreferencesRepository.refreshToken != null
@@ -82,4 +111,36 @@ class SearchSpotifyViewModel(
             Timber.e("Moin -->  $ex")
         }
     }
+
+    fun connectSpotify(context: Context) = SpotifyAppRemote.connect(
+        context,
+        connectionParams,
+        connectionListener
+    )
+
+    private fun subscribePlayerState() =
+        _spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
+            viewModelScope.launch(Dispatchers.IO) {
+                Timber.d("Moin --> Player state: $playerState")
+                _spotifyState.emit(Play(playerState))
+            }
+        }
+
+    fun disconnectSpotify() = SpotifyAppRemote.disconnect(_spotifyAppRemote)
+
+    fun playTrack(trackId: String) =
+        _spotifyAppRemote
+            ?.playerApi
+            ?.play("spotify:track:$trackId")
+            ?.also {
+                subscribePlayerState()
+            }
+
+    fun pauseTrack() =
+        _spotifyAppRemote
+            ?.playerApi
+            ?.pause()
+            ?.also {
+                subscribePlayerState()
+            }
 }

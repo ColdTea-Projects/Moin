@@ -24,4 +24,8 @@
     <string name="ok">OK</string>
     <string name="search_bar_hint">Search</string>
 
+    <!-- Search spotify -->
+
+    <string name="spotify_connection_failed">Spotify connection has failed :( We are so sorry for this. Please try to restart Moin app.</string>
+
 </resources>

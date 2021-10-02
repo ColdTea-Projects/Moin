@@ -42,7 +42,11 @@ class SpotifySearchResultDelegate :
         fun bind(item: SpotifySearchResultBundle) {
             binding.searchItem = item.spotifySearchResultDelegateItem
 
-            if (!item.playState) binding.play.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24)
+            //TODO: Replace with lotti
+            with(binding.play){
+                val imageSource = if(item.playState) R.drawable.ic_baseline_pause_circle_filled_24 else R.drawable.ic_baseline_play_circle_outline_24
+                setImageResource(imageSource)
+            }
 
             binding.play.setOnClickListener {
                 item.onClickPlay(item.id)

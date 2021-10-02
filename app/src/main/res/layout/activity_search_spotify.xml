@@ -27,7 +27,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:singleLine="true"
-                android:imeOptions="actionSearch"/>
+                android:imeOptions="actionSearch"
+                android:enabled="false"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView

@@ -1,5 +1,6 @@
 package de.coldtea.moin.ui.searchspotify
 
+import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -19,6 +20,9 @@ import de.coldtea.moin.extensions.convertToAuthorizationResponse
 import de.coldtea.moin.services.model.*
 import de.coldtea.moin.ui.playlist.PlaylistFragment.Companion.PLAYLIST_KEY
 import de.coldtea.moin.ui.searchspotify.adapter.SpotifySearchAdapter
+import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultBundle
+import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultDelegateItem
+import de.coldtea.moin.ui.services.DialogManager
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,9 +30,11 @@ class SearchSpotifyActivity : AppCompatActivity() {
 
     private val viewModel: SearchSpotifyViewModel by viewModel()
     private var searchResultAdapter = SpotifySearchAdapter()
-    var binding: ActivitySearchSpotifyBinding? = null
-
     private var playlist: Playlist? = null
+
+    var binding: ActivitySearchSpotifyBinding? = null
+    var alertDialog: AlertDialog? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +60,21 @@ class SearchSpotifyActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.connectSpotify(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pauseTrackAndCleanPlaylist()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.disconnectSpotify()
+    }
+
     private fun initUIItems() = with(binding) {
         this?.searchResultsRecyclerView?.apply {
             layoutManager = LinearLayoutManager(this@SearchSpotifyActivity)
@@ -71,6 +92,8 @@ class SearchSpotifyActivity : AppCompatActivity() {
         }
 
         this?.searchInput?.doOnTextChanged { _, _, _, count ->
+
+            pauseTrackAndCleanPlaylist()
             when {
                 count > 0 && viewModel.refreshTokenExist -> viewModel.getAccessTokenByRefreshToken()
                 count > 0 && !viewModel.refreshTokenExist -> startActivity(viewModel.getAuthorizationIntent())
@@ -81,6 +104,19 @@ class SearchSpotifyActivity : AppCompatActivity() {
     private fun initSpotify() = lifecycleScope.launchWhenResumed {
         viewModel.spotifyState.collect {
             when (it) {
+                ConnectionSuccess -> {
+                    binding?.searchInput?.isEnabled = true
+                }
+                ConnectionFailed -> {
+                    alertDialog = DialogManager.buildDialog(
+                        this@SearchSpotifyActivity,
+                        getString(R.string.spotify_connection_failed),
+                        getString(R.string.ok),
+                        { alertDialog?.dismiss() }
+                    )
+
+                    alertDialog?.show()
+                }
                 is AccessTokenReceived -> {
                     val keyword = binding?.searchInput?.text.toString()
                     if (keyword.isNotEmpty() && it.tokenResponse?.accessToken != null) {
@@ -95,11 +131,44 @@ class SearchSpotifyActivity : AppCompatActivity() {
         }
     }
 
-    fun onPlayClicked(id: String){
+    private fun onPlayClicked(id: String){
+        val clickedItem = searchResultAdapter.items.first { it.id == id }
+
+        if (clickedItem.playState){
+            pauseTrackAndCleanPlaylist()
+        }else{
+            playTrackAndUpdateList(id)
+        }
 
     }
 
-    fun onItemClicked(id: String){
+    private fun onItemClicked(id: String){
 
     }
+
+    private fun pauseTrackAndCleanPlaylist(){
+        viewModel.pauseTrack()
+        searchResultAdapter.items = searchResultAdapter.items.listWithNewPlayingItem(null)
+    }
+
+    private fun playTrackAndUpdateList(trackId: String){
+        viewModel.playTrack(trackId)
+        searchResultAdapter.items = searchResultAdapter.items.listWithNewPlayingItem(trackId)
+    }
+
+    private fun List<SpotifySearchResultBundle>.listWithNewPlayingItem(playingItemId: String?) =
+        this.map {
+            SpotifySearchResultBundle(
+                id = it.id,
+                spotifySearchResultDelegateItem = SpotifySearchResultDelegateItem(
+                    imageUrl = it.spotifySearchResultDelegateItem.imageUrl,
+                    songName = it.spotifySearchResultDelegateItem.songName,
+                    artistName = it.spotifySearchResultDelegateItem.artistName
+                ),
+
+                onClickPlay = ::onPlayClicked,
+                onClickItem = ::onItemClicked,
+                playState = it.id == playingItemId
+            )
+        }
 }
