@@ -9,6 +9,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/moinBlueTone1">
@@ -30,7 +31,7 @@
             android:textColor="@color/moinBlueTone7"
             android:textSize="@dimen/song_name_size"
             android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/play"
             app:layout_constraintStart_toEndOf="@id/album_cover"
             app:layout_constraintTop_toTopOf="@id/album_cover"
             android:maxLines="1"
@@ -50,6 +51,17 @@
             android:maxLines="1"
             android:text="@{searchItem.artistName}"
             tools:text="Sample Artist" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/play"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="@dimen/margin_xs"
+            android:padding="15dp"
+            app:srcCompat="@drawable/ic_baseline_play_circle_outline_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

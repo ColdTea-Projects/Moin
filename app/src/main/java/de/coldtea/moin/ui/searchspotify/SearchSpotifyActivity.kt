@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivitySearchSpotifyBinding
-import de.coldtea.moin.domain.model.extensions.getSongList
+import de.coldtea.moin.domain.model.extensions.getSearchResultBundle
 import de.coldtea.moin.domain.model.playlist.Playlist
 import de.coldtea.moin.domain.services.SpotifyService
 import de.coldtea.moin.extensions.convertToAuthorizationResponse
@@ -82,17 +82,24 @@ class SearchSpotifyActivity : AppCompatActivity() {
         viewModel.spotifyState.collect {
             when (it) {
                 is AccessTokenReceived -> {
-                    //binding?.spotify?.text = it.tokenResponse.toString()
-
                     val keyword = binding?.searchInput?.text.toString()
                     if (keyword.isNotEmpty() && it.tokenResponse?.accessToken != null) {
                         viewModel.search(it.tokenResponse.accessToken, keyword)
                     }
                 }
                 is SearchResultReceived -> {
-                    searchResultAdapter.items = it.searchResult?.getSongList()
+                    searchResultAdapter.items = it.searchResult
+                        ?.getSearchResultBundle(::onPlayClicked, ::onItemClicked)
                 }
             }
         }
+    }
+
+    fun onPlayClicked(id: String){
+
+    }
+
+    fun onItemClicked(id: String){
+
     }
 }

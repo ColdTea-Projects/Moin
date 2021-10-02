@@ -8,14 +8,14 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ItemSearchResultsBinding
-import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultDelegateItem
+import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultBundle
 
 class SpotifySearchResultDelegate :
-    AbsListItemAdapterDelegate<SpotifySearchResultDelegateItem, SpotifySearchResultDelegateItem, SpotifySearchResultDelegate.SpotifySearchResultViewHolder>() {
+    AbsListItemAdapterDelegate<SpotifySearchResultBundle, SpotifySearchResultBundle, SpotifySearchResultDelegate.SpotifySearchResultViewHolder>() {
 
     override fun isForViewType(
-        item: SpotifySearchResultDelegateItem,
-        items: MutableList<SpotifySearchResultDelegateItem>,
+        item: SpotifySearchResultBundle,
+        items: MutableList<SpotifySearchResultBundle>,
         position: Int
     ): Boolean = true
 
@@ -30,7 +30,7 @@ class SpotifySearchResultDelegate :
         )
 
     override fun onBindViewHolder(
-        item: SpotifySearchResultDelegateItem,
+        item: SpotifySearchResultBundle,
         holder: SpotifySearchResultViewHolder,
         payloads: MutableList<Any>
     ) = holder.bind(item)
@@ -39,11 +39,21 @@ class SpotifySearchResultDelegate :
         private val binding: ItemSearchResultsBinding,
         private val context: Context
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: SpotifySearchResultDelegateItem) {
-            binding.searchItem = item
+        fun bind(item: SpotifySearchResultBundle) {
+            binding.searchItem = item.spotifySearchResultDelegateItem
+
+            if (!item.playState) binding.play.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24)
+
+            binding.play.setOnClickListener {
+                item.onClickPlay(item.id)
+            }
+
+            binding.mainContainer.setOnClickListener {
+                item.onClickItem(item.id)
+            }
 
             Glide.with(context)
-                .load(item.imageUrl)
+                .load(item.spotifySearchResultDelegateItem.imageUrl)
                 .placeholder(R.drawable.ic_baseline_library_music_24)
                 .into(binding.albumCover)
         }

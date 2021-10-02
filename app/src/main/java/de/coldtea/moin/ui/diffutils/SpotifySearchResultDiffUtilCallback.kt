@@ -1,14 +1,14 @@
 package de.coldtea.moin.ui.diffutils
 
 import androidx.recyclerview.widget.DiffUtil
-import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultDelegateItem
+import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultBundle
 
-class SpotifySearchResultDiffUtilCallback : DiffUtil.ItemCallback<SpotifySearchResultDelegateItem>() {
+class SpotifySearchResultDiffUtilCallback : DiffUtil.ItemCallback<SpotifySearchResultBundle>() {
 
-    override fun areItemsTheSame(oldItem: SpotifySearchResultDelegateItem, newItem: SpotifySearchResultDelegateItem): Boolean =
+    override fun areItemsTheSame(oldItem: SpotifySearchResultBundle, newItem: SpotifySearchResultBundle): Boolean =
         oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: SpotifySearchResultDelegateItem, newItem: SpotifySearchResultDelegateItem): Boolean =
+    override fun areContentsTheSame(oldItem: SpotifySearchResultBundle, newItem: SpotifySearchResultBundle): Boolean =
         oldItem.hashCode() == newItem.hashCode()
 
 }

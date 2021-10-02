@@ -1,14 +1,23 @@
 package de.coldtea.moin.domain.model.extensions
 
 import de.coldtea.moin.domain.model.spotify.SearchResult
+import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultBundle
 import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultDelegateItem
 
-fun SearchResult.getSongList() =
+fun SearchResult.getSearchResultBundle(
+    onClickPlay: (id: String) -> Unit,
+    onClickItem: (id: String) -> Unit
+) =
     this.tracks.items.map {
-        SpotifySearchResultDelegateItem(
+        SpotifySearchResultBundle(
             id = it.id,
-            imageUrl = it.album.images[0]?.url,
-            songName = it.name,
-            artistName = it.artists.joinToString(", ") { artist -> artist.name }
+            spotifySearchResultDelegateItem = SpotifySearchResultDelegateItem(
+                imageUrl = it.album.images[0]?.url,
+                songName = it.name,
+                artistName = it.artists.joinToString(", ") { artist -> artist.name }
+            ),
+            onClickPlay = onClickPlay,
+            onClickItem = onClickItem
         )
+
     }
