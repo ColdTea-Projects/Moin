@@ -1,9 +1,10 @@
 package de.coldtea.moin.domain.model.playlist
 
 data class Song (
-    val songId: Int,
+    val localId: Int,
+    val trackId: String,
     val name: String,
-    val albumName: String,
+    val artistName: String,
     val imageUrl: String,
     val mediaType: Int,
     val source: String,

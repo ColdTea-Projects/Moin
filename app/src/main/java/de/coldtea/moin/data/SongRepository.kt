@@ -13,8 +13,9 @@ class SongRepository(
     suspend fun addSong(song: Song) =
         daoSong.insert(
             SongEntity(
+                trackId = song.trackId,
                 name = song.name,
-                albumName = song.albumName,
+                artistName = song.artistName,
                 imageUrl = song.imageUrl,
                 mediaType = song.mediaType,
                 source = song.source,

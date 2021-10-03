@@ -8,11 +8,16 @@ import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import de.coldtea.moin.data.SharedPreferencesRepository
+import de.coldtea.moin.data.SongRepository
 import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
+import de.coldtea.moin.domain.model.playlist.MediaType
+import de.coldtea.moin.domain.model.playlist.Playlist
+import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.domain.services.SpotifyService
 import de.coldtea.moin.services.model.*
+import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultBundle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -23,9 +28,21 @@ import timber.log.Timber
 class SearchSpotifyViewModel(
     private val spotifyAuthRepo: SpotifyAuthRepository,
     private val spotifyRepo: SpotifyRepository,
-    private val sharedPreferencesRepository: SharedPreferencesRepository
+    private val sharedPreferencesRepository: SharedPreferencesRepository,
+    private val songRepository: SongRepository
 ) : ViewModel()
 {
+
+    var playlist: Playlist? = null
+        set(value) {
+            sharedPreferencesRepository.spotifyAuthorizationBackup?.let{ key ->
+                field = Playlist.values().find { it.key == key }
+                sharedPreferencesRepository.spotifyAuthorizationBackup = null
+                return
+            }
+
+            field = value
+        }
 
     private var _spotifyState = MutableSharedFlow<SpotifyState>()
     val spotifyState: SharedFlow<SpotifyState> = _spotifyState
@@ -143,4 +160,25 @@ class SearchSpotifyViewModel(
             ?.also {
                 subscribePlayerState()
             }
+
+    fun addSong(spotifySearchResultBundle: SpotifySearchResultBundle){
+        val selectedTrack = Song(
+            localId = -1,
+            trackId = spotifySearchResultBundle.id,
+            name = spotifySearchResultBundle.spotifySearchResultDelegateItem.songName,
+            artistName = spotifySearchResultBundle.spotifySearchResultDelegateItem.artistName,
+            imageUrl = spotifySearchResultBundle.spotifySearchResultDelegateItem.imageUrl.orEmpty(),
+            mediaType = MediaType.SPOTIFY.ordinal,
+            source = "",
+            playlist = playlist?.ordinal?:-1
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            songRepository.addSong(selectedTrack)
+        }
+    }
+
+    fun backUpPlaylist(){
+        sharedPreferencesRepository.spotifyAuthorizationBackup = playlist?.key
+    }
 }

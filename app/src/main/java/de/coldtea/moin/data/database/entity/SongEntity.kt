@@ -9,10 +9,12 @@ data class SongEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "song_local_id")
     val songLocalId: Int = 0,
+    @ColumnInfo(name = "track_id")
+    val trackId: String,
     @ColumnInfo(name = "name")
     val name: String,
-    @ColumnInfo(name = "album_name")
-    val albumName: String,
+    @ColumnInfo(name = "artist_name")
+    val artistName: String,
     @ColumnInfo(name = "image_url")
     val imageUrl: String,
     @ColumnInfo(name = "media_type")

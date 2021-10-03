@@ -36,12 +36,19 @@ class SharedPreferencesRepository(val context: Context) {
             putString(REFRESH_TOKEN, value)
         }.apply()
 
+    var spotifyAuthorizationBackup: String?
+        get() = sharedPreferences.getString(SPOTIFY_AUTHORIZATION_BACKUP,null)
+        set(value) = sharedPreferences.edit().apply {
+            putString(SPOTIFY_AUTHORIZATION_BACKUP, value)
+        }.apply()
+
     companion object {
         private const val MOIN_APP_SHARED_PREFERENCES = "moin_app_shared_preferences"
         private const val DID_WORKS_START = "did_works_start"
         private const val AUTHORIZATION_CODE = "authorization_code"
         private const val CODE_VERIFIER = "code_verifier"
         private const val REFRESH_TOKEN = "refresh_token"
+        private const val SPOTIFY_AUTHORIZATION_BACKUP = "spotify_authorization_backup"
     }
 
 }

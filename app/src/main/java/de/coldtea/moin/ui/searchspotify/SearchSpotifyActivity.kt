@@ -18,7 +18,7 @@ import de.coldtea.moin.domain.model.playlist.Playlist
 import de.coldtea.moin.domain.services.SpotifyService
 import de.coldtea.moin.extensions.convertToAuthorizationResponse
 import de.coldtea.moin.services.model.*
-import de.coldtea.moin.ui.playlist.PlaylistFragment.Companion.PLAYLIST_KEY
+import de.coldtea.moin.ui.playlist.PlaylistViewModel
 import de.coldtea.moin.ui.searchspotify.adapter.SpotifySearchAdapter
 import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultBundle
 import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultDelegateItem
@@ -30,19 +30,19 @@ class SearchSpotifyActivity : AppCompatActivity() {
 
     private val viewModel: SearchSpotifyViewModel by viewModel()
     private var searchResultAdapter = SpotifySearchAdapter()
-    private var playlist: Playlist? = null
 
     var binding: ActivitySearchSpotifyBinding? = null
     var alertDialog: AlertDialog? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search_spotify)
 
-        playlist = Playlist.values()
-            .find { it.key == savedInstanceState?.getString(PLAYLIST_KEY) }
+        viewModel.playlist = Playlist.values()
+            .find {
+                it.key == intent.getStringExtra(PlaylistViewModel.PLAY_LIST_FRAGMENT_WEATHER_KEY)
+            }
 
         initUIItems()
         initSpotify()
@@ -56,6 +56,7 @@ class SearchSpotifyActivity : AppCompatActivity() {
                 viewModel.getAccessToken(authorizationResponse?.code)
             }
         } else if (!viewModel.refreshTokenExist) {
+            viewModel.backUpPlaylist()
             startActivity(viewModel.getAuthorizationIntent())
         }
     }
@@ -131,27 +132,29 @@ class SearchSpotifyActivity : AppCompatActivity() {
         }
     }
 
-    private fun onPlayClicked(id: String){
+    private fun onPlayClicked(id: String) {
         val clickedItem = searchResultAdapter.items.first { it.id == id }
 
-        if (clickedItem.playState){
+        if (clickedItem.playState) {
             pauseTrackAndCleanPlaylist()
-        }else{
+        } else {
             playTrackAndUpdateList(id)
         }
-
     }
 
-    private fun onItemClicked(id: String){
+    private fun onItemClicked(id: String) =
+        viewModel.addSong(
+            searchResultAdapter.items.first { it.id == id }
+        ).also {
+            finish()
+        }
 
-    }
-
-    private fun pauseTrackAndCleanPlaylist(){
+    private fun pauseTrackAndCleanPlaylist() {
         viewModel.pauseTrack()
         searchResultAdapter.items = searchResultAdapter.items.listWithNewPlayingItem(null)
     }
 
-    private fun playTrackAndUpdateList(trackId: String){
+    private fun playTrackAndUpdateList(trackId: String) {
         viewModel.playTrack(trackId)
         searchResultAdapter.items = searchResultAdapter.items.listWithNewPlayingItem(trackId)
     }
