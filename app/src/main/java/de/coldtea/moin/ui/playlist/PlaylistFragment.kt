@@ -80,6 +80,12 @@ class PlaylistFragment : BaseFragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        requireActivity().title = getString(R.string.app_name)
+    }
+
     fun onDeleteClicked(id: Int){
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.deleteSong(id)
