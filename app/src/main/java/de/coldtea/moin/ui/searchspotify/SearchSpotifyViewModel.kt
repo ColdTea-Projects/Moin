@@ -13,7 +13,7 @@ import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
 import de.coldtea.moin.domain.model.playlist.MediaType
-import de.coldtea.moin.domain.model.playlist.Playlist
+import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.domain.services.SpotifyService
 import de.coldtea.moin.services.model.*
@@ -33,10 +33,10 @@ class SearchSpotifyViewModel(
 ) : ViewModel()
 {
 
-    var playlist: Playlist? = null
+    var playlist: PlaylistName? = null
         set(value) {
             sharedPreferencesRepository.spotifyAuthorizationBackup?.let{ key ->
-                field = Playlist.values().find { it.key == key }
+                field = PlaylistName.values().find { it.key == key }
                 sharedPreferencesRepository.spotifyAuthorizationBackup = null
                 return
             }

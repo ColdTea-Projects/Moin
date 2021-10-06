@@ -36,7 +36,7 @@ class AlarmFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("Moin --> onCreate")
         super.onCreate(savedInstanceState)
-        startListeningAlarms()
+        observeAlarms()
     }
 
     override fun onCreateView(
@@ -96,7 +96,7 @@ class AlarmFragment : BaseFragment() {
             ).show()
         }
 
-    private fun startListeningAlarms() = lifecycleScope.launchWhenCreated {
+    private fun observeAlarms() = lifecycleScope.launchWhenCreated {
         viewModel.alarmList.collect { alarmList ->
             alarmsAdapter.items = alarmList.alarmItems.map { it.convertToDelegateItem() }
         }

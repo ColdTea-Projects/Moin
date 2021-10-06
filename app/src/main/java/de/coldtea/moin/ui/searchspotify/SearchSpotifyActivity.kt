@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivitySearchSpotifyBinding
 import de.coldtea.moin.domain.model.extensions.getSearchResultBundle
-import de.coldtea.moin.domain.model.playlist.Playlist
+import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.domain.services.SpotifyService
 import de.coldtea.moin.extensions.convertToAuthorizationResponse
 import de.coldtea.moin.services.model.*
@@ -39,7 +39,7 @@ class SearchSpotifyActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search_spotify)
 
-        viewModel.playlist = Playlist.values()
+        viewModel.playlist = PlaylistName.values()
             .find {
                 it.key == intent.getStringExtra(PlaylistViewModel.PLAY_LIST_FRAGMENT_WEATHER_KEY)
             }

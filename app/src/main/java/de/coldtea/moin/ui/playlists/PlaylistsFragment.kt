@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentPlaylistsBinding
-import de.coldtea.moin.domain.model.playlist.Playlist
+import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.services.DialogManager
 import de.coldtea.moin.ui.services.FragmentNavigationService
@@ -34,7 +34,7 @@ class PlaylistsFragment : BaseFragment() {
     private fun FragmentPlaylistsBinding.initButtons() {
         sunny.setOnClickListener {
             try {
-                FragmentNavigationService.addPlaylistFragmentToStack(Playlist.SUNNY, requireActivity())
+                FragmentNavigationService.addPlaylistFragmentToStack(PlaylistName.SUNNY, requireActivity())
             } catch (ex: IllegalArgumentException) {
                 Timber.e("Moin --> $ex")
                 showSomethingWentWrongDialog()
@@ -43,7 +43,7 @@ class PlaylistsFragment : BaseFragment() {
 
         cloudy.setOnClickListener {
             try {
-                FragmentNavigationService.addPlaylistFragmentToStack(Playlist.CLOUDY, requireActivity())
+                FragmentNavigationService.addPlaylistFragmentToStack(PlaylistName.CLOUDY, requireActivity())
             } catch (ex: IllegalArgumentException) {
                 Timber.e("Moin --> $ex")
                 showSomethingWentWrongDialog()
@@ -52,7 +52,7 @@ class PlaylistsFragment : BaseFragment() {
 
         rainy.setOnClickListener {
             try {
-                FragmentNavigationService.addPlaylistFragmentToStack(Playlist.RAINY, requireActivity())
+                FragmentNavigationService.addPlaylistFragmentToStack(PlaylistName.RAINY, requireActivity())
             } catch (ex: IllegalArgumentException) {
                 Timber.e("Moin --> $ex")
                 showSomethingWentWrongDialog()
@@ -61,7 +61,7 @@ class PlaylistsFragment : BaseFragment() {
 
         snowy.setOnClickListener {
             try {
-                FragmentNavigationService.addPlaylistFragmentToStack(Playlist.SNOWY, requireActivity())
+                FragmentNavigationService.addPlaylistFragmentToStack(PlaylistName.SNOWY, requireActivity())
             } catch (ex: IllegalArgumentException) {
                 Timber.e("Moin --> $ex")
                 showSomethingWentWrongDialog()

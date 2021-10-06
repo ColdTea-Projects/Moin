@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentPlaylistBinding
-import de.coldtea.moin.domain.model.extensions.toSong
-import de.coldtea.moin.domain.model.playlist.Playlist
+import de.coldtea.moin.domain.model.extensions.getPlaylistBundle
+import de.coldtea.moin.domain.model.playlist.PlaylistName
+import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.playlist.PlaylistViewModel.Companion.PLAY_LIST_FRAGMENT_WEATHER_KEY
 import de.coldtea.moin.ui.playlist.adapter.PlaylistAdapter
-import de.coldtea.moin.ui.playlist.adapter.model.PlaylistBundle
-import de.coldtea.moin.ui.playlist.adapter.model.PlaylistDelegateItem
 import de.coldtea.moin.ui.searchspotify.SearchSpotifyActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -31,8 +31,17 @@ class PlaylistFragment : BaseFragment() {
 
     var binding: FragmentPlaylistBinding? = null
 
-    val playlist: Playlist?
-        get() = Playlist.values().find { it.key == arguments?.getString(PLAY_LIST_FRAGMENT_WEATHER_KEY).orEmpty() }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.playlistName = PlaylistName
+            .values()
+            .find {
+                it.key == arguments?.getString(PLAY_LIST_FRAGMENT_WEATHER_KEY).orEmpty()
+            }
+
+        observePlaylist()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,12 +55,12 @@ class PlaylistFragment : BaseFragment() {
     }.root
 
     private fun FragmentPlaylistBinding.initUIItems() {
-        playlist?.let { playlist ->
+        viewModel.playlistName?.let { playlistName ->
 
-            requireActivity().title = playlist.name
+            requireActivity().title = playlistName.name
             addSong.setOnClickListener {
                 val intent = Intent(requireActivity(), SearchSpotifyActivity::class.java)
-                intent.putExtra(PLAY_LIST_FRAGMENT_WEATHER_KEY, playlist.key)
+                intent.putExtra(PLAY_LIST_FRAGMENT_WEATHER_KEY, playlistName.key)
                 startActivity(intent)
             }
         }
@@ -75,9 +84,7 @@ class PlaylistFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            loadPlaylist()
-        }
+        refreshPlaylist()
     }
 
     override fun onDestroy() {
@@ -86,32 +93,24 @@ class PlaylistFragment : BaseFragment() {
         requireActivity().title = getString(R.string.app_name)
     }
 
-    fun onDeleteClicked(id: Int){
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.deleteSong(id)
-            loadPlaylist()
+    fun observePlaylist() = lifecycleScope.launchWhenCreated {
+        viewModel.playlist.collect { songs ->
+            onPlaylistReceived(songs)
         }
     }
 
-    private suspend fun loadPlaylist(){
-        playlist?.let {
-            val songs = viewModel.getSongsByPlaylist(
-                it
-            )
-
-            playlistAdapter.items = songs.map { songEntity ->
-                val song = songEntity.toSong()
-                PlaylistBundle(
-                    id = song.localId,
-                    playlistDelegateItem = PlaylistDelegateItem(
-                        imageUrl = song.imageUrl,
-                        songName = song.name,
-                        artistName = song.artistName
-                    ),
-                    onClickDelete = ::onDeleteClicked
-                )
-            }
+    fun onPlaylistReceived(songs: List<Song>){
+        playlistAdapter.items = songs.map {
+            it.getPlaylistBundle (::onDeleteClicked)
         }
+    }
+
+    fun refreshPlaylist() = lifecycleScope.launch(Dispatchers.IO) {
+        viewModel.refreshPlaylist()
+    }
+
+    fun onDeleteClicked(id: Int) = lifecycleScope.launch(Dispatchers.IO){
+        viewModel.deleteSong(id)
     }
 
     companion object {

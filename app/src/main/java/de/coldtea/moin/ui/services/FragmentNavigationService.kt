@@ -3,14 +3,14 @@ package de.coldtea.moin.ui.services
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import de.coldtea.moin.R
-import de.coldtea.moin.domain.model.playlist.Playlist
+import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.ui.playlist.PlaylistFragment
 import de.coldtea.moin.ui.playlist.PlaylistViewModel.Companion.PLAY_LIST_FRAGMENT_WEATHER_KEY
 
 object FragmentNavigationService {
 
     @Throws(IllegalStateException::class)
-    fun addPlaylistFragmentToStack(playlist: Playlist, activity: FragmentActivity?) = activity?.let{
+    fun addPlaylistFragmentToStack(playlist: PlaylistName, activity: FragmentActivity?) = activity?.let{
         val playlistBundle = Bundle()
         playlistBundle.putString(PLAY_LIST_FRAGMENT_WEATHER_KEY, playlist.key)
 
