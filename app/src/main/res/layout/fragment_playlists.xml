@@ -6,24 +6,27 @@
         android:layout_height="match_parent"
         android:background="@color/moinBlueTone1">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/sunny"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent=".25"
-            android:layout_margin="@dimen/margin_s"
+            android:paddingTop="@dimen/margin_s"
+            android:paddingEnd="@dimen/margin_s"
+            android:paddingStart="@dimen/margin_s"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/background_playlist_item"
+            app:srcCompat="@drawable/background_playlist_item"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/rainy"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent=".25"
-            android:padding="@dimen/margin_s"
+            android:paddingTop="@dimen/margin_s"
+            android:paddingEnd="@dimen/margin_s"
+            android:paddingStart="@dimen/margin_s"
             app:layout_constraintTop_toBottomOf="@id/sunny"
             app:srcCompat="@drawable/background_playlist_item"
             android:clickable="true"
@@ -34,7 +37,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent=".25"
-            android:padding="@dimen/margin_s"
+            android:paddingTop="@dimen/margin_s"
+            android:paddingEnd="@dimen/margin_s"
+            android:paddingStart="@dimen/margin_s"
             app:layout_constraintTop_toBottomOf="@id/rainy"
             app:srcCompat="@drawable/background_playlist_item"
             android:clickable="true"
