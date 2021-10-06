@@ -1,9 +1,11 @@
 package de.coldtea.moin.ui.searchspotify
 
 import android.app.AlertDialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doOnTextChanged
@@ -11,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivitySearchSpotifyBinding
 import de.coldtea.moin.domain.model.extensions.getSearchResultBundle
@@ -90,6 +93,8 @@ class SearchSpotifyActivity : AppCompatActivity() {
             if (itemDecorationCount == 0) addItemDecoration(itemDecoration)
 
             adapter = searchResultAdapter
+
+            addOnScrollListener(SearchResultScrollListener())
         }
 
         this?.searchInput?.doOnTextChanged { _, _, _, count ->
@@ -98,6 +103,7 @@ class SearchSpotifyActivity : AppCompatActivity() {
             when {
                 count > 0 && viewModel.refreshTokenExist -> viewModel.getAccessTokenByRefreshToken()
                 count > 0 && !viewModel.refreshTokenExist -> startActivity(viewModel.getAuthorizationIntent())
+                count == 0 -> clearPlaylist()
             }
         }
     }
@@ -140,6 +146,8 @@ class SearchSpotifyActivity : AppCompatActivity() {
         } else {
             playTrackAndUpdateList(id)
         }
+
+        closeKeyboard()
     }
 
     private fun onItemClicked(id: String) =
@@ -174,4 +182,21 @@ class SearchSpotifyActivity : AppCompatActivity() {
                 playState = it.id == playingItemId
             )
         }
+
+    private fun closeKeyboard(){
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+    }
+
+    private fun clearPlaylist(){
+        searchResultAdapter.items = listOf()
+    }
+
+    inner class SearchResultScrollListener : RecyclerView.OnScrollListener(){
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            closeKeyboard()
+        }
+    }
 }
