@@ -42,6 +42,12 @@ class SharedPreferencesRepository(val context: Context) {
             putString(SPOTIFY_AUTHORIZATION_BACKUP, value)
         }.apply()
 
+    var lastVisitedCity: String?
+        get() = sharedPreferences.getString(LAST_VISITED_CITY,null)
+        set(value) = sharedPreferences.edit().apply {
+            putString(LAST_VISITED_CITY, value)
+        }.apply()
+
     companion object {
         private const val MOIN_APP_SHARED_PREFERENCES = "moin_app_shared_preferences"
         private const val DID_WORKS_START = "did_works_start"
@@ -49,6 +55,7 @@ class SharedPreferencesRepository(val context: Context) {
         private const val CODE_VERIFIER = "code_verifier"
         private const val REFRESH_TOKEN = "refresh_token"
         private const val SPOTIFY_AUTHORIZATION_BACKUP = "spotify_authorization_backup"
+        private const val LAST_VISITED_CITY = "last_visited_city"
     }
 
 }

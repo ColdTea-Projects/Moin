@@ -12,7 +12,7 @@ object ForecastUpdateWorkManager {
     }
 
     private val periodicUpdateRequest =
-        PeriodicWorkRequestBuilder<ForecastUpdateWork>(1, TimeUnit.HOURS).setConstraints(
+        PeriodicWorkRequestBuilder<ForecastUpdateWork>(2, TimeUnit.DAYS).setConstraints(
             workRequestConstraints
         ).build()
 

@@ -4,6 +4,8 @@ import de.coldtea.moin.data.database.MoinDatabase
 import de.coldtea.moin.data.network.forecast.WeatherForecastApi
 import de.coldtea.moin.data.network.forecast.model.Weather
 import de.coldtea.moin.domain.model.alarm.LatLong
+import de.coldtea.moin.domain.model.extensions.toHourlyForecast
+import de.coldtea.moin.domain.model.forecast.HourlyForecast
 import de.coldtea.moin.extensions.convertToEntitylist
 import de.coldtea.moin.extensions.getTopOfTheHour
 
@@ -26,6 +28,12 @@ class WeatherRepository(
 
         moinDatabase.daoHourlyForecast.removeOutdatedForecasts(getTopOfTheHour())
     }
+
+    suspend fun getForecast(): HourlyForecast? =
+        moinDatabase
+            .daoHourlyForecast
+            .getForecastsAt(getTopOfTheHour())
+            ?.toHourlyForecast()
 
     private suspend fun getWeatherForThreeDays(cityName: String) =
         weatherForecastApi.getForecast(cityName, 3)
