@@ -1,30 +1,74 @@
 package de.coldtea.moin.ui.alarm.lockscreen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.SpotifyAppRemote
 import de.coldtea.moin.domain.model.alarm.AlarmItem
 import de.coldtea.moin.domain.model.alarm.DismissAlarmRequest
 import de.coldtea.moin.domain.model.alarm.DismissAlarmUpdate
 import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
+import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
 import de.coldtea.moin.domain.services.SmplrAlarmService
+import de.coldtea.moin.domain.services.SongRandomizeService
+import de.coldtea.moin.domain.services.SpotifyService
+import de.coldtea.moin.services.model.ConnectionFailed
+import de.coldtea.moin.services.model.ConnectionSuccess
+import de.coldtea.moin.services.model.Play
+import de.coldtea.moin.services.model.SpotifyState
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
 import de.coldtea.moin.ui.alarm.lockscreen.models.LockScreenState
 import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
+import timber.log.Timber
 import java.util.*
 
-class LockScreenAlarmViewModel : ViewModel() {
+class LockScreenAlarmViewModel(
+    val songRandomizeService: SongRandomizeService
+) : ViewModel() {
 
     private val smplrAlarmService: SmplrAlarmService by inject(SmplrAlarmService::class.java)
     var requestId = -1
 
     private val _lockScreenState = MutableStateFlow<LockScreenState>(Ringing)
     val lockScreenState: StateFlow<LockScreenState> = _lockScreenState
+
+    private val _ringerStateInfo = MutableSharedFlow<RingerScreenInfo?>()
+    val ringerStateInfo: SharedFlow<RingerScreenInfo?> = _ringerStateInfo
+
+    private var _spotifyState = MutableSharedFlow<SpotifyState>()
+    val spotifyState: SharedFlow<SpotifyState> = _spotifyState
+
+    private var _spotifyAppRemote: SpotifyAppRemote? = null
+
+    private val connectionListener = object : Connector.ConnectionListener {
+        override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
+            _spotifyAppRemote = spotifyAppRemote
+            Timber.d("Moin --> Spotify Connected!")
+            viewModelScope.launch(Dispatchers.IO) {
+                _spotifyState.emit(ConnectionSuccess)
+            }
+        }
+
+        override fun onFailure(error: Throwable?) {
+            viewModelScope.launch(Dispatchers.IO) {
+                Timber.d("Moin --> $error")
+                _spotifyState.emit(ConnectionFailed)
+            }
+        }
+    }
+
+    private val connectionParams by lazy {
+        ConnectionParams.Builder(SpotifyService.CLIENT_ID)
+            .setRedirectUri(SpotifyService.REDIRECT_URI)
+            .showAuthView(true)
+            .build()
+    }
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -33,20 +77,58 @@ class LockScreenAlarmViewModel : ViewModel() {
                     SnoozeAlarmUpdate,
                     DismissAlarmUpdate -> _lockScreenState.emit(Done)
                     DismissAlarmRequest -> alarmObject.alarmList.alarmItems
-                        .find { alarmItem ->  alarmItem.requestId == requestId }
+                        .find { alarmItem -> alarmItem.requestId == requestId }
                         ?.let { alarmItem ->
                             setAlarmForDismissal(alarmItem)
                         }
                 }
-
             }
+
+
         }
     }
+
+    fun ring() = viewModelScope.launch {
+        _ringerStateInfo.emit(songRandomizeService.getRingerScreenInfo())
+    }
+
+    fun connectSpotify(context: Context) = SpotifyAppRemote.connect(
+        context,
+        connectionParams,
+        connectionListener
+    )
+
+    private fun subscribePlayerState() =
+        _spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
+            viewModelScope.launch(Dispatchers.IO) {
+                Timber.d("Moin --> Player state: $playerState")
+                _spotifyState.emit(Play(playerState))
+            }
+        }
+
+    fun disconnectSpotify() = SpotifyAppRemote.disconnect(_spotifyAppRemote)
+
+    fun playTrack(songId: String) =
+        _spotifyAppRemote
+            ?.playerApi
+            ?.play("spotify:track:${songId}")
+            ?.also {
+                subscribePlayerState()
+            }
+
+    fun pauseTrack() =
+        _spotifyAppRemote
+            ?.playerApi
+            ?.pause()
+            ?.also {
+                subscribePlayerState()
+            }
 
     fun dismissAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.callRequestAlarmList(DismissAlarmRequest)
         }
+        pauseTrack()
     }
 
     private fun setAlarmForDismissal(alarmItem: AlarmItem) {
@@ -68,6 +150,8 @@ class LockScreenAlarmViewModel : ViewModel() {
                 isActive = true,
                 alarmEvent = SnoozeAlarmUpdate
             )
+        }.also {
+            pauseTrack()
         }
 
     private val snoozeTime: Pair<Int, Int>

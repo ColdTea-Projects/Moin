@@ -1,6 +1,7 @@
 package de.coldtea.moin.di
 
 import de.coldtea.moin.MainViewModel
+import de.coldtea.moin.ui.alarm.lockscreen.LockScreenAlarmViewModel
 import de.coldtea.moin.ui.debugview.DebugViewModel
 import de.coldtea.moin.ui.playlist.PlaylistViewModel
 import de.coldtea.moin.ui.searchspotify.SearchSpotifyViewModel
@@ -13,4 +14,5 @@ val appModule = module {
     viewModel { MainViewModel(get(), get()) }
     viewModel { SearchSpotifyViewModel(get(), get(), get(), get()) }
     viewModel { PlaylistViewModel(get()) }
+    viewModel { LockScreenAlarmViewModel(get()) }
 }
