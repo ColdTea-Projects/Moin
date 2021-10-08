@@ -13,18 +13,33 @@ class WeatherRepository(
     private val weatherForecastApi: WeatherForecastApi,
     private val moinDatabase: MoinDatabase
 ) {
+
+    //TODO:check database if it duplicates
     suspend fun updateWeatherForecast(cityName: String) {
         val forecast = getWeatherForThreeDays(cityName)
 
         forecast?.updateForecastsDatabase(cityName)
     }
 
-    suspend fun getHourlyForecast() = moinDatabase.daoHourlyForecast.getHourlyForecasts()
+    suspend fun getHourlyForecast() = moinDatabase
+        .daoHourlyForecast
+        .getHourlyForecasts()
+        .map {
+            it.toHourlyForecast()
+        }
+
+    suspend fun getHourlyForecastByCity(cityName: String) = moinDatabase
+        .daoHourlyForecast
+        .getHourlyForecastsByCity(cityName)
+        .map {
+            it.toHourlyForecast()
+        }
 
     private suspend fun Weather.updateForecastsDatabase(cityName: String) {
-        convertToEntitylist(cityName).map { hourlyForecastEntity ->
-            moinDatabase.daoHourlyForecast.insert(hourlyForecastEntity)
-        }
+        convertToEntitylist(cityName)
+            .map { hourlyForecastEntity ->
+                moinDatabase.daoHourlyForecast.insert(hourlyForecastEntity)
+            }
 
         moinDatabase.daoHourlyForecast.removeOutdatedForecasts(getTopOfTheHour())
     }
@@ -38,7 +53,8 @@ class WeatherRepository(
     private suspend fun getWeatherForThreeDays(cityName: String) =
         weatherForecastApi.getForecast(cityName, 3)
 
-    suspend fun getCurrentByLatLong(latLong: LatLong?) = latLong?.let { weatherForecastApi.getCurrent("${latLong.lat},${latLong.long}") }
+    suspend fun getCurrentByLatLong(latLong: LatLong?) =
+        latLong?.let { weatherForecastApi.getCurrent("${latLong.lat},${latLong.long}") }
 
 
 }

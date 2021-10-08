@@ -38,7 +38,7 @@ class DebugActivity : AppCompatActivity() {
         {
             binding?.city?.text = city
             binding?.search?.setOnClickListener { onSearchClicked() }
-            debugViewModel.getWeatherForecast(city, location)
+            debugViewModel.getWeatherForecast(location)
         }
 
         binding?.play?.setOnClickListener {

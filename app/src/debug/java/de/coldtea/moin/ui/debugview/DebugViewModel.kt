@@ -11,10 +11,10 @@ import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.data.WeatherRepository
-import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 import de.coldtea.moin.data.network.forecast.model.CurrentWeather
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
 import de.coldtea.moin.domain.model.alarm.LatLong
+import de.coldtea.moin.domain.model.forecast.HourlyForecast
 import de.coldtea.moin.domain.services.GeolocationService
 import de.coldtea.moin.domain.services.SpotifyService.CLIENT_ID
 import de.coldtea.moin.domain.services.SpotifyService.REDIRECT_URI
@@ -36,8 +36,8 @@ class DebugViewModel(
 
     private var _spotifyAppRemote: SpotifyAppRemote? = null
 
-    private var _weatherResponse = MutableSharedFlow<List<HourlyForecastEntity>>()
-    val weatherResponse: SharedFlow<List<HourlyForecastEntity>> = _weatherResponse
+    private var _weatherResponse = MutableSharedFlow<List<HourlyForecast>>()
+    val weatherResponse: SharedFlow<List<HourlyForecast>> = _weatherResponse
 
     private var _currentResponse = MutableSharedFlow<CurrentWeather>()
     val currentResponse: SharedFlow<CurrentWeather> = _currentResponse
@@ -75,7 +75,7 @@ class DebugViewModel(
             .build()
     }
 
-    fun getWeatherForecast(cityName: String, latLong: LatLong?) =
+    fun getWeatherForecast(latLong: LatLong?) =
         viewModelScope.launch(Dispatchers.IO) {
 
             try {

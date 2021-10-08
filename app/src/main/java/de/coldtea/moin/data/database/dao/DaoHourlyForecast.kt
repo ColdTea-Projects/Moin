@@ -20,4 +20,8 @@ abstract class DaoHourlyForecast : DaoBase<HourlyForecastEntity> {
     @Query("DELETE FROM hourly_forecast WHERE time_epoch < :nowEpoch")
     abstract suspend fun removeOutdatedForecasts(nowEpoch: Int)
 
+    @Transaction
+    @Query("SELECT * FROM hourly_forecast WHERE city = :cityName")
+    abstract suspend fun getHourlyForecastsByCity(cityName: String) : List<HourlyForecastEntity>
+
 }

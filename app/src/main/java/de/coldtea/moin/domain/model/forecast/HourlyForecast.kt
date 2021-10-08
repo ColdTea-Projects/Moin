@@ -4,5 +4,6 @@ data class HourlyForecast(
     val tempC: Double,
     val tempF: Double,
     val conditionCode: Int,
-    val conditionText: String
+    val conditionText: String,
+    val timeEpoch: Int
 )
