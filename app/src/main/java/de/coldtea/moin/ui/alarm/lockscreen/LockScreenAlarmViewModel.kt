@@ -30,7 +30,7 @@ import timber.log.Timber
 import java.util.*
 
 class LockScreenAlarmViewModel(
-    val songRandomizeService: SongRandomizeService
+    private val songRandomizeService: SongRandomizeService
 ) : ViewModel() {
 
     private val smplrAlarmService: SmplrAlarmService by inject(SmplrAlarmService::class.java)
