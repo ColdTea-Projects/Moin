@@ -62,12 +62,13 @@ class GeolocationService(
 
     fun requestLocationPermit(activity: AppCompatActivity) =
         activity.requestPermissions(
-            arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),
+            REQUESTED_LOCATION_PERMISSIONS,
             LOCATION_PERMIT_REQUEST_CODE
         )
 
     companion object {
         const val LOCATION_PERMIT_REQUEST_CODE = 255
+        val REQUESTED_LOCATION_PERMISSIONS = arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
     }
 
 }

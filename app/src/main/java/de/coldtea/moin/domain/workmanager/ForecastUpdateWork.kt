@@ -23,8 +23,8 @@ class ForecastUpdateWork(context: Context, workerParameters: WorkerParameters) :
         val city = sharedPreferencesRepository.lastVisitedCity
             ?: return Result.failure()
 
-        Timber.i("Moin geolocationService --> $geolocationService")
-        Timber.i("Moin city --> $city")
+        Timber.i("Moin --> geolocationService $geolocationService")
+        Timber.i("Moin --> city $city")
         try {
             if (isUpdateNeeded(city)) weatherRepository.updateWeatherForecast(city)
             Timber.i("Moin-getWeatherForecast- the weather forecast is updated")

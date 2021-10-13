@@ -1,6 +1,7 @@
 package de.coldtea.moin
 
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,11 +9,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.databinding.ActivityMainBinding
+import de.coldtea.moin.domain.services.GeolocationService.Companion.LOCATION_PERMIT_REQUEST_CODE
+import de.coldtea.moin.domain.services.GeolocationService.Companion.REQUESTED_LOCATION_PERMISSIONS
 import de.coldtea.moin.domain.workmanager.ForecastUpdateWorkManager
 import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.debugview.DebugActivity
 import de.coldtea.moin.ui.playlists.PlaylistsFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -63,14 +69,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        when{
-            mainViewModel.locationServicesPermited && !mainViewModel.didWorksStart -> {
-                mainViewModel.saveLocation()
-                startWeatherForecastPeriodicalUpdateWork()
-            }
-            mainViewModel.locationServicesPermited && mainViewModel.didWorksStart -> mainViewModel.updateForecastIfLocationChanged()
+        if(mainViewModel.locationServicesPermited && mainViewModel.didWorksStart) mainViewModel.updateForecastIfLocationChanged()
 
-        }
     }
 
     private fun ActivityMainBinding.setupBottomNavigation() =
@@ -106,4 +106,26 @@ class MainActivity : AppCompatActivity() {
         ForecastUpdateWorkManager.startPeriodicalForecastUpdate(applicationContext)
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode == LOCATION_PERMIT_REQUEST_CODE){
+            REQUESTED_LOCATION_PERMISSIONS.map {
+                if(!permissions.contains(it)) return
+            }
+
+            if(grantResults.contains(PERMISSION_DENIED)) return
+
+            onLocationPermissionsGranted()
+        }
+    }
+
+    private fun onLocationPermissionsGranted() = lifecycleScope.launch(Dispatchers.IO) {
+        mainViewModel.saveLocation()
+        startWeatherForecastPeriodicalUpdateWork()
+    }
 }
