@@ -1,6 +1,5 @@
 package de.coldtea.moin.ui.playlists
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import timber.log.Timber
 class PlaylistsFragment : BaseFragment() {
 
     private val viewModel: PlaylistsViewModel by viewModels()
-    var alertDialog: AlertDialog? = null
     var binding: FragmentPlaylistsBinding? = null
 
     override fun onCreateView(
@@ -70,14 +68,12 @@ class PlaylistsFragment : BaseFragment() {
     }
 
     private fun showSomethingWentWrongDialog() = try{
-        alertDialog = DialogManager.buildDialog(
-            requireActivity(),
-            getString(R.string.something_went_wrong),
-            getString(R.string.ok),
-            { alertDialog?.dismiss() }
-        )
-
-        alertDialog?.show()
+        DialogManager.buildDialog(
+            activity = requireActivity(),
+            message = getString(R.string.something_went_wrong),
+            positiveText = getString(R.string.ok),
+            positiveAction = { dialogInterface ->  dialogInterface?.dismiss() }
+        ).show()
     }catch (ex: IllegalArgumentException){
         Timber.e("Moin:showSomethingWentWrongDialog --> $ex")
     }

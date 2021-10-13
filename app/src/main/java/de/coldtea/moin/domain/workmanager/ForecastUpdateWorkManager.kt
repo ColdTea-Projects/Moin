@@ -2,6 +2,7 @@ package de.coldtea.moin.domain.workmanager
 
 import android.content.Context
 import androidx.work.*
+import de.coldtea.moin.data.SharedPreferencesRepository
 import java.util.concurrent.TimeUnit
 
 object ForecastUpdateWorkManager {
@@ -22,6 +23,8 @@ object ForecastUpdateWorkManager {
             FORECAST_UPDATE_WORK,
             ExistingPeriodicWorkPolicy.KEEP,
             periodicUpdateRequest
-        )
+        ).also {
+            SharedPreferencesRepository(context).didWorksStart = true
+        }
 
 }

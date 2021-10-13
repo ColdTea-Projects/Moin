@@ -1,14 +1,11 @@
 package de.coldtea.moin
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import de.coldtea.moin.databinding.ActivityMainBinding
@@ -36,7 +33,9 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appToolbar)
 
-        if(mainViewModel.geolocationService.isNotPermitted) ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION), 225)
+        if(!mainViewModel.locationServicesPermited) {
+            mainViewModel.requestLocationServicePermissions(this)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -64,7 +63,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!mainViewModel.geolocationService.isNotPermitted && !mainViewModel.sharedPreferencesRepository.didWorksStart) startWeatherForecastPeriodicalUpdateWork()
+        when{
+            mainViewModel.locationServicesPermited && !mainViewModel.didWorksStart -> {
+                mainViewModel.saveLocation()
+                startWeatherForecastPeriodicalUpdateWork()
+            }
+            mainViewModel.locationServicesPermited && mainViewModel.didWorksStart -> mainViewModel.updateForecastIfLocationChanged()
+
+        }
     }
 
     private fun ActivityMainBinding.setupBottomNavigation() =
@@ -98,7 +104,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun startWeatherForecastPeriodicalUpdateWork() {
         ForecastUpdateWorkManager.startPeriodicalForecastUpdate(applicationContext)
-        mainViewModel.sharedPreferencesRepository.didWorksStart = true
     }
 
 }

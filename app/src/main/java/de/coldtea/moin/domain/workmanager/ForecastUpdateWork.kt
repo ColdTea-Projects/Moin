@@ -20,8 +20,7 @@ class ForecastUpdateWork(context: Context, workerParameters: WorkerParameters) :
     )
 
     override suspend fun doWork(): Result {
-        val city = geolocationService.getCityName()
-            ?: sharedPreferencesRepository.lastVisitedCity
+        val city = sharedPreferencesRepository.lastVisitedCity
             ?: return Result.failure()
 
         Timber.i("Moin geolocationService --> $geolocationService")

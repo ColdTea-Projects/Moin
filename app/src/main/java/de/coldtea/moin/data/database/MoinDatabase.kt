@@ -24,6 +24,7 @@ abstract class MoinDatabase : RoomDatabase() {
     abstract val daoHourlyForecast: DaoHourlyForecast
     abstract val daoSong: DaoSong
 
+    //TODO: try if this works without locally ensured singleton
     companion object {
         @Volatile
         private var INSTANCE: MoinDatabase? = null

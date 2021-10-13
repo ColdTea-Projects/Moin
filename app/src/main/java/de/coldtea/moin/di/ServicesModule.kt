@@ -8,6 +8,6 @@ import org.koin.dsl.module
 
 val servicesModule = module {
     single { SmplrAlarmService(androidContext()) }
-    single{ GeolocationService(androidContext()) }
+    single{ GeolocationService(androidContext(), get()) }
     single{ SongRandomizeService(get(), get(), get(), get()) }
 }

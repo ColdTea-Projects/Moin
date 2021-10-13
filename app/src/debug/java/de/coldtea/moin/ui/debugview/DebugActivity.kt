@@ -11,7 +11,9 @@ import de.coldtea.moin.databinding.ActivityDebugBinding
 import de.coldtea.moin.domain.services.SpotifyService.REDIRECT_URI_ROOT
 import de.coldtea.moin.extensions.convertToAuthorizationResponse
 import de.coldtea.moin.services.model.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -31,14 +33,16 @@ class DebugActivity : AppCompatActivity() {
         initWeatherResponse()
         initSpotify()
 
-        val city = debugViewModel.getCity()
-        val location = debugViewModel.getLocation()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val city = debugViewModel.getCity()
+            val location = debugViewModel.getLocation()
 
-        if(!city.isNullOrEmpty())
-        {
-            binding?.city?.text = city
-            binding?.search?.setOnClickListener { onSearchClicked() }
-            debugViewModel.getWeatherForecast(location)
+            if(!city.isNullOrEmpty())
+            {
+                binding?.city?.text = city
+                binding?.search?.setOnClickListener { onSearchClicked() }
+                debugViewModel.getWeatherForecast(location)
+            }
         }
 
         binding?.play?.setOnClickListener {

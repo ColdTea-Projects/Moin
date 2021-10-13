@@ -99,7 +99,9 @@ class DebugViewModel(
 
 
     fun getCity() = geolocationService.getCityName()
+
     fun getLocation() = geolocationService.getLatLong()
+
     fun getAuthorizationIntent(): Intent? = spotifyAuthRepo.getAuthorizationIntent()
 
     fun connectSpotify(context: Context) = SpotifyAppRemote.connect(

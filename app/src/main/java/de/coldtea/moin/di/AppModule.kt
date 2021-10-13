@@ -11,7 +11,7 @@ import org.koin.dsl.module
 val appModule = module {
     // ViewModel for Detail View
     viewModel { DebugViewModel(get(), get(), get(), get(), get()) }
-    viewModel { MainViewModel(get(), get()) }
+    viewModel { MainViewModel(get(), get(), get()) }
     viewModel { SearchSpotifyViewModel(get(), get(), get(), get()) }
     viewModel { PlaylistViewModel(get()) }
     viewModel { LockScreenAlarmViewModel(get()) }
