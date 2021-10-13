@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.PlayerApi
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import de.coldtea.moin.domain.model.alarm.AlarmItem
 import de.coldtea.moin.domain.model.alarm.DismissAlarmRequest
@@ -111,7 +112,7 @@ class LockScreenAlarmViewModel(
     fun playTrack(songId: String) =
         _spotifyAppRemote
             ?.playerApi
-            ?.play("spotify:track:${songId}")
+            ?.play("spotify:track:${songId}", PlayerApi.StreamType.ALARM)
             ?.also {
                 subscribePlayerState()
             }
