@@ -26,6 +26,12 @@
 
     <!-- Search spotify -->
 
-    <string name="spotify_connection_failed">Spotify connection has failed :( We are so sorry for this. Please try to restart Moin app.</string>
+    <string name="spotify_connection_failed_title">Spotify connection has failed! </string>
+    <string name="spotify_connection_failed_content">
+        In order to search, add and play songs from Spotify, we need you to login and grant access to your account. We would like to assure you
+        that any of your personal data will not be shared. You can find more details about this in the privacy policy of Moin App.\n
+        If you granted access yet it still did not work, please try again. We are very sorry about the inconvenience, please feel free to let us
+        know about the problem in PlayStore. Thank you for your understanding!
+    </string>
 
 </resources>

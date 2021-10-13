@@ -1,6 +1,5 @@
 package de.coldtea.moin.ui.searchspotify
 
-import android.app.AlertDialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -40,7 +39,6 @@ class SearchSpotifyActivity : AppCompatActivity() {
     private var searchResultAdapter = SpotifySearchAdapter()
 
     var binding: ActivitySearchSpotifyBinding? = null
-    var alertDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,17 +136,16 @@ class SearchSpotifyActivity : AppCompatActivity() {
     }
 
     private fun onConnectionFailed(){
-        alertDialog = DialogManager.buildDialog(
-            this@SearchSpotifyActivity,
-            getString(R.string.spotify_connection_failed),
-            getString(R.string.ok),
-            {
-                alertDialog?.dismiss()
+        DialogManager.buildDialog(
+            activity = this@SearchSpotifyActivity,
+            message = getString(R.string.spotify_connection_failed_content),
+            title = getString(R.string.spotify_connection_failed_title),
+            positiveText = getString(R.string.ok),
+            positiveAction = {
+                it.dismiss()
                 finish()
             }
-        )
-
-        alertDialog?.show()
+        ).show()
     }
 
     private fun onActivationTokenReceived(tokenResponse: TokenResponse?) {
