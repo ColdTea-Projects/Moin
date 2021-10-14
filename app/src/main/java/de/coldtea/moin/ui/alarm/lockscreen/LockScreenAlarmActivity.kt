@@ -22,9 +22,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class LockScreenAlarmActivity : AppCompatActivity() {
-    //TODO: When the alarm rings, check if the city is the current city, if not get current
-    //if it is the same: check is there any record in DB, if not get current
-    // if there is any record -> Use it and avoid new API request
 
     private lateinit var binding: ActivityLockScreenAlarmBinding
     private val viewModel: LockScreenAlarmViewModel by viewModel()
