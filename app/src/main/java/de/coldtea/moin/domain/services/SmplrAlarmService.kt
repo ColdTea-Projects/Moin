@@ -55,7 +55,7 @@ class SmplrAlarmService(private val context: Context) {
 
     }
 
-    fun setAlarm(hour: Int, minute: Int, notificationItem: NotificationItem, weekDays: List<WeekDays>? = null, alarmEvent: AlarmEvent? = null): Int {
+    fun setAlarm(hour: Int, minute: Int, notificationItem: NotificationItem, weekDays: List<WeekDays>? = null, alarmEvent: AlarmEvent? = null, label: String): Int {
         lastAlarmEvent = alarmEvent
 
         return smplrAlarmSet(context = context){
@@ -78,7 +78,8 @@ class SmplrAlarmService(private val context: Context) {
                 listOf(
                     "originalHour" to "$hour",
                     "originalMinute" to "$minute",
-                    "isExpanded" to "false"
+                    "isExpanded" to "false",
+                    "label" to label
                 )
             }
 

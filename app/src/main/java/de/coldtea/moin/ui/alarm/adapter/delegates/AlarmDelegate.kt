@@ -10,6 +10,7 @@ import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ViewAlarmDelegateItemBinding
 import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.moin.extensions.*
+import de.coldtea.moin.ui.alarm.adapter.model.AlarmBundle
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import kotlinx.coroutines.CoroutineScope
@@ -18,13 +19,13 @@ import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 
 class AlarmDelegate :
-    AbsListItemAdapterDelegate<AlarmDelegateItem, AlarmDelegateItem, AlarmDelegate.AlarmViewHolder>() {
+    AbsListItemAdapterDelegate<AlarmBundle, AlarmBundle, AlarmDelegate.AlarmViewHolder>() {
 
     private val smplrAlarmService: SmplrAlarmService by KoinJavaComponent.inject(SmplrAlarmService::class.java)
 
     override fun isForViewType(
-        item: AlarmDelegateItem,
-        items: MutableList<AlarmDelegateItem>,
+        item: AlarmBundle,
+        items: MutableList<AlarmBundle>,
         position: Int
     ): Boolean = true
 
@@ -38,7 +39,7 @@ class AlarmDelegate :
         )
 
     override fun onBindViewHolder(
-        item: AlarmDelegateItem,
+        item: AlarmBundle,
         holder: AlarmViewHolder,
         payloads: MutableList<Any>
     ) = holder.bind(item)
@@ -47,7 +48,8 @@ class AlarmDelegate :
         private val binding: ViewAlarmDelegateItemBinding,
         private val smplrAlarmService: SmplrAlarmService
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: AlarmDelegateItem) = with(binding) {
+        fun bind(bundle: AlarmBundle) = with(binding) {
+            val item = bundle.alarmDelegateItem
             val hourMinute = item.originalHour to item.originalMinute
             binding.item = item
             time.text = hourMinute.getTimeText()
@@ -70,7 +72,8 @@ class AlarmDelegate :
                 val infoPairs = listOf(
                     "originalHour" to "${item.originalHour}",
                     "originalMinute" to "${item.originalMinute}",
-                    "isExpanded" to "${!item.isExpanded}"
+                    "isExpanded" to "${!item.isExpanded}",
+                    "label" to item.label
                 )
                 updateAlarm(item, infoPairs = infoPairs, weekDays = weekdaysList)
             }
@@ -90,12 +93,17 @@ class AlarmDelegate :
                 updateAlarm(item, isActive = true, weekDays = weekdaysList)
             }
 
+            label.setOnClickListener {
+                bundle.onClickLabel(bundle.alarmDelegateItem)
+            }
+
             time.setOnClickListener {
                 val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                     val infoPairs = listOf(
                         "originalHour" to "$hour",
                         "originalMinute" to "$minute",
-                        "isExpanded" to "${!item.isExpanded}"
+                        "isExpanded" to "${!item.isExpanded}",
+                        "label" to item.label
                     )
 
                     updateAlarm(item = item, hour = hour, minute = minute, infoPairs = infoPairs)
@@ -129,6 +137,5 @@ class AlarmDelegate :
             )
         }
     }
-
 
 }

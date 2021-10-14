@@ -4,5 +4,5 @@ data class RingerScreenInfo (
     val forecastText: String,
     val songId: String?,
     val tempC: Double,
-    val tempF: Double,
+    val tempF: Double
 )

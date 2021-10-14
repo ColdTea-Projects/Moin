@@ -10,5 +10,6 @@ data class AlarmDelegateItem(
     var isActive: Boolean,
     var isExpanded: Boolean = false,
     var originalHour: Int,
-    var originalMinute: Int
+    var originalMinute: Int,
+    var label: String
 )

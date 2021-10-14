@@ -18,10 +18,12 @@
 
     <!-- Alarm delegate -->
     <string name="snooze_until">Snoozed until %1$s!</string>
+    <string name="label_hint">Click here to add a label</string>
 
     <!-- General -->
     <string name="something_went_wrong">Something went wrong and we are not at the moment able to process your request. We are working on the issue, thank you so much for your understanding!</string>
     <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
     <string name="search_bar_hint">Search</string>
 
     <!-- Search spotify -->

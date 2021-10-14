@@ -23,4 +23,5 @@
     <color name="moinOrange2">#f7474f</color>
     <color name="moinOrange3">#E1343C</color>
 
+    <color name="transparent">#00000000</color>
 </resources>

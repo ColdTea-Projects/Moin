@@ -15,7 +15,10 @@ import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentAlarmBinding
 import de.coldtea.moin.domain.model.alarm.convertToDelegateItem
 import de.coldtea.moin.ui.alarm.adapter.AlarmsAdapter
+import de.coldtea.moin.ui.alarm.adapter.model.AlarmBundle
+import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.moin.ui.base.BaseFragment
+import de.coldtea.moin.ui.dialogfragments.label.AlarmLabelDialogFragment
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 import java.util.*
@@ -98,8 +101,25 @@ class AlarmFragment : BaseFragment() {
 
     private fun observeAlarms() = lifecycleScope.launchWhenCreated {
         viewModel.alarmList.collect { alarmList ->
-            alarmsAdapter.items = alarmList.alarmItems.map { it.convertToDelegateItem() }
+            alarmsAdapter.items = alarmList.alarmItems.map {
+                val item = it.convertToDelegateItem()
+
+                AlarmBundle(
+                    item.requestId,
+                    item,
+                    ::openLabelDialogFragment
+                )
+            }
         }
+    }
+
+    private fun openLabelDialogFragment(alarmDelegateItem: AlarmDelegateItem){
+        AlarmLabelDialogFragment
+            .getInstance(alarmDelegateItem)
+            .show(
+                childFragmentManager,
+                AlarmLabelDialogFragment.TAG
+            )
     }
 
     private fun getAlarmTime(duration: Int): Pair<Int, Int>

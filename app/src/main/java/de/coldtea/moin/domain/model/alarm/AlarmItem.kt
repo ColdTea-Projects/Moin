@@ -22,7 +22,8 @@ data class AlarmItem(
 data class InfoPairs(
     val originalHour: String,
     val originalMinute: String,
-    val isExpanded: String
+    val isExpanded: String,
+    val label: String
 )
 
 fun AlarmItem.convertToDelegateItem(): AlarmDelegateItem =
@@ -34,6 +35,7 @@ fun AlarmItem.convertToDelegateItem(): AlarmDelegateItem =
         isActive = isActive,
         isExpanded = info?.isExpanded.toBoolean(),
         originalHour = info?.originalHour?.toIntOrNull()?:0,
-        originalMinute = info?.originalMinute?.toIntOrNull()?:0
+        originalMinute = info?.originalMinute?.toIntOrNull()?:0,
+        label = info?.label.orEmpty()
     )
 

@@ -1,3 +1,4 @@
+
 package de.coldtea.moin.ui.alarm.lockscreen
 
 import android.content.Context
@@ -7,10 +8,7 @@ import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.PlayerApi
 import com.spotify.android.appremote.api.SpotifyAppRemote
-import de.coldtea.moin.domain.model.alarm.AlarmItem
-import de.coldtea.moin.domain.model.alarm.DismissAlarmRequest
-import de.coldtea.moin.domain.model.alarm.DismissAlarmUpdate
-import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
+import de.coldtea.moin.domain.model.alarm.*
 import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
 import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.moin.domain.services.SongRandomizeService
@@ -38,6 +36,9 @@ class LockScreenAlarmViewModel(
 
     private val _lockScreenState = MutableStateFlow<LockScreenState>(Ringing)
     val lockScreenState: StateFlow<LockScreenState> = _lockScreenState
+
+    private val _label = MutableSharedFlow<String>()
+    val label: SharedFlow<String> = _label
 
     private val _ringerStateInfo = MutableSharedFlow<RingerScreenInfo?>()
     val ringerStateInfo: SharedFlow<RingerScreenInfo?> = _ringerStateInfo
@@ -74,6 +75,7 @@ class LockScreenAlarmViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.alarmList.collect { alarmObject ->
+
                 when (alarmObject.alarmEvent) {
                     SnoozeAlarmUpdate,
                     DismissAlarmUpdate -> _lockScreenState.emit(Done)
@@ -82,6 +84,7 @@ class LockScreenAlarmViewModel(
                         ?.let { alarmItem ->
                             setAlarmForDismissal(alarmItem)
                         }
+                    RequestAlarms -> _label.emit(alarmObject.alarmList.alarmItems[0].info?.label.orEmpty())
                 }
             }
 
@@ -131,6 +134,10 @@ class LockScreenAlarmViewModel(
         }
         pauseTrack()
     }
+
+    fun requestAlarmForUI() = smplrAlarmService.callRequestAlarmList(
+        alarmEvent = RequestAlarms
+    )
 
     private fun setAlarmForDismissal(alarmItem: AlarmItem) {
         smplrAlarmService.updateAlarm(

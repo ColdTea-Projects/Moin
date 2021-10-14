@@ -41,13 +41,13 @@
             android:id="@+id/days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/moinBlueTone7"
             android:layout_marginTop="@dimen/margin_s"
+            android:textColor="@color/moinBlueTone7"
             android:textSize="@dimen/alarm_item_weekdays_font_size"
+            app:isVisible="@{!item.expanded}"
             app:layout_constraintBottom_toBottomOf="@id/groupVisible"
             app:layout_constraintStart_toStartOf="@+id/time"
             app:layout_constraintTop_toBottomOf="@id/time"
-            app:isVisible="@{!item.expanded}"
             tools:text="MON TU WED TH FR SAT SUN" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -94,26 +94,45 @@
             android:id="@+id/repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/days"
-            app:layout_constraintTop_toBottomOf="@+id/days"
-            android:layout_marginTop="@dimen/margin_s"
-            android:textSize="@dimen/alarm_item_repeat_font_size"
+            android:layout_marginStart="@dimen/margin_s"
             android:buttonTint="@color/moinBlueTone7"
+            android:text="@string/alarm_item_repeat_checkbox"
             android:textColor="@color/moinBlueTone7"
-            android:text="@string/alarm_item_repeat_checkbox"/>
+            android:textSize="@dimen/alarm_item_repeat_font_size"
+            app:layout_constraintBottom_toBottomOf="@+id/sunday"
+            app:layout_constraintStart_toEndOf="@+id/saturday"
+            app:layout_constraintTop_toTopOf="@+id/sunday" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_s"
+            android:layout_marginTop="@dimen/margin_s"
+            android:maxLength="100"
+            android:textColor="@color/moinBlueTone7"
+            tools:text="Label comes here"
+            android:gravity="center_vertical"
+            app:setLabel="@{item.label}"
+            app:layout_constraintEnd_toStartOf="@+id/delete"
+            app:layout_constraintStart_toStartOf="@+id/days"
+            app:layout_constraintTop_toBottomOf="@id/days"
+            android:drawablePadding="@dimen/margin_xxs"
+            android:drawableStart="@drawable/ic_baseline_label_24"
+            android:drawableTint="@color/moinBlueTone7"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/sunday"
             android:layout_width="@dimen/weekday_radio_button_size"
             android:layout_height="@dimen/weekday_radio_button_size"
-            android:checked="true"
-            android:pointerIcon="@null"
             android:layout_marginTop="@dimen/margin_s"
-            app:layout_constraintTop_toBottomOf="@id/repeat"
-            app:layout_constraintStart_toStartOf="@id/repeat"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
+            android:background="@drawable/sunday_radio_background"
             android:button="@null"
-            android:background="@drawable/monday_radio_background"/>
+            android:checked="true"
+            android:onClick="@{() -> onWeekdayClicked.invoke()}"
+            android:pointerIcon="@null"
+            app:layout_constraintStart_toStartOf="@id/label"
+            app:layout_constraintTop_toBottomOf="@id/label" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/monday"
@@ -126,7 +145,7 @@
             app:layout_constraintStart_toEndOf="@id/sunday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
             android:button="@null"
-            android:background="@drawable/tuesday_radio_background"/>
+            android:background="@drawable/monday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/tuesday"
@@ -139,7 +158,7 @@
             app:layout_constraintStart_toEndOf="@id/monday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
             android:button="@null"
-            android:background="@drawable/wednesday_radio_background"/>
+            android:background="@drawable/tuesday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/wednesday"
@@ -152,7 +171,7 @@
             app:layout_constraintStart_toEndOf="@id/tuesday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
             android:button="@null"
-            android:background="@drawable/thursday_radio_background"/>
+            android:background="@drawable/wednesday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/thursday"
@@ -165,7 +184,7 @@
             app:layout_constraintStart_toEndOf="@id/wednesday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
             android:button="@null"
-            android:background="@drawable/friday_radio_background"/>
+            android:background="@drawable/thursday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/friday"
@@ -178,7 +197,7 @@
             app:layout_constraintStart_toEndOf="@id/thursday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
             android:button="@null"
-            android:background="@drawable/saturday_radio_background"/>
+            android:background="@drawable/friday_radio_background"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/saturday"
@@ -191,7 +210,7 @@
             app:layout_constraintStart_toEndOf="@id/friday"
             android:onClick="@{() -> onWeekdayClicked.invoke()}"
             android:button="@null"
-            android:background="@drawable/sunday_radio_background"/>
+            android:background="@drawable/saturday_radio_background"/>
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/groupVisible"
@@ -206,7 +225,7 @@
             android:id="@+id/groupHidden"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="delete, repeat"
+            app:constraint_referenced_ids="delete, repeat, label"
             app:isVisible="@{item.expanded}"/>
 
         <androidx.constraintlayout.widget.Group

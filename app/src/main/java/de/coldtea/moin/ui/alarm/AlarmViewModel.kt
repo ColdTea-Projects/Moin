@@ -40,7 +40,11 @@ class AlarmViewModel: ViewModel(){
 
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.setAlarm(
-                hour = hour, minute = minute, notificationItem = notificationItem, weekDays = listOf()
+                hour = hour,
+                minute = minute,
+                notificationItem = notificationItem,
+                weekDays = listOf(),
+                label = ""
             )
         }
 

@@ -37,17 +37,17 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         binding = ActivityLockScreenAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        lifecycleScope.launch {
-            initStateObserver()
-            observeRingerItems()
-            observeSpotifyState()
-        }
+        initStateObserver()
+        observeRingerItems()
+        observeSpotifyState()
+        observeSavedAlarmInfo()
 
     }
 
     override fun onStart() {
         super.onStart()
         setupUIItems()
+        viewModel.requestAlarmForUI()
         activateLockScreen()
 
         viewModel.ring()
@@ -69,7 +69,7 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun initStateObserver() = lifecycleScope.launch {
+    private fun initStateObserver() = lifecycleScope.launch {
         viewModel.lockScreenState.collect { state ->
             when (state) {
                 is Ringing -> {
@@ -84,21 +84,24 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun observeRingerItems() = lifecycleScope.launch {
+    private fun observeRingerItems() = lifecycleScope.launch {
         viewModel.ringerStateInfo.collect {
             ringerScreenInfo = it
             viewModel.connectSpotify(this@LockScreenAlarmActivity)
-        }
-    }
+        }}
 
-    private suspend fun observeSpotifyState() = lifecycleScope.launch {
+    private fun observeSpotifyState() = lifecycleScope.launch {
         viewModel.spotifyState.collect {
             when (it) {
                 ConnectionSuccess -> onConnectionSuccess()
                 ConnectionFailed -> onConnectionFailed()
             }
-        }
-    }
+        }}
+
+    private fun observeSavedAlarmInfo() = lifecycleScope.launch {
+        viewModel.label.collect{
+            binding.label.text = it
+        }}
 
     private fun onConnectionSuccess() {
         val songId = ringerScreenInfo?.songId

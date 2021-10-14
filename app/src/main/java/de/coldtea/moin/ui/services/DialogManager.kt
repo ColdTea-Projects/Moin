@@ -3,6 +3,7 @@ package de.coldtea.moin.ui.services
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.view.View
 
 object DialogManager {
 
@@ -14,13 +15,18 @@ object DialogManager {
         positiveText: String,
         positiveAction: ((dialogInterface: DialogInterface) -> Unit),
         negativeText: String? = null,
-        negativeAction: ((dialogInterface: DialogInterface) -> Unit)? = null
+        negativeAction: ((dialogInterface: DialogInterface) -> Unit)? = null,
+        view: View? = null
     ): AlertDialog = activity?.let{
         val builder = AlertDialog.Builder(activity)
 
         builder.setMessage(message)
         builder.setPositiveButton(positiveText) { dialog, _ ->
             positiveAction(dialog)
+        }
+
+        if(view != null){
+            builder.setView(view)
         }
 
         if (title != null){
