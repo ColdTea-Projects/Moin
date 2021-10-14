@@ -15,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class DebugActivity : AppCompatActivity() {
@@ -40,7 +42,6 @@ class DebugActivity : AppCompatActivity() {
             if(!city.isNullOrEmpty())
             {
                 binding?.city?.text = city
-                binding?.search?.setOnClickListener { onSearchClicked() }
                 debugViewModel.getWeatherForecast(location)
             }
         }
@@ -48,6 +49,8 @@ class DebugActivity : AppCompatActivity() {
         binding?.play?.setOnClickListener {
             debugViewModel.playPlaylist()
         }
+
+        binding?.search?.setOnClickListener { onSearchClicked() }
 
         //This part does not work from here anymore, please use actual use-case to get spotify authorization TODO:Remove authorization
         val data: Uri? = intent.data
@@ -85,9 +88,21 @@ class DebugActivity : AppCompatActivity() {
     }
 
     private fun initWeatherResponse() = lifecycleScope.launchWhenResumed {
+        var weatherText: String = "Weather for 3 days : \n"
+
         debugViewModel.weatherResponse.collect{
-            binding?.weatherText?.text = "Weather for 3 days : $it"
+            it.map { forecast ->
+
+                val date = SimpleDateFormat("HH:mm dd.MM", Locale.GERMAN)
+                    .format(
+                        Date( forecast.timeEpoch * 1000L )
+                    )
+
+                weatherText += "{$date:${forecast.conditionText}:${forecast.tempC}}\n"
+            }
+            binding?.weatherText?.text = weatherText
         }
+
     }
 
     private fun initSpotify() = lifecycleScope.launchWhenResumed {
