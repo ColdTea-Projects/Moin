@@ -19,7 +19,7 @@ class MainViewModel(
     fun requestLocationServicePermissions(activity: MainActivity) =
         geolocationService.requestLocationPermit(activity)
 
-    suspend fun saveLocation() {
+    fun saveLocation() {
         sharedPreferencesRepository.lastVisitedCity = geolocationService.getCityName()
     }
 

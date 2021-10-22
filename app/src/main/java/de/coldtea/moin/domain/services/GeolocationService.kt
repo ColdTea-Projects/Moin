@@ -36,7 +36,13 @@ class GeolocationService(
 
         Timber.i("Moin --> context: $context")
         Timber.i("Moin --> geocoder: $geocoder")
-        val addresses = geocoder.getFromLocation(longLat.lat, longLat.long, 1)
+        //TODO: research gcpr
+        val addresses = try {
+            geocoder.getFromLocation(longLat.lat, longLat.long, 1)
+        }catch (e: Exception){
+            Timber.d("Moin --> Address could not be received: $e")
+            return null
+        }
 
         Timber.i("Moin --> address: $addresses")
         sharedPreferencesRepository.lastVisitedCity = addresses.first().getCityName()

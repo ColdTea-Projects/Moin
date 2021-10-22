@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onLocationPermissionsGranted() = lifecycleScope.launch(Dispatchers.IO) {
+    private fun onLocationPermissionsGranted() = lifecycleScope.launch(Dispatchers.IO){
         mainViewModel.saveLocation()
         startWeatherForecastPeriodicalUpdateWork()
     }
