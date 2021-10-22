@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.size
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -87,7 +86,7 @@ class AlarmFragment : BaseFragment() {
                 viewModel.setAlarm(hour, minute)
             }
 
-            val alarmTime = getAlarmTime(alarmList.size + 1)
+            val alarmTime = getAlarmTime(1)
             TimePickerDialog(
                 requireContext(),
                 timeSetListener,

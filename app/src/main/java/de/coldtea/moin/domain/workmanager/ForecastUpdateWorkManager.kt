@@ -13,9 +13,12 @@ object ForecastUpdateWorkManager {
     }
 
     private val periodicUpdateRequest =
-        PeriodicWorkRequestBuilder<ForecastUpdateWork>(1, TimeUnit.HOURS).setConstraints(
-            workRequestConstraints
-        ).build()
+        PeriodicWorkRequestBuilder<ForecastUpdateWork>(
+            repeatInterval = 1,
+            repeatIntervalTimeUnit = TimeUnit.HOURS
+        )
+            .setConstraints(workRequestConstraints)
+            .build()
 
     fun startPeriodicalForecastUpdate(context: Context) = WorkManager
         .getInstance(context)
