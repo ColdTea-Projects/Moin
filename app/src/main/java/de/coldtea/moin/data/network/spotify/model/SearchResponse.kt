@@ -1,11 +1,10 @@
 package de.coldtea.moin.data.network.spotify.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
+@Serializable
 data class SearchResponse(
-    @Json(name = "tracks")
-    val tracks: TracksResponse?
+    @SerialName("tracks")
+    val trackResponse: TracksResponse?
 )

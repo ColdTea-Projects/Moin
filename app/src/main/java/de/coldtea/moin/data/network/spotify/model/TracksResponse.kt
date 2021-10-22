@@ -1,23 +1,24 @@
 package de.coldtea.moin.data.network.spotify.model
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
+@Serializable
 data class TracksResponse(
-    @Json(name = "href")
+    @SerialName("href")
     val href: String?,
-    @Json(name = "items")
+    @SerialName("items")
     val items: List<ItemResponse?>?,
-    @Json(name = "limit")
+    @SerialName("limit")
     val limit: Int?,
-    @Json(name = "next")
+    @SerialName("next")
     val next: String?,
-    @Json(name = "offset")
+    @SerialName("offset")
     val offset: Int?,
-    @Json(name = "previous")
+    @Contextual
+    @SerialName("previous")
     val previous: Any?,
-    @Json(name = "total")
+    @SerialName("total")
     val total: Int?
 )

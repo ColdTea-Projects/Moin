@@ -1,11 +1,11 @@
 package de.coldtea.moin.domain.model.alarm
 
-import com.squareup.moshi.JsonClass
 import de.coldtea.moin.extensions.convertToInfoPairs
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AlarmItem(
     val requestId: Int,
     val hour: Int,
@@ -14,11 +14,11 @@ data class AlarmItem(
     val isActive: Boolean,
     val infoPairs: String
 ){
-    val info: InfoPairs?
+    val info: InfoPairs
         get() = infoPairs.convertToInfoPairs()
 }
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class InfoPairs(
     val originalHour: String,
     val originalMinute: String,
@@ -33,9 +33,9 @@ fun AlarmItem.convertToDelegateItem(): AlarmDelegateItem =
         minute = minute,
         weekDays = weekDays,
         isActive = isActive,
-        isExpanded = info?.isExpanded.toBoolean(),
-        originalHour = info?.originalHour?.toIntOrNull()?:0,
-        originalMinute = info?.originalMinute?.toIntOrNull()?:0,
-        label = info?.label.orEmpty()
+        isExpanded = info.isExpanded.toBoolean(),
+        originalHour = info.originalHour.toIntOrNull()?:0,
+        originalMinute = info.originalMinute.toIntOrNull()?:0,
+        label = info.label
     )
 

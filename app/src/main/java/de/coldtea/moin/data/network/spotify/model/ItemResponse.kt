@@ -1,43 +1,42 @@
 package de.coldtea.moin.data.network.spotify.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
+@Serializable
 data class ItemResponse(
-    @Json(name = "album")
-    val album: AlbumResponse?,
-    @Json(name = "artists")
-    val artists: List<ArtistResponse?>?,
-    @Json(name = "available_markets")
+    @SerialName("album")
+    val albumResponse: AlbumResponse?,
+    @SerialName("artists")
+    val artistResponse: List<ArtistResponse?>?,
+    @SerialName("available_markets")
     val availableMarkets: List<String?>?,
-    @Json(name = "disc_number")
+    @SerialName("disc_number")
     val discNumber: Int?,
-    @Json(name = "duration_ms")
+    @SerialName("duration_ms")
     val durationMs: Int?,
-    @Json(name = "explicit")
+    @SerialName("explicit")
     val explicit: Boolean?,
-    @Json(name = "external_ids")
-    val externalIds: ExternalIdsResponse?,
-    @Json(name = "external_urls")
-    val externalUrls: ExternalUrlsResponse?,
-    @Json(name = "href")
+    @SerialName("external_ids")
+    val externalIdResponse: ExternalIdsResponse?,
+    @SerialName("external_urls")
+    val externalUrlResponse: ExternalUrlsResponse?,
+    @SerialName("href")
     val href: String?,
-    @Json(name = "id")
+    @SerialName("id")
     val id: String?,
-    @Json(name = "is_local")
+    @SerialName("is_local")
     val isLocal: Boolean?,
-    @Json(name = "name")
+    @SerialName("name")
     val name: String?,
-    @Json(name = "popularity")
+    @SerialName("popularity")
     val popularity: Int?,
-    @Json(name = "preview_url")
+    @SerialName("preview_url")
     val previewUrl: String?,
-    @Json(name = "track_number")
+    @SerialName("track_number")
     val trackNumber: Int?,
-    @Json(name = "type")
+    @SerialName("type")
     val type: String?,
-    @Json(name = "uri")
+    @SerialName("uri")
     val uri: String?
 )

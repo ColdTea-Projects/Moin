@@ -5,7 +5,7 @@ import de.coldtea.moin.domain.model.spotify.*
 
 fun SearchResponse.toSearchResult() =
     SearchResult(
-        tracks.toTracks()
+        trackResponse.toTracks()
     )
 
 fun TracksResponse?.toTracks() =
@@ -23,14 +23,14 @@ fun TracksResponse?.toTracks() =
 
 fun ItemResponse?.toItem() =
     Item(
-        album = this?.album.toAlbum(),
-        artists = this?.artists?.map { it.toArtist() }?: listOf(),
+        album = this?.albumResponse.toAlbum(),
+        artists = this?.artistResponse?.map { it.toArtist() }?: listOf(),
         availableMarkets = this?.availableMarkets?.map { it.orEmpty() }?: listOf(),
         discNumber = this?.discNumber?:0,
         durationMs = this?.durationMs?:0,
         explicit = this?.explicit?:false,
-        externalIds = ExternalIds(this?.externalIds?.isrc.orEmpty()),
-        externalUrls = ExternalUrls(this?.externalUrls?.spotify.orEmpty()),
+        externalIds = ExternalIds(this?.externalIdResponse?.isrc.orEmpty()),
+        externalUrls = ExternalUrls(this?.externalUrlResponse?.spotify.orEmpty()),
         href = this?.href.orEmpty(),
         id = this?.id.orEmpty(),
         isLocal = this?.isLocal?:false,

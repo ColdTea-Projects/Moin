@@ -1,11 +1,11 @@
 package de.coldtea.moin.extensions
 
 import de.coldtea.moin.data.database.entity.HourlyForecastEntity
-import de.coldtea.moin.data.network.forecast.model.Weather
+import de.coldtea.moin.data.network.forecast.model.WeatherResponse
 
-fun Weather.convertToEntitylist(cityName: String): List<HourlyForecastEntity> {
+fun WeatherResponse.convertToEntitylist(cityName: String): List<HourlyForecastEntity> {
     val hourlyForecastEntityList = mutableListOf<HourlyForecastEntity>()
-    forecast?.forecastday?.map { day ->
+    forecastResponse?.forecastdayResponse?.map { day ->
         day.hour?.map { hour ->
             val hourlyForecastEntity = HourlyForecastEntity(
                 hourlyForecastId = hour.timeEpoch ?: -1,
@@ -15,8 +15,8 @@ fun Weather.convertToEntitylist(cityName: String): List<HourlyForecastEntity> {
                 timeEpoch = hour.timeEpoch ?: -1,
                 tempC = hour.tempC,
                 tempF = hour.tempF,
-                conditionCode = hour.condition?.code ?: -1,
-                conditionText = hour.condition?.text.orEmpty()
+                conditionCode = hour.conditionResponse?.code ?: -1,
+                conditionText = hour.conditionResponse?.text.orEmpty()
             )
 
             hourlyForecastEntityList.add(hourlyForecastEntity)

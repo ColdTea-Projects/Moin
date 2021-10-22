@@ -1,18 +1,18 @@
 package de.coldtea.moin.data.network.spotify.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AccessTokenRequestParametersResponse (
-    @Json(name = "client_id")
+    @SerialName("client_id")
     val clientId: String?,
-    @Json(name = "grant_type")
+    @SerialName("grant_type")
     val grantType: String?,
-    @Json(name = "code")
+    @SerialName("code")
     val code: String?,
-    @Json(name = "redirect_uri")
+    @SerialName("redirect_uri")
     val redirectUri: String?,
-    @Json(name = "code_verifier")
+    @SerialName("code_verifier")
     val codeVerifier: String?
 )

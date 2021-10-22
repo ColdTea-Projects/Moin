@@ -1,22 +1,32 @@
 package de.coldtea.moin.di
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import de.coldtea.moin.BuildConfig
 import de.coldtea.moin.data.network.forecast.WeatherForecastApi
 import de.coldtea.moin.data.network.interceptors.AuthInterceptor
 import de.coldtea.moin.data.network.spotify.SpotifyApi
 import de.coldtea.moin.data.network.spotify.SpotifyAuthApi
 import de.coldtea.moin.domain.services.AuthenticationService
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 
 private const val WEATHER_API_RETROFIT = "WeatherApiRetrofit"
 private const val SPOTIFY_AUTH_API_RETROFIT = "SpotifyAuthRetrofit"
 private const val SPOTIFY_API_RETROFIT = "SpotifyRetrofit"
 
+@ExperimentalSerializationApi
+val json = Json{
+    ignoreUnknownKeys = true
+    explicitNulls = false
+}
+
+@ExperimentalSerializationApi
 val networkModule = module {
     factory { AuthInterceptor() }
     factory { HttpLoggingInterceptor() }
@@ -30,27 +40,30 @@ val networkModule = module {
     single { AuthenticationService() }
 }
 
+@ExperimentalSerializationApi
 fun provideRetrofitWeatherApi(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.ROOT_URL_WEATHER_API)
         .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 }
 
+@ExperimentalSerializationApi
 fun provideRetrofitSpotifyAuth(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.ROOT_URL_SPOTIFY_AUTH)
         .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 }
 
+@ExperimentalSerializationApi
 fun provideRetrofitSpotify(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.ROOT_URL_SPOTIFY)
         .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 }
 

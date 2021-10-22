@@ -1,35 +1,34 @@
 package de.coldtea.moin.data.network.spotify.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AlbumResponse(
-    @Json(name = "album_type")
+    @SerialName("album_type")
     val albumType: String?,
-    @Json(name = "artists")
+    @SerialName("artists")
     val artists: List<ArtistResponse?>?,
-    @Json(name = "available_markets")
+    @SerialName("available_markets")
     val availableMarkets: List<String?>?,
-    @Json(name = "external_urls")
+    @SerialName("external_urls")
     val externalUrls: ExternalUrlsResponse?,
-    @Json(name = "href")
+    @SerialName("href")
     val href: String?,
-    @Json(name = "id")
+    @SerialName("id")
     val id: String?,
-    @Json(name = "images")
+    @SerialName("images")
     val images: List<ImageResponse?>?,
-    @Json(name = "name")
+    @SerialName("name")
     val name: String?,
-    @Json(name = "release_date")
+    @SerialName("release_date")
     val releaseDate: String?,
-    @Json(name = "release_date_precision")
+    @SerialName("release_date_precision")
     val releaseDatePrecision: String?,
-    @Json(name = "total_tracks")
+    @SerialName("total_tracks")
     val totalTracks: Int?,
-    @Json(name = "type")
+    @SerialName("type")
     val type: String?,
-    @Json(name = "uri")
+    @SerialName("uri")
     val uri: String?
 )

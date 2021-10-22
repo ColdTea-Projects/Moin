@@ -11,7 +11,7 @@ import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
 import de.coldtea.moin.data.WeatherRepository
-import de.coldtea.moin.data.network.forecast.model.CurrentWeather
+import de.coldtea.moin.data.network.forecast.model.CurrentWeatherResponse
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
 import de.coldtea.moin.domain.model.alarm.LatLong
 import de.coldtea.moin.domain.model.forecast.HourlyForecast
@@ -39,8 +39,8 @@ class DebugViewModel(
     private var _weatherResponse = MutableSharedFlow<List<HourlyForecast>>()
     val weatherResponse: SharedFlow<List<HourlyForecast>> = _weatherResponse
 
-    private var _currentResponse = MutableSharedFlow<CurrentWeather>()
-    val currentResponse: SharedFlow<CurrentWeather> = _currentResponse
+    private var _currentResponse = MutableSharedFlow<CurrentWeatherResponse>()
+    val currentResponse: SharedFlow<CurrentWeatherResponse> = _currentResponse
 
     private var _spotifyState = MutableSharedFlow<SpotifyState>()
     val spotifyState: SharedFlow<SpotifyState> = _spotifyState

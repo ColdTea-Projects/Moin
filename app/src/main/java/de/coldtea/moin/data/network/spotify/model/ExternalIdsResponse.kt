@@ -1,11 +1,10 @@
 package de.coldtea.moin.data.network.spotify.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
+@Serializable
 data class ExternalIdsResponse(
-    @Json(name = "isrc")
+    @SerialName("isrc")
     val isrc: String?
 )
