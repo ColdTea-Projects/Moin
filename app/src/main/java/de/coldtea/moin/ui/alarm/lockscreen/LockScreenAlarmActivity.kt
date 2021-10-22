@@ -13,6 +13,7 @@ import de.coldtea.moin.extensions.activateLockScreen
 import de.coldtea.moin.extensions.deactivateLockScreen
 import de.coldtea.moin.services.model.ConnectionFailed
 import de.coldtea.moin.services.model.ConnectionSuccess
+import de.coldtea.moin.services.model.Play
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
 import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
@@ -27,6 +28,7 @@ class LockScreenAlarmActivity : AppCompatActivity() {
     private val viewModel: LockScreenAlarmViewModel by viewModel()
     private var ringtone: Ringtone? = null
     private var ringerScreenInfo: RingerScreenInfo? = null
+    private var isStartedPlaying = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +94,12 @@ class LockScreenAlarmActivity : AppCompatActivity() {
             when (it) {
                 ConnectionSuccess -> onConnectionSuccess()
                 ConnectionFailed -> onConnectionFailed()
+                is Play -> {
+                    if(it.playerState.isPaused && isStartedPlaying) finish()
+                    else {
+                        isStartedPlaying = true
+                    }
+                }
             }
         }}
 

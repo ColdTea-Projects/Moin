@@ -10,6 +10,8 @@ import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import retrofit2.HttpException
+import timber.log.Timber
 
 class SongRandomizeService(
     private val weatherRepository: WeatherRepository,
@@ -23,8 +25,14 @@ class SongRandomizeService(
 
         withTimeout(3000L) {
             if (city != null && city != sharedPreferencesRepository.lastVisitedCity) {
-                weatherRepository.updateWeatherForecast(city).also {
-                    sharedPreferencesRepository.lastVisitedCity = city
+                try {
+                    weatherRepository.updateWeatherForecast(city).also {
+                        sharedPreferencesRepository.lastVisitedCity = city
+                    }
+                }catch (e: HttpException){
+                    Timber.e("Moin --> $e")
+                }catch (e: Exception){
+                    Timber.e("Moin --> $e")
                 }
             }
         }
