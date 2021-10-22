@@ -1,6 +1,7 @@
 
 package de.coldtea.moin.ui.alarm.lockscreen
 
+import android.app.NotificationManager
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -84,7 +85,7 @@ class LockScreenAlarmViewModel(
                         ?.let { alarmItem ->
                             setAlarmForDismissal(alarmItem)
                         }
-                    RequestAlarms -> _label.emit(alarmObject.alarmList.alarmItems[0].info?.label.orEmpty())
+                    RequestAlarms -> _label.emit(alarmObject.alarmList.alarmItems[0].info.label)
                 }
             }
 
@@ -142,8 +143,8 @@ class LockScreenAlarmViewModel(
     private fun setAlarmForDismissal(alarmItem: AlarmItem) {
         smplrAlarmService.updateAlarm(
             requestId = requestId,
-            hour = alarmItem.info?.originalHour?.toIntOrNull(),
-            minute = alarmItem.info?.originalMinute?.toIntOrNull(),
+            hour = alarmItem.info.originalHour.toIntOrNull(),
+            minute = alarmItem.info.originalMinute.toIntOrNull(),
             isActive = false,
             alarmEvent = DismissAlarmUpdate
         )
@@ -167,4 +168,9 @@ class LockScreenAlarmViewModel(
             it.add(Calendar.MINUTE, 15)
             it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
         }
+
+    fun dismissNotification(context: Context){
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(requestId)
+    }
 }

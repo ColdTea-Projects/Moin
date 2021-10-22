@@ -55,6 +55,8 @@ class LockScreenAlarmActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.disconnectSpotify()
+        viewModel.dismissNotification(this)
+
         deactivateLockScreen()
     }
 
