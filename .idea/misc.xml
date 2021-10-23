@@ -14,7 +14,7 @@
         <entry key="app/src/main/res/layout/activity_search_spotify.xml" value="0.39947916666666666" />
         <entry key="app/src/main/res/layout/dialog_alarm_label.xml" value="0.2641843971631206" />
         <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.15670289855072464" />
-        <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.15670289855072464" />
+        <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_playlists.xml" value="0.3234375" />
         <entry key="app/src/main/res/layout/fragment_search_spotify.xml" value="0.48289269051321926" />
         <entry key="app/src/main/res/layout/item_playlist.xml" value="0.20652173913043478" />

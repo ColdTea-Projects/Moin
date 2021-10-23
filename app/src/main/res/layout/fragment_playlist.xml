@@ -11,7 +11,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlist_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/margin_xl"
+            android:clipToPadding="false" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_song"
@@ -22,7 +24,6 @@
             app:borderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:rippleColor="@color/moinOrange3"
             app:srcCompat="@drawable/ic_baseline_add_alarm_24"
             app:tint="@color/moinBlueTone1"
