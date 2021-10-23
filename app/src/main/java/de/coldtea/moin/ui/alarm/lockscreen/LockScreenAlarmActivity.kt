@@ -1,5 +1,6 @@
 package de.coldtea.moin.ui.alarm.lockscreen
 
+import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.media.Ringtone
 import android.media.RingtoneManager
@@ -32,6 +33,7 @@ class LockScreenAlarmActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
         binding = ActivityLockScreenAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
