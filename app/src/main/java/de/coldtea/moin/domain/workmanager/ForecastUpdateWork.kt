@@ -40,8 +40,6 @@ class ForecastUpdateWork(context: Context, workerParameters: WorkerParameters) :
     }
 
     private suspend fun isUpdateNeeded(cityName: String): Boolean {
-        if (sharedPreferencesRepository.lastBulkForecastFetch == -1) return true
-
         val forecastBoundaryObject = weatherRepository
             .getHourlyForecastByCity(cityName)
             .toForecastBoundary()

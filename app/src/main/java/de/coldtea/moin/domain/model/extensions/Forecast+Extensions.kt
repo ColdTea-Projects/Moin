@@ -15,8 +15,8 @@ fun HourlyForecast.toRingerScreenInfo(songId: String?) =
 
 fun List<HourlyForecast>.toForecastBoundary() =
     ForecastBoundary(
-        latestForecastTimeEpoch = this.last().timeEpoch,
-        earliestForecastTimeEpoch = this.first().timeEpoch,
+        latestForecastTimeEpoch = this.lastOrNull()?.timeEpoch?:-1,
+        earliestForecastTimeEpoch = this.firstOrNull()?.timeEpoch?:-1,
         dataSize = this.size
     )
 
