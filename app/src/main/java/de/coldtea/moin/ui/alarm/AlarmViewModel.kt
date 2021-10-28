@@ -1,5 +1,6 @@
 package de.coldtea.moin.ui.alarm
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.coldtea.moin.R
@@ -28,7 +29,7 @@ class AlarmViewModel: ViewModel(){
         }
     }
 
-    fun setAlarm(hour: Int, minute: Int){
+    fun setAlarm(hour: Int, minute: Int, context: Context){
         val notificationItem = NotificationItem(
             R.drawable.ic_baseline_alarm_24,
             "Alarm is ringing",

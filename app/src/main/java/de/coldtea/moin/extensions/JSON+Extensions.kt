@@ -8,14 +8,14 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun String.convertToAlarmList(): AlarmList =
     json.decodeFromString(this)
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun String.convertToInfoPairs(): InfoPairs =
     json.decodeFromString(this)
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun AccessTokenRequestParametersResponse.convertToString(): String =
     json.encodeToString(this)

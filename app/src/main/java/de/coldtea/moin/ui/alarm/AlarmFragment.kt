@@ -83,7 +83,7 @@ class AlarmFragment : BaseFragment() {
         setAlarm.setOnClickListener {
 //            val cal = Calendar.getInstance()
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-                viewModel.setAlarm(hour, minute)
+                viewModel.setAlarm(hour, minute, requireContext())
             }
 
             val alarmTime = getAlarmTime(1)

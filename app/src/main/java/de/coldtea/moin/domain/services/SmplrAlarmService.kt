@@ -2,11 +2,11 @@ package de.coldtea.moin.domain.services
 
 import android.content.Context
 import android.content.Intent
+import de.coldtea.moin.MainActivity
 import de.coldtea.moin.domain.model.alarm.AlarmEvent
 import de.coldtea.moin.domain.model.alarm.AlarmObject
 import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
 import de.coldtea.moin.extensions.convertToAlarmList
-import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.alarm.lockscreen.LockScreenAlarmActivity
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import de.coldtea.smplr.smplralarm.models.NotificationItem
@@ -33,7 +33,7 @@ class SmplrAlarmService(private val context: Context) {
 
     private val onClickIntent = Intent(
         context,
-        AlarmFragment::class.java
+        MainActivity::class.java
     )
 
     private val fullScreenIntent = Intent(
@@ -43,7 +43,7 @@ class SmplrAlarmService(private val context: Context) {
 
     init {
         smplrAlarmChangeOrRequestListener(context){
-            it.convertToAlarmList()?.let { alarmList ->
+            it.convertToAlarmList().let { alarmList ->
                 CoroutineScope(Dispatchers.IO).launch {
                     Timber.d("Moin --> _alarmList.emit(alarmList) ")
                     _alarmList.emit(AlarmObject(alarmList, lastAlarmEvent))
