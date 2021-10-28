@@ -14,6 +14,7 @@ import de.coldtea.moin.databinding.FragmentPlaylistBinding
 import de.coldtea.moin.domain.model.extensions.getPlaylistBundle
 import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.domain.model.playlist.Song
+import de.coldtea.moin.domain.model.playlist.getTitle
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.playlist.PlaylistViewModel.Companion.PLAY_LIST_FRAGMENT_WEATHER_KEY
 import de.coldtea.moin.ui.playlist.adapter.PlaylistAdapter
@@ -57,7 +58,7 @@ class PlaylistFragment : BaseFragment() {
     private fun FragmentPlaylistBinding.initUIItems() {
         viewModel.playlistName?.let { playlistName ->
 
-            requireActivity().title = playlistName.name
+            requireActivity().title = playlistName.getTitle()
             addSong.setOnClickListener {
                 val intent = Intent(requireActivity(), SearchSpotifyActivity::class.java)
                 intent.putExtra(PLAY_LIST_FRAGMENT_WEATHER_KEY, playlistName.key)

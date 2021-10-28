@@ -35,5 +35,7 @@ fun getTopOfTheHour() = Calendar.getInstance().apply {
     set(MINUTE, 0)
 }.timeInSeconds()
 
+fun Calendar.isDayTime(): Boolean = get(HOUR_OF_DAY) in 6..18
+
 fun Calendar.timeInSeconds(): Int =
     (this.timeInMillis / 1000).toInt()
