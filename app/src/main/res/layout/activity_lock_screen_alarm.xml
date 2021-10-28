@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             tools:text = "This field is reserved for user message"
             android:gravity="center"
+            android:maxLength="100"
             app:layout_constraintTop_toBottomOf="@id/weather"
             android:textColor="@color/moinBlueTone7"/>
 
