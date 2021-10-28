@@ -5,14 +5,14 @@ import de.coldtea.moin.domain.model.playlist.PlaylistName
 val SUNNY_WEATHER_BUNDLE = ForecastConditionBundle(
     PlaylistName.SUNNY,
     listOf(
-        1000,
-        1003
+        1000
     )
 )
 
 val CLOUDY_WEATHER_BUNDLE = ForecastConditionBundle(
     PlaylistName.CLOUDY,
     listOf(
+        1003,
         1006,
         1009,
         1030,
