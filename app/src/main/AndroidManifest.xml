@@ -19,7 +19,7 @@
         android:allowBackup="false"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.alarm.lockscreen.LockScreenAlarmActivity" />
+        <activity android:name=".ui.lockscreen.LockScreenAlarmActivity" />
 
         <activity
             android:name=".MainActivity"
@@ -59,6 +59,14 @@
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
+            <meta-data
+                android:name="android.service.notification.default_filter_types"
+                android:value="conversations,alerting">
+            </meta-data>
+            <meta-data
+                android:name="android.service.notification.disabled_filter_types"
+                android:value="ongoing,silent">
+            </meta-data>
         </service>
     </application>
 

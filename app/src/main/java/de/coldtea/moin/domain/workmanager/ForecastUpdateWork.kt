@@ -26,6 +26,7 @@ class ForecastUpdateWork(context: Context, workerParameters: WorkerParameters) :
         Timber.i("Moin --> geolocationService $geolocationService")
         Timber.i("Moin --> city $city")
         try {
+            Timber.i("Moin --> updateWeatherForecast - ForecastUpdateWork")
             if (isUpdateNeeded(city)) weatherRepository.updateWeatherForecast(city)
             Timber.i("Moin-getWeatherForecast- the weather forecast is updated")
         } catch (ex: HttpException) {

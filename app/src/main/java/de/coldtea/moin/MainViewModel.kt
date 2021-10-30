@@ -7,6 +7,7 @@ import de.coldtea.moin.data.WeatherRepository
 import de.coldtea.moin.domain.services.GeolocationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel(
     private val sharedPreferencesRepository: SharedPreferencesRepository,
@@ -24,9 +25,10 @@ class MainViewModel(
     }
 
     fun updateForecastIfLocationChanged() = viewModelScope.launch(Dispatchers.IO) {
-        val currentCity = geolocationService.getCityName()
+        val currentCity = geolocationService.getCityName()//TODO: why the hell this is null now?
 
-        if (currentCity != null && currentCity != sharedPreferencesRepository.lastVisitedCity) {
+        if (!currentCity.isNullOrEmpty() && currentCity != sharedPreferencesRepository.lastVisitedCity) {
+            Timber.i("Moin --> updateWeatherForecast - main view model")
             weatherRepository.updateWeatherForecast(currentCity)
             sharedPreferencesRepository.lastVisitedCity = currentCity
         }

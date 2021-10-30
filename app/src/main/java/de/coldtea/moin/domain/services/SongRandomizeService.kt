@@ -6,7 +6,9 @@ import de.coldtea.moin.data.WeatherRepository
 import de.coldtea.moin.domain.model.extensions.toRingerScreenInfo
 import de.coldtea.moin.domain.model.forecast.*
 import de.coldtea.moin.domain.model.playlist.PlaylistName
+import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
@@ -20,12 +22,15 @@ class SongRandomizeService(
     private val songRepository: SongRepository
 ) {
 
-    suspend fun getRingerScreenInfo(): RingerScreenInfo? = withContext(Dispatchers.IO) {
+    suspend fun getRingerScreenInfo(): RingerScreenInfo? = withContext(Dispatchers.IO+ CoroutineExceptionHandler { _, t ->
+        Timber.d("Moin --> getRingerScreenInfo crashed: $t")
+    }) {
         val city = geolocationService.getCityName()
 
         withTimeout(3000L) {
-            if (city != null && city != sharedPreferencesRepository.lastVisitedCity) {
+            if (!city.isNullOrEmpty() && city != sharedPreferencesRepository.lastVisitedCity) {
                 try {
+                    Timber.i("Moin --> updateWeatherForecast - SongRandomizeService")
                     weatherRepository.updateWeatherForecast(city).also {
                         sharedPreferencesRepository.lastVisitedCity = city
                     }
@@ -44,7 +49,7 @@ class SongRandomizeService(
         )
     }
 
-    private suspend fun getRandomSong(forecast: HourlyForecast?): String? {
+    private suspend fun getRandomSong(forecast: HourlyForecast?): Song? {
         val playlist = if (forecast != null) {
             findMainForecastCondition(forecast.conditionCode)
         } else null
@@ -52,19 +57,19 @@ class SongRandomizeService(
         return getRandomSongByPlaylist(playlist)
     }
 
-    private suspend fun getRandomSongByPlaylist(playlistName: PlaylistName?): String? {
+    private suspend fun getRandomSongByPlaylist(playlistName: PlaylistName?): Song? {
         if (playlistName != null) {
             val songs = songRepository.getSongsByPlaylist(playlistName)
             if (songs.isEmpty())
                 return getRandomSongByPlaylist(null)
 
-            return songs.shuffled().take(1)[0].trackId
+            return songs.shuffled().take(1)[0]
         } else {
             val songs = songRepository.getSongs()
             if(songs.isEmpty()){
                 return null
             }
-            return songs.shuffled().take(1)[0].trackId
+            return songs.shuffled().take(1)[0]
         }
     }
 

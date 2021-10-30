@@ -7,7 +7,7 @@ import de.coldtea.moin.domain.model.alarm.AlarmEvent
 import de.coldtea.moin.domain.model.alarm.AlarmObject
 import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
 import de.coldtea.moin.extensions.convertToAlarmList
-import de.coldtea.moin.ui.alarm.lockscreen.LockScreenAlarmActivity
+import de.coldtea.moin.ui.lockscreen.LockScreenAlarmActivity
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmListRequestAPI
 import de.coldtea.smplr.smplralarm.models.NotificationItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
@@ -45,7 +45,7 @@ class SmplrAlarmService(private val context: Context) {
         smplrAlarmChangeOrRequestListener(context){
             it.convertToAlarmList().let { alarmList ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    Timber.d("Moin --> _alarmList.emit(alarmList) ")
+                    Timber.d("Moin --> _alarmList.emit(alarmList) -- $lastAlarmEvent")
                     _alarmList.emit(AlarmObject(alarmList, lastAlarmEvent))
                 }
             }

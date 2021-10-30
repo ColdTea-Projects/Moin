@@ -3,12 +3,13 @@ package de.coldtea.moin.domain.model.extensions
 import de.coldtea.moin.data.database.entity.HourlyForecastEntity
 import de.coldtea.moin.domain.model.forecast.ForecastBoundary
 import de.coldtea.moin.domain.model.forecast.HourlyForecast
+import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
 
-fun HourlyForecast.toRingerScreenInfo(songId: String?) =
+fun HourlyForecast.toRingerScreenInfo(song: Song?) =
     RingerScreenInfo(
         forecastText = conditionText,
-        songId = songId,
+        song = song,
         tempC = tempC,
         tempF = tempF
     )

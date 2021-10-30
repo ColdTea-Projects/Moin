@@ -2,7 +2,7 @@ package de.coldtea.moin.domain.services
 
 import android.app.KeyguardManager
 import android.content.Context
-import android.media.AudioManager
+import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -26,23 +26,32 @@ class AlarmNotificationListenerService: NotificationListenerService() {
     private val smplrAlarmService: SmplrAlarmService by KoinJavaComponent.inject(SmplrAlarmService::class.java)
     private val songRandomizeService: SongRandomizeService by KoinJavaComponent.inject(SongRandomizeService::class.java)
     private val ioCoroutineScope = CoroutineScope(Dispatchers.IO)
-    private val keyguardManager = applicationContext.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
     private var ringtone: Ringtone? = null
 
+    override fun onListenerConnected() {
+        Timber.i("Moin --> onListenerConnected")
+        super.onListenerConnected()
+        Timber.i("Moin --> onListenerConnected")
+    }
+
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
+        Timber.i("Moin --> onNotificationPosted")
         super.onNotificationPosted(sbn)
+        Timber.i("Moin --> onNotificationPosted")
         notificationId = sbn?.id?:-1
+        val keyguardManager = applicationContext.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+
 
         //is screen not locked
         if (!keyguardManager.isKeyguardLocked){
             observeAlarmList()
             smplrAlarmService.callRequestAlarmList()
-//            sbn?.id?.let { ring(it) }
-//            SpotifyAppRemote.connect(
-//                applicationContext,
-//                connectionParams,
-//                connectionListener
-//            )
+            sbn?.id?.let { ring() }
+            SpotifyAppRemote.connect(
+                applicationContext,
+                connectionParams,
+                connectionListener
+            )
         }
     }
 
@@ -93,7 +102,7 @@ class AlarmNotificationListenerService: NotificationListenerService() {
 
         _spotifyAppRemote
             ?.playerApi
-            ?.play("spotify:track:${ringerScreenInfo?.songId}", PlayerApi.StreamType.ALARM)
+            ?.play("spotify:track:${ringerScreenInfo?.song}", PlayerApi.StreamType.ALARM)
             ?.also {
                 subscribePlayerState()
             }
@@ -107,7 +116,10 @@ class AlarmNotificationListenerService: NotificationListenerService() {
     private fun ringDefaultAlarm(){
         val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         ringtone = RingtoneManager.getRingtone(applicationContext, notification)
-        ringtone?.streamType = AudioManager.STREAM_ALARM
+        ringtone?.audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
         ringtone?.play()
     }
 
