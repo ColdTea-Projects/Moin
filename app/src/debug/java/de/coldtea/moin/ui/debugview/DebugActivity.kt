@@ -1,15 +1,11 @@
 package de.coldtea.moin.ui.debugview
 
-import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
-import de.coldtea.moin.domain.services.SpotifyService.REDIRECT_URI_ROOT
-import de.coldtea.moin.extensions.convertToAuthorizationResponse
 import de.coldtea.moin.services.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -53,18 +49,18 @@ class DebugActivity : AppCompatActivity() {
         binding?.search?.setOnClickListener { onSearchClicked() }
 
         //This part does not work from here anymore, please use actual use-case to get spotify authorization TODO:Remove authorization
-        val data: Uri? = intent.data
-
-        if (data != null && !TextUtils.isEmpty(data.scheme)) {
-            if (REDIRECT_URI_ROOT == data.scheme) {
-                binding?.spotify?.text = data.toString()
-                val authorizationResponse = data.toString().convertToAuthorizationResponse()
-                debugViewModel.registerAuthorizationCode(authorizationResponse)
-                debugViewModel.getAccessToken(authorizationResponse?.code)
-            }
-        }else if(!debugViewModel.refreshTokenExist){
-            startActivity(debugViewModel.getAuthorizationIntent())
-        }
+//        val data: Uri? = intent.data
+//
+//        if (data != null && !TextUtils.isEmpty(data.scheme)) {
+//            if (REDIRECT_URI_ROOT == data.scheme) {
+//                binding?.spotify?.text = data.toString()
+//                val authorizationResponse = data.toString().convertToAuthorizationResponse()
+//                debugViewModel.registerAuthorizationCode(authorizationResponse)
+//                debugViewModel.getAccessToken(authorizationResponse?.code)
+//            }
+//        }else if(!debugViewModel.refreshTokenExist){
+//            startActivity(debugViewModel.getAuthorizationIntent())
+//        }
     }
 
     override fun onStart() {

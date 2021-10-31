@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.LocationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import de.coldtea.moin.data.SharedPreferencesRepository
@@ -18,7 +19,7 @@ import java.util.*
 class GeolocationService(
     private val context: Context,
     private val sharedPreferencesRepository: SharedPreferencesRepository
-    ) {
+) {
     private val geocoder = Geocoder(context, Locale.getDefault())
     private val locationManager: LocationManager by lazy { context.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     val permitted: Boolean
@@ -26,10 +27,13 @@ class GeolocationService(
             context,
             ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(
-            context,
-            ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+                &&
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R)
+                    ActivityCompat.checkSelfPermission(
+                        context,
+                        ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                else true
 
     fun getCityName(): String? {
         val longLat = getLatLong() ?: return ""
@@ -39,7 +43,7 @@ class GeolocationService(
         //TODO: research gcpr
         val addresses = try {
             geocoder.getFromLocation(longLat.lat, longLat.long, 1)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Timber.d("Moin --> Address could not be received: $e")
             return null
         }
@@ -74,7 +78,9 @@ class GeolocationService(
 
     companion object {
         const val LOCATION_PERMIT_REQUEST_CODE = 255
-        val REQUESTED_LOCATION_PERMISSIONS = arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
+        val REQUESTED_LOCATION_PERMISSIONS =
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) arrayOf(ACCESS_COARSE_LOCATION)
+            else arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
     }
 
 }
