@@ -11,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.databinding.ActivityMainBinding
-import de.coldtea.moin.domain.services.AlarmNotificationListenerService
 import de.coldtea.moin.domain.services.GeolocationService.Companion.LOCATION_PERMIT_REQUEST_CODE
 import de.coldtea.moin.domain.services.GeolocationService.Companion.REQUESTED_LOCATION_PERMISSIONS
 import de.coldtea.moin.domain.workmanager.ForecastUpdateWorkManager
@@ -44,7 +43,6 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.requestLocationServicePermissions(this)
         }
 
-        startService(Intent(this, AlarmNotificationListenerService::class.java))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

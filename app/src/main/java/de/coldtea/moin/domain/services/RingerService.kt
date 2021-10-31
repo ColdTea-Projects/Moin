@@ -28,11 +28,11 @@ class RingerService(
 ) {
     private val ioCoroutineScope
         get() = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { _, t ->
-            Timber.d("Moin --> ioCoroutineScope crashed: $t")
+            Timber.d("Moin.RingerService --> ioCoroutineScope crashed: $t")
         })
     private val mainCoroutineScope
         get() = CoroutineScope(Dispatchers.Main + CoroutineExceptionHandler { _, t ->
-            Timber.d("Moin --> mainCoroutineScope crashed: $t")
+            Timber.d("Moin.RingerService --> mainCoroutineScope crashed: $t")
         })
 
     private var ringerScreenInfo: RingerScreenInfo? = null

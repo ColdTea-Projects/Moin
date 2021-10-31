@@ -1,6 +1,7 @@
 package de.coldtea.moin.di
 
 import de.coldtea.moin.MainViewModel
+import de.coldtea.moin.ui.alarm.AlarmViewModel
 import de.coldtea.moin.ui.debugview.DebugViewModel
 import de.coldtea.moin.ui.dialogfragments.label.AlarmLabelDialogViewModel
 import de.coldtea.moin.ui.lockscreen.LockScreenAlarmViewModel
@@ -17,4 +18,5 @@ val appModule = module {
     viewModel { PlaylistViewModel(get()) }
     viewModel { LockScreenAlarmViewModel(get(), get()) }
     viewModel { AlarmLabelDialogViewModel(get()) }
+    viewModel { AlarmViewModel(get()) }
 }

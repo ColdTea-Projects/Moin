@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,13 +18,14 @@ import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.dialogfragments.label.AlarmLabelDialogFragment
 import kotlinx.coroutines.flow.collect
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
 class AlarmFragment : BaseFragment() {
 
     // region properties
-    private val viewModel: AlarmViewModel by viewModels()
+    private val viewModel: AlarmViewModel by viewModel()
 
     private var alarmsAdapter = AlarmsAdapter()
 
@@ -83,7 +83,7 @@ class AlarmFragment : BaseFragment() {
         setAlarm.setOnClickListener {
 //            val cal = Calendar.getInstance()
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-                viewModel.setAlarm(hour, minute, requireContext())
+                viewModel.setAlarm(hour, minute, requireContext().applicationContext)
             }
 
             val alarmTime = getAlarmTime(1)

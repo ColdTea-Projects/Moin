@@ -20,7 +20,6 @@ class LockScreenAlarmActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLockScreenAlarmBinding
     private val viewModel: LockScreenAlarmViewModel by viewModel()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

@@ -8,7 +8,6 @@ import de.coldtea.moin.domain.model.forecast.*
 import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
@@ -22,9 +21,7 @@ class SongRandomizeService(
     private val songRepository: SongRepository
 ) {
 
-    suspend fun getRingerScreenInfo(): RingerScreenInfo? = withContext(Dispatchers.IO+ CoroutineExceptionHandler { _, t ->
-        Timber.d("Moin --> getRingerScreenInfo crashed: $t")
-    }) {
+    suspend fun getRingerScreenInfo(): RingerScreenInfo? = withContext(Dispatchers.IO) {
         val city = geolocationService.getCityName()
 
         withTimeout(3000L) {
