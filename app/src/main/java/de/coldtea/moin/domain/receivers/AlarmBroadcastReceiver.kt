@@ -1,10 +1,12 @@
 package de.coldtea.moin.domain.receivers
 
 import android.app.KeyguardManager
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import de.coldtea.moin.domain.model.alarm.NotificationListenerRequest
+import de.coldtea.moin.domain.model.ringer.Stops
 import de.coldtea.moin.domain.services.RingerService
 import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
@@ -23,6 +25,10 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
     private val ioCoroutineScope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { _, t ->
         Timber.d("Moin.AlarmBroadcastReceiver --> ioCoroutineScope crashed: $t")
     })
+    private val mainCoroutineScope
+        get() = CoroutineScope(Dispatchers.Main + CoroutineExceptionHandler { _, t ->
+            Timber.d("Moin.RingerService --> mainCoroutineScope crashed: $t")
+        })
 
     override fun onReceive(context: Context?, intent: Intent?) {
         requestId = intent?.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)?:return
@@ -37,6 +43,7 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
         //is screen not locked
         if (!keyguardManager.isKeyguardLocked){
             observeAlarmList()
+            observeRingerState(applicationContext)
             smplrAlarmService.callRequestAlarmList(NotificationListenerRequest)
         }
     }
@@ -50,5 +57,18 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
                 }
             }
         }
+    }
+
+    private fun observeRingerState(applicationContext: Context) = mainCoroutineScope.launch {
+        ringerService.ringerStateInfo.collect { ringerStateInfo ->
+            if(ringerStateInfo is Stops){
+                dismissNotification(applicationContext)
+            }
+        }
+    }
+
+    private fun dismissNotification(applicationContext: Context){
+        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(requestId)
     }
 }
