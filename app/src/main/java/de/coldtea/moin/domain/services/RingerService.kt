@@ -53,6 +53,7 @@ class RingerService(
     val ringerStateInfo = _ringerStateInfo.asSharedFlow()
 
     fun ring() = ioCoroutineScope.launch {
+        isStartedPlaying = false
         ringerScreenInfo = songRandomizeService.getRingerScreenInfo()
         _ringerStateInfo.emit(
             Randomized(ringerScreenInfo)
@@ -134,12 +135,12 @@ class RingerService(
     private fun subscribePlayerState() =
         _spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
             mainCoroutineScope.launch {
-                Timber.d("Moin --> Player state: $playerState")
+                Timber.d("Moin --> Player state: ${playerState.isPaused} - $isStartedPlaying")
                 if (playerState.isPaused && isStartedPlaying) {
                     isStartedPlaying = false
                     _ringerStateInfo.emit(Stops)
                 }
-                else {
+                else if (!playerState.isPaused && !isStartedPlaying){
                     isStartedPlaying = true
                 }
             }
