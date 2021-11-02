@@ -106,7 +106,7 @@ class AlarmDelegate :
                         "label" to item.label
                     )
 
-                    updateAlarm(item = item, hour = hour, minute = minute, infoPairs = infoPairs)
+                    updateAlarm(item = item, hour = hour, minute = minute, isActive = true, infoPairs = infoPairs)
                 }
                 TimePickerDialog(
                     time.context,

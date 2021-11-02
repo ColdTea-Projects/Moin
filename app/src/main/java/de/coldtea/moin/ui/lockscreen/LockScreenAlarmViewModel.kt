@@ -94,6 +94,7 @@ class LockScreenAlarmViewModel(
     )
 
     fun onScreenDestroyed(context: Context){
+        ringerService.stop()
         ringerService.invalidate()
         dismissNotification(context)
     }
