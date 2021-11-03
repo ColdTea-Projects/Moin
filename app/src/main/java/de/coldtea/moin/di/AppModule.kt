@@ -3,6 +3,7 @@ package de.coldtea.moin.di
 import de.coldtea.moin.MainViewModel
 import de.coldtea.moin.ui.alarm.AlarmViewModel
 import de.coldtea.moin.ui.debugview.DebugViewModel
+import de.coldtea.moin.ui.debugview.mp3.Mp3ViewModel
 import de.coldtea.moin.ui.dialogfragments.label.AlarmLabelDialogViewModel
 import de.coldtea.moin.ui.lockscreen.LockScreenAlarmViewModel
 import de.coldtea.moin.ui.playlist.PlaylistViewModel
@@ -19,4 +20,5 @@ val appModule = module {
     viewModel { LockScreenAlarmViewModel(get(), get()) }
     viewModel { AlarmLabelDialogViewModel(get()) }
     viewModel { AlarmViewModel(get()) }
+    viewModel { Mp3ViewModel() }
 }

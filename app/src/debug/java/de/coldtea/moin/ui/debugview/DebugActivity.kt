@@ -1,5 +1,6 @@
 package de.coldtea.moin.ui.debugview
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -7,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
 import de.coldtea.moin.services.model.*
+import de.coldtea.moin.ui.debugview.mp3.Mp3Activity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -47,6 +49,11 @@ class DebugActivity : AppCompatActivity() {
         }
 
         binding?.search?.setOnClickListener { onSearchClicked() }
+
+        binding?.mp3?.setOnClickListener {
+            val intent = Intent(this, Mp3Activity::class.java)
+            startActivity(intent)
+        }
 
         //This part does not work from here anymore, please use actual use-case to get spotify authorization TODO:Remove authorization
 //        val data: Uri? = intent.data
