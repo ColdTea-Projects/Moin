@@ -2,6 +2,8 @@ package de.coldtea.moin.ui.playlist
 
 import androidx.lifecycle.ViewModel
 import de.coldtea.moin.data.SongRepository
+import de.coldtea.moin.domain.model.mp3.MP3Object
+import de.coldtea.moin.domain.model.playlist.MediaType
 import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.domain.model.playlist.Song
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,6 +25,21 @@ class PlaylistViewModel(
     suspend fun deleteSong(id:Int){
         songRepository.deleteSong(id)
         refreshPlaylist()
+    }
+
+    suspend fun addMP3(mP3Object: MP3Object){
+        val selectedMP3 = Song(
+            localId = -1,
+            trackId = "",
+            name = mP3Object.displayName,
+            artistName = "",
+            imageUrl = "",
+            mediaType = MediaType.MP3.ordinal,
+            source = mP3Object.uri.toString(),
+            playlist = playlistName?.ordinal?:-1
+        )
+
+        songRepository.addSong(selectedMP3)
     }
 
     companion object{

@@ -41,4 +41,8 @@
 
     <!-- Alarm Notification -->
 
+
+    <!-- Alarm delegate -->
+
+    <string name="add_song">Add Song</string>
 </resources>

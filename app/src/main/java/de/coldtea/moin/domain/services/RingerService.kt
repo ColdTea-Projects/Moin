@@ -26,6 +26,7 @@ class RingerService(
     private val context: Context,
     private val songRandomizeService: SongRandomizeService
 ) {
+    private var mp3PlayerService: MP3PlayerService? = null
     private val ioCoroutineScope
         get() = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { _, t ->
             Timber.d("Moin.RingerService --> ioCoroutineScope crashed: $t")
@@ -64,6 +65,14 @@ class RingerService(
                     connectSpotify()
                 }
             }
+            MediaType.MP3.ordinal -> {
+                mp3PlayerService = MP3PlayerService(
+                    context,
+                    FilePickerConverter.stringToUri(ringerScreenInfo?.song?.source.orEmpty())
+                )
+
+                mp3PlayerService?.play()
+            }
             null -> ringDefaultAlarm()
         }
     }
@@ -71,6 +80,14 @@ class RingerService(
     fun stop() {
         when (ringerScreenInfo?.song?.mediaType) {
             MediaType.SPOTIFY.ordinal -> pauseTrack()
+            MediaType.MP3.ordinal -> {
+                mp3PlayerService?.stop()
+                mp3PlayerService = null
+
+                mainCoroutineScope.launch {
+                    _ringerStateInfo.emit(Stops)
+                }
+            }
             null -> stopDefaultAlarm()
         }
         isStartedPlaying = false

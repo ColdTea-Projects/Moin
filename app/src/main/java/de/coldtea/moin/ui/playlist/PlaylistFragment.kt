@@ -1,10 +1,14 @@
 package de.coldtea.moin.ui.playlist
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -15,6 +19,8 @@ import de.coldtea.moin.domain.model.extensions.getPlaylistBundle
 import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.domain.model.playlist.getTitle
+import de.coldtea.moin.domain.services.FilePickerConverter
+import de.coldtea.moin.domain.services.MP3PlayerService
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.playlist.PlaylistViewModel.Companion.PLAY_LIST_FRAGMENT_WEATHER_KEY
 import de.coldtea.moin.ui.playlist.adapter.PlaylistAdapter
@@ -31,6 +37,9 @@ class PlaylistFragment : BaseFragment() {
     private val playlistAdapter = PlaylistAdapter()
 
     var binding: FragmentPlaylistBinding? = null
+    var isFabsCollapsed = true
+
+    private var registerActivityResult: ActivityResultLauncher<Intent>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +49,11 @@ class PlaylistFragment : BaseFragment() {
             .find {
                 it.key == arguments?.getString(PLAY_LIST_FRAGMENT_WEATHER_KEY).orEmpty()
             }
+
+
+        registerActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            onFilePickerActivityResult(result)
+        }
 
         observePlaylist()
     }
@@ -59,10 +73,24 @@ class PlaylistFragment : BaseFragment() {
         viewModel.playlistName?.let { playlistName ->
 
             requireActivity().title = playlistName.getTitle()
+
             addSong.setOnClickListener {
+                if(isFabsCollapsed) expandFAB()
+                else shrinkFAB()
+            }
+
+            addSpotify.setOnClickListener {
                 val intent = Intent(requireActivity(), SearchSpotifyActivity::class.java)
                 intent.putExtra(PLAY_LIST_FRAGMENT_WEATHER_KEY, playlistName.key)
                 startActivity(intent)
+            }
+
+            addMp3.setOnClickListener {
+                val intent = Intent()
+                intent.action = Intent.ACTION_GET_CONTENT
+                intent.type = MP3PlayerService.MP3_MIME_TYPE
+
+                registerActivityResult?.launch(intent)
             }
         }
 
@@ -82,9 +110,30 @@ class PlaylistFragment : BaseFragment() {
         }
     }
 
+    private fun FragmentPlaylistBinding.expandFAB(){
+        addSpotify.show()
+        addMp3.show()
+
+        addSong.extend()
+
+        isFabsCollapsed = false
+
+    }
+
+    private fun FragmentPlaylistBinding.shrinkFAB(){
+        addSpotify.hide()
+        addMp3.hide()
+
+        addSong.shrink()
+
+        isFabsCollapsed = true
+
+    }
+
     override fun onResume() {
         super.onResume()
 
+        binding?.shrinkFAB()
         refreshPlaylist()
     }
 
@@ -112,6 +161,15 @@ class PlaylistFragment : BaseFragment() {
 
     fun onDeleteClicked(id: Int) = lifecycleScope.launch(Dispatchers.IO){
         viewModel.deleteSong(id)
+    }
+
+    fun onFilePickerActivityResult(result: ActivityResult) {
+        val uri = Uri.parse(result.data?.data.toString())?:return
+        val mP3Object = FilePickerConverter.getMP3Object(requireActivity().contentResolver, uri)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.addMP3(mP3Object)
+        }
     }
 
     companion object {

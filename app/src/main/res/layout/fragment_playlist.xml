@@ -12,22 +12,52 @@
             android:id="@+id/playlist_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/margin_xl"
-            android:clipToPadding="false" />
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/margin_xl" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/add_song"
+            android:text="@string/add_song"
+            android:textColor="@color/moinBlueTone1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_s"
             android:backgroundTint="@color/moinOrange2"
+            android:contentDescription="@string/content_description_add_alarm"
             app:borderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:rippleColor="@color/moinOrange3"
-            app:srcCompat="@drawable/ic_baseline_music_note_24"
-            app:tint="@color/moinBlueTone1"
-            android:contentDescription="@string/content_description_add_alarm" />
+            app:icon="@drawable/ic_baseline_music_note_24"
+            app:iconTint="@color/moinBlueTone1" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_spotify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/moinOrange2"
+                android:layout_marginBottom="@dimen/margin_xs"
+                android:contentDescription="@string/content_description_add_alarm"
+                app:borderWidth="0dp"
+                app:layout_constraintBottom_toTopOf="@id/add_song"
+                app:layout_constraintEnd_toEndOf="@id/add_song"
+                app:rippleColor="@color/moinOrange3"
+                app:srcCompat="@drawable/ic_spotify_icon"
+                app:tint="@color/moinBlueTone1" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_mp3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/moinOrange2"
+                android:layout_marginBottom="@dimen/margin_xs"
+                android:contentDescription="@string/content_description_add_alarm"
+                app:borderWidth="0dp"
+                app:layout_constraintBottom_toTopOf="@id/add_spotify"
+                app:layout_constraintEnd_toEndOf="@id/add_spotify"
+                app:rippleColor="@color/moinOrange3"
+                app:srcCompat="@drawable/ic_mp3_icon"
+                app:tint="@color/moinBlueTone1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
