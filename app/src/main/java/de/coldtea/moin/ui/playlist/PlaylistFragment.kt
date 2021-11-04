@@ -1,5 +1,6 @@
 package de.coldtea.moin.ui.playlist
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -167,6 +168,7 @@ class PlaylistFragment : BaseFragment() {
     }
 
     fun onFilePickerActivityResult(result: ActivityResult) {
+        if(result.resultCode != RESULT_OK) return
         val uri = Uri.parse(result.data?.data.toString())?:return
         val mP3Object = FilePickerConverter.getMP3Object(requireActivity().contentResolver, uri)
 
