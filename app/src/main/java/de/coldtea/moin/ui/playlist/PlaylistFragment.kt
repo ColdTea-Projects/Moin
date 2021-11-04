@@ -87,8 +87,11 @@ class PlaylistFragment : BaseFragment() {
 
             addMp3.setOnClickListener {
                 val intent = Intent()
-                intent.action = Intent.ACTION_GET_CONTENT
+                intent.action = Intent.ACTION_OPEN_DOCUMENT
                 intent.type = MP3PlayerService.MP3_MIME_TYPE
+
+                intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
                 registerActivityResult?.launch(intent)
             }
