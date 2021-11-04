@@ -86,7 +86,7 @@ class PlaylistFragment : BaseFragment() {
                 startActivity(intent)
             }
 
-            addMp3.setOnClickListener {
+            addLocalMusic.setOnClickListener {
                 val intent = Intent()
                 intent.action = Intent.ACTION_OPEN_DOCUMENT
                 intent.type = MP3PlayerService.MP3_MIME_TYPE
@@ -116,7 +116,7 @@ class PlaylistFragment : BaseFragment() {
 
     private fun FragmentPlaylistBinding.expandFAB(){
         addSpotify.show()
-        addMp3.show()
+        addLocalMusic.show()
 
         addSong.extend()
 
@@ -126,7 +126,7 @@ class PlaylistFragment : BaseFragment() {
 
     private fun FragmentPlaylistBinding.shrinkFAB(){
         addSpotify.hide()
-        addMp3.hide()
+        addLocalMusic.hide()
 
         addSong.shrink()
 
