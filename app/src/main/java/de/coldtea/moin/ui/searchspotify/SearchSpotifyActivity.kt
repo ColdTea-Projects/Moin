@@ -83,7 +83,9 @@ class SearchSpotifyActivity : AppCompatActivity() {
     }
 
     private fun initUIItems() = with(binding) {
-        this?.searchResultsRecyclerView?.apply {
+        this?:return@with
+
+        searchResultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchSpotifyActivity)
             val itemDecoration =
                 DividerItemDecoration(this@SearchSpotifyActivity, DividerItemDecoration.VERTICAL)
@@ -100,20 +102,21 @@ class SearchSpotifyActivity : AppCompatActivity() {
             addOnScrollListener(SearchResultScrollListener())
         }
 
-        this?.searchInput?.doOnTextChanged { _, _, _, count ->
+        searchInput.doOnTextChanged { _, _, _, _ ->
+            val textLength = binding?.searchInput?.text?.length ?: 0
 
             pauseTrackAndCleanPlaylist()
             when {
-                count > 0 && viewModel.refreshTokenExist -> viewModel.getAccessTokenByRefreshToken()
-                count > 0 && !viewModel.refreshTokenExist -> startActivity(viewModel.getAuthorizationIntent())
-                count == 0 -> clearPlaylist()
+                viewModel.refreshTokenExist -> viewModel.getAccessTokenByRefreshToken()
+                !viewModel.refreshTokenExist -> startActivity(viewModel.getAuthorizationIntent())
             }
 
-            binding?.setClearButtonVisibility(count > 0)
+            binding?.searchMessage?.isVisible = false
+            binding?.setClearButtonVisibility(textLength > 0)
         }
 
-        this?.clearText?.setOnClickListener {
-            this.searchInput.text?.clear()
+        clearText.setOnClickListener {
+            searchInput.text?.clear()
         }
     }
 
@@ -129,13 +132,13 @@ class SearchSpotifyActivity : AppCompatActivity() {
         }
     }
 
-    private fun onConnectionSuccess(){
+    private fun onConnectionSuccess() {
         binding?.searchInput?.isEnabled = true
         binding?.searchInput?.requestFocus()
         openKeyboard()
     }
 
-    private fun onConnectionFailed(){
+    private fun onConnectionFailed() {
         DialogManager.buildDialog(
             activity = this@SearchSpotifyActivity,
             message = getString(R.string.spotify_connection_failed_content),
@@ -155,7 +158,7 @@ class SearchSpotifyActivity : AppCompatActivity() {
         }
     }
 
-    private fun onSearchResultReceived(searchResult: SearchResult?){
+    private fun onSearchResultReceived(searchResult: SearchResult?) {
         searchResultAdapter.items = searchResult
             ?.getSearchResultBundle(::onPlayClicked, ::onItemClicked)
     }
@@ -205,29 +208,37 @@ class SearchSpotifyActivity : AppCompatActivity() {
             )
         }
 
-    private fun closeKeyboard(){
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    private fun closeKeyboard() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
-    private fun openKeyboard(){
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    private fun openKeyboard() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(currentFocus, 0)
     }
 
-    private fun clearPlaylist(){
+    private fun clearPlaylist() {
         searchResultAdapter.items = listOf()
     }
 
-    private fun ActivitySearchSpotifyBinding.setClearButtonVisibility(isVisible: Boolean) = if(isVisible){
-        searchInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0,0)
-    }else{
-        searchInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_search_24,0)
-    }.also {
-        clearText.isVisible = isVisible
-    }
+    private fun ActivitySearchSpotifyBinding.setClearButtonVisibility(isVisible: Boolean) =
+        if (isVisible) {
+            searchInput.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        } else {
+            searchInput.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_baseline_search_24,
+                0
+            )
+        }.also {
+            clearText.isVisible = isVisible
+        }
 
-    inner class SearchResultScrollListener : RecyclerView.OnScrollListener(){
+    inner class SearchResultScrollListener : RecyclerView.OnScrollListener() {
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)

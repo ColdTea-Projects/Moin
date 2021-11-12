@@ -38,6 +38,7 @@
         If you granted access yet it still did not work, please try again. We are very sorry about the inconvenience, please feel free to let us
         know about the problem in PlayStore. Thank you for your understanding!
     </string>
+    <string name="spotify_search_message">Search songs from Spotify for your alarm playlist. </string>
 
     <!-- Alarm Notification -->
 
