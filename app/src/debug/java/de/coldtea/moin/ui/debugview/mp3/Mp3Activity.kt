@@ -6,15 +6,12 @@ import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityMp3Binding
 import de.coldtea.moin.domain.services.FilePickerConverter
 import de.coldtea.moin.domain.services.MP3PlayerService
 import de.coldtea.moin.domain.services.MP3PlayerService.Companion.MP3_MIME_TYPE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-
 
 class Mp3Activity : AppCompatActivity() {
 
@@ -26,7 +23,8 @@ class Mp3Activity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_mp3)
+        binding = ActivityMp3Binding.inflate(layoutInflater)
+        setContentView(binding?.root)
 
         val registerActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             onActivityResult(result)

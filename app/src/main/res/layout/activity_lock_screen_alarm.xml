@@ -1,78 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/moinBlueTone1">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_xxl"
+        android:textColor="@color/moinBlueTone7"
+        android:textSize="@dimen/clock_font_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="07:15" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/weather"
+        android:layout_width="@dimen/weather_icon_size"
+        android:layout_height="@dimen/weather_icon_size"
+        android:layout_marginTop="@dimen/margin_xl"
+        android:tint="@color/moinBlueTone3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/time"
+        app:srcCompat="@drawable/ic_baseline_wb_cloudy_70" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/label"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/moinBlueTone1">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLength="100"
+        android:textColor="@color/moinBlueTone7"
+        app:layout_constraintTop_toBottomOf="@id/weather"
+        tools:text="This field is reserved for user message" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_xxl"
-            android:textSize="@dimen/clock_font_size"
-            android:textColor="@color/moinBlueTone7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="07:15"
-            />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/alarm"
+        android:layout_width="@dimen/alarm_control_icon_size"
+        android:layout_height="@dimen/alarm_control_icon_size"
+        android:layout_marginTop="@dimen/margin_xxl"
+        android:tint="@color/moinBlueTone7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weather"
+        app:srcCompat="@drawable/ic_baseline_alarm_24" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/weather"
-            android:layout_width="@dimen/weather_icon_size"
-            android:layout_height="@dimen/weather_icon_size"
-            android:layout_marginTop="@dimen/margin_xl"
-            android:tint="@color/moinBlueTone3"
-            app:layout_constraintTop_toBottomOf="@id/time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_wb_cloudy_70"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/dismiss"
+        android:layout_width="@dimen/alarm_control_icon_size"
+        android:layout_height="@dimen/alarm_control_icon_size"
+        android:layout_marginTop="@dimen/margin_xxl"
+        android:tint="@color/moinBlueTone7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/alarm"
+        app:layout_constraintTop_toBottomOf="@id/weather"
+        app:srcCompat="@drawable/ic_baseline_alarm_off_24" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text = "This field is reserved for user message"
-            android:gravity="center"
-            android:maxLength="100"
-            app:layout_constraintTop_toBottomOf="@id/weather"
-            android:textColor="@color/moinBlueTone7"/>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/alarm"
-            android:layout_width="@dimen/alarm_control_icon_size"
-            android:layout_height="@dimen/alarm_control_icon_size"
-            android:layout_marginTop="@dimen/margin_xxl"
-            android:tint="@color/moinBlueTone7"
-            app:layout_constraintTop_toBottomOf="@id/weather"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_alarm_24"/>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/dismiss"
-            android:layout_width="@dimen/alarm_control_icon_size"
-            android:layout_height="@dimen/alarm_control_icon_size"
-            android:layout_marginTop="@dimen/margin_xxl"
-            android:tint="@color/moinBlueTone7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/alarm"
-            app:layout_constraintTop_toBottomOf="@id/weather"
-            app:srcCompat="@drawable/ic_baseline_alarm_off_24" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/snooze"
-            android:layout_width="@dimen/alarm_control_icon_size"
-            android:layout_height="@dimen/alarm_control_icon_size"
-            android:layout_marginTop="@dimen/margin_xxl"
-            android:tint="@color/moinBlueTone7"
-            app:layout_constraintEnd_toEndOf="@id/alarm"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/weather"
-            app:srcCompat="@drawable/ic_baseline_snooze_24" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/snooze"
+        android:layout_width="@dimen/alarm_control_icon_size"
+        android:layout_height="@dimen/alarm_control_icon_size"
+        android:layout_marginTop="@dimen/margin_xxl"
+        android:tint="@color/moinBlueTone7"
+        app:layout_constraintEnd_toEndOf="@id/alarm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weather"
+        app:srcCompat="@drawable/ic_baseline_snooze_24" />
+</androidx.constraintlayout.widget.ConstraintLayout>

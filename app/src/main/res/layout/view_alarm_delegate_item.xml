@@ -1,238 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_alarm_item"
+    android:padding="@dimen/margin_s">
 
-    <data>
-
-        <import type="de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem" />
-        <import type="kotlin.jvm.functions.Function0" />
-        <import type="kotlin.Unit"/>
-
-        <variable
-            name="onWeekdayClicked"
-            type="Function0&lt; Unit>"/>
-
-
-        <variable
-            name="item"
-            type="AlarmDelegateItem" />
-
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_alarm_item"
-        android:padding="@dimen/margin_s">
+        android:textColor="@color/moinBlueTone7"
+        android:textSize="@dimen/alarm_item_clock_font_size"
+        app:layout_constraintBottom_toTopOf="@id/days"
+        app:layout_constraintStart_toStartOf="@id/groupVisible"
+        app:layout_constraintTop_toTopOf="@id/groupVisible"
+        tools:text="19:23" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/moinBlueTone7"
-            android:textSize="@dimen/alarm_item_clock_font_size"
-            app:layout_constraintBottom_toTopOf="@id/days"
-            app:layout_constraintStart_toStartOf="@id/groupVisible"
-            app:layout_constraintTop_toTopOf="@id/groupVisible"
-            tools:text="19:23" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_s"
+        android:textColor="@color/moinBlueTone7"
+        android:textSize="@dimen/alarm_item_weekdays_font_size"
+        app:layout_constraintBottom_toBottomOf="@id/groupVisible"
+        app:layout_constraintStart_toStartOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@id/time"
+        tools:text="MON TU WED TH FR SAT SUN" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/days"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_s"
-            android:textColor="@color/moinBlueTone7"
-            android:textSize="@dimen/alarm_item_weekdays_font_size"
-            app:isVisible="@{!item.expanded}"
-            app:layout_constraintBottom_toBottomOf="@id/groupVisible"
-            app:layout_constraintStart_toStartOf="@+id/time"
-            app:layout_constraintTop_toBottomOf="@id/time"
-            tools:text="MON TU WED TH FR SAT SUN" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/snooze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/moinBlueTone7"
+        android:textSize="@dimen/alarm_item_snooze_font_size"
+        app:layout_constraintStart_toStartOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@id/monday"
+        tools:text="Snoozing Until : 19:19" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/snooze"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:textColor="@color/moinBlueTone7"
-            android:textSize="@dimen/alarm_item_snooze_font_size"
-            app:layout_constraintStart_toStartOf="@+id/time"
-            app:layout_constraintTop_toBottomOf="@id/monday"
-            tools:text="Snoozing Until : 19:19" />
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/is_active"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/time" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/is_active"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:checkedState="@{item.active}"
-            app:layout_constraintBottom_toBottomOf="@+id/time"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/time" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/expand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_down_arrow_18"
+        app:tint="@color/moinBlueTone7" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/expand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_down_arrow_18"
-            app:tint="@color/moinBlueTone7" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_s"
+        app:layout_constraintBottom_toTopOf="@id/expand"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/monday"
+        app:srcCompat="@drawable/ic_baseline_delete_24"
+        app:tint="@color/moinBlueTone7" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/monday"
-            app:layout_constraintBottom_toTopOf="@id/expand"
-            android:layout_marginBottom="@dimen/margin_s"
-            app:srcCompat="@drawable/ic_baseline_delete_24"
-            app:tint="@color/moinBlueTone7" />
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/repeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_s"
+        android:buttonTint="@color/moinBlueTone7"
+        android:text="@string/alarm_item_repeat_checkbox"
+        android:textColor="@color/moinBlueTone7"
+        android:textSize="@dimen/alarm_item_repeat_font_size"
+        app:layout_constraintBottom_toBottomOf="@+id/sunday"
+        app:layout_constraintStart_toEndOf="@+id/saturday"
+        app:layout_constraintTop_toTopOf="@+id/sunday" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/repeat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_s"
-            android:buttonTint="@color/moinBlueTone7"
-            android:text="@string/alarm_item_repeat_checkbox"
-            android:textColor="@color/moinBlueTone7"
-            android:textSize="@dimen/alarm_item_repeat_font_size"
-            app:layout_constraintBottom_toBottomOf="@+id/sunday"
-            app:layout_constraintStart_toEndOf="@+id/saturday"
-            app:layout_constraintTop_toTopOf="@+id/sunday" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_s"
+        android:layout_marginEnd="@dimen/margin_s"
+        android:drawableStart="@drawable/ic_baseline_label_24"
+        android:drawablePadding="@dimen/margin_xxs"
+        android:drawableTint="@color/moinBlueTone7"
+        android:gravity="center_vertical"
+        android:maxLength="100"
+        android:textColor="@color/moinBlueTone7"
+        app:layout_constraintEnd_toStartOf="@+id/delete"
+        app:layout_constraintStart_toStartOf="@+id/days"
+        app:layout_constraintTop_toBottomOf="@id/days"
+        tools:text="Label comes here" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_s"
-            android:layout_marginTop="@dimen/margin_s"
-            android:maxLength="100"
-            android:textColor="@color/moinBlueTone7"
-            tools:text="Label comes here"
-            android:gravity="center_vertical"
-            app:setLabel="@{item.label}"
-            app:layout_constraintEnd_toStartOf="@+id/delete"
-            app:layout_constraintStart_toStartOf="@+id/days"
-            app:layout_constraintTop_toBottomOf="@id/days"
-            android:drawablePadding="@dimen/margin_xxs"
-            android:drawableStart="@drawable/ic_baseline_label_24"
-            android:drawableTint="@color/moinBlueTone7"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/sunday"
+        android:layout_width="@dimen/weekday_radio_button_size"
+        android:layout_height="@dimen/weekday_radio_button_size"
+        android:layout_marginTop="@dimen/margin_s"
+        android:background="@drawable/sunday_radio_background"
+        android:button="@null"
+        android:checked="true"
+        android:pointerIcon="@null"
+        app:layout_constraintStart_toStartOf="@id/label"
+        app:layout_constraintTop_toBottomOf="@id/label" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/sunday"
-            android:layout_width="@dimen/weekday_radio_button_size"
-            android:layout_height="@dimen/weekday_radio_button_size"
-            android:layout_marginTop="@dimen/margin_s"
-            android:background="@drawable/sunday_radio_background"
-            android:button="@null"
-            android:checked="true"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:pointerIcon="@null"
-            app:layout_constraintStart_toStartOf="@id/label"
-            app:layout_constraintTop_toBottomOf="@id/label" />
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/monday"
+        android:layout_width="@dimen/weekday_radio_button_size"
+        android:layout_height="@dimen/weekday_radio_button_size"
+        android:layout_marginStart="@dimen/weekday_radio_button_distance"
+        android:background="@drawable/monday_radio_background"
+        android:button="@null"
+        android:checked="true"
+        android:pointerIcon="@null"
+        app:layout_constraintStart_toEndOf="@id/sunday"
+        app:layout_constraintTop_toTopOf="@id/sunday" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/monday"
-            android:layout_width="@dimen/weekday_radio_button_size"
-            android:layout_height="@dimen/weekday_radio_button_size"
-            android:checked="true"
-            android:pointerIcon="@null"
-            android:layout_marginStart="@dimen/weekday_radio_button_distance"
-            app:layout_constraintTop_toTopOf="@id/sunday"
-            app:layout_constraintStart_toEndOf="@id/sunday"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:button="@null"
-            android:background="@drawable/monday_radio_background"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/tuesday"
+        android:layout_width="@dimen/weekday_radio_button_size"
+        android:layout_height="@dimen/weekday_radio_button_size"
+        android:layout_marginStart="@dimen/weekday_radio_button_distance"
+        android:background="@drawable/tuesday_radio_background"
+        android:button="@null"
+        android:checked="true"
+        android:pointerIcon="@null"
+        app:layout_constraintStart_toEndOf="@id/monday"
+        app:layout_constraintTop_toTopOf="@id/monday" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/tuesday"
-            android:layout_width="@dimen/weekday_radio_button_size"
-            android:layout_height="@dimen/weekday_radio_button_size"
-            android:checked="true"
-            android:pointerIcon="@null"
-            android:layout_marginStart="@dimen/weekday_radio_button_distance"
-            app:layout_constraintTop_toTopOf="@id/monday"
-            app:layout_constraintStart_toEndOf="@id/monday"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:button="@null"
-            android:background="@drawable/tuesday_radio_background"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/wednesday"
+        android:layout_width="@dimen/weekday_radio_button_size"
+        android:layout_height="@dimen/weekday_radio_button_size"
+        android:layout_marginStart="@dimen/weekday_radio_button_distance"
+        android:background="@drawable/wednesday_radio_background"
+        android:button="@null"
+        android:checked="true"
+        android:pointerIcon="@null"
+        app:layout_constraintStart_toEndOf="@id/tuesday"
+        app:layout_constraintTop_toTopOf="@id/tuesday" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/wednesday"
-            android:layout_width="@dimen/weekday_radio_button_size"
-            android:layout_height="@dimen/weekday_radio_button_size"
-            android:checked="true"
-            android:pointerIcon="@null"
-            android:layout_marginStart="@dimen/weekday_radio_button_distance"
-            app:layout_constraintTop_toTopOf="@id/tuesday"
-            app:layout_constraintStart_toEndOf="@id/tuesday"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:button="@null"
-            android:background="@drawable/wednesday_radio_background"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/thursday"
+        android:layout_width="@dimen/weekday_radio_button_size"
+        android:layout_height="@dimen/weekday_radio_button_size"
+        android:layout_marginStart="@dimen/weekday_radio_button_distance"
+        android:background="@drawable/thursday_radio_background"
+        android:button="@null"
+        android:checked="true"
+        android:pointerIcon="@null"
+        app:layout_constraintStart_toEndOf="@id/wednesday"
+        app:layout_constraintTop_toTopOf="@id/wednesday" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/thursday"
-            android:layout_width="@dimen/weekday_radio_button_size"
-            android:layout_height="@dimen/weekday_radio_button_size"
-            android:checked="true"
-            android:pointerIcon="@null"
-            android:layout_marginStart="@dimen/weekday_radio_button_distance"
-            app:layout_constraintTop_toTopOf="@id/wednesday"
-            app:layout_constraintStart_toEndOf="@id/wednesday"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:button="@null"
-            android:background="@drawable/thursday_radio_background"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/friday"
+        android:layout_width="@dimen/weekday_radio_button_size"
+        android:layout_height="@dimen/weekday_radio_button_size"
+        android:layout_marginStart="@dimen/weekday_radio_button_distance"
+        android:background="@drawable/friday_radio_background"
+        android:button="@null"
+        android:checked="true"
+        android:pointerIcon="@null"
+        app:layout_constraintStart_toEndOf="@id/thursday"
+        app:layout_constraintTop_toTopOf="@id/thursday" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/friday"
-            android:layout_width="@dimen/weekday_radio_button_size"
-            android:layout_height="@dimen/weekday_radio_button_size"
-            android:checked="true"
-            android:pointerIcon="@null"
-            android:layout_marginStart="@dimen/weekday_radio_button_distance"
-            app:layout_constraintTop_toTopOf="@id/thursday"
-            app:layout_constraintStart_toEndOf="@id/thursday"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:button="@null"
-            android:background="@drawable/friday_radio_background"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/saturday"
+        android:layout_width="@dimen/weekday_radio_button_size"
+        android:layout_height="@dimen/weekday_radio_button_size"
+        android:layout_marginStart="@dimen/weekday_radio_button_distance"
+        android:background="@drawable/saturday_radio_background"
+        android:button="@null"
+        android:checked="true"
+        android:pointerIcon="@null"
+        app:layout_constraintStart_toEndOf="@id/friday"
+        app:layout_constraintTop_toTopOf="@id/friday" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/saturday"
-            android:layout_width="@dimen/weekday_radio_button_size"
-            android:layout_height="@dimen/weekday_radio_button_size"
-            android:checked="true"
-            android:pointerIcon="@null"
-            android:layout_marginStart="@dimen/weekday_radio_button_distance"
-            app:layout_constraintTop_toTopOf="@id/friday"
-            app:layout_constraintStart_toEndOf="@id/friday"
-            android:onClick="@{() -> onWeekdayClicked.invoke()}"
-            android:button="@null"
-            android:background="@drawable/saturday_radio_background"/>
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupVisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="expand,time,days, is_active"
+        app:layout_constraintBottom_toTopOf="@id/groupHidden"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupVisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="expand,time,days, is_active"
-            app:layout_constraintBottom_toTopOf="@id/groupHidden"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupHidden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="delete, repeat, label" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupHidden"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="delete, repeat, label"
-            app:isVisible="@{item.expanded}"/>
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/groupWeekdays"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="monday, tuesday, wednesday, thursday, friday, saturday, sunday"
-            app:isVisible="@{item.expanded}"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupWeekdays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="monday, tuesday, wednesday, thursday, friday, saturday, sunday" />
+</androidx.constraintlayout.widget.ConstraintLayout>

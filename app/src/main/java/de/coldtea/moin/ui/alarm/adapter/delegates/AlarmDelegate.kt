@@ -13,6 +13,7 @@ import de.coldtea.moin.extensions.*
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmBundle
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.smplr.smplralarm.models.WeekDays
+import kotlinx.android.synthetic.main.view_alarm_delegate_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,18 +52,26 @@ class AlarmDelegate :
         fun bind(bundle: AlarmBundle) = with(binding) {
             val item = bundle.alarmDelegateItem
             val hourMinute = item.originalHour to item.originalMinute
-            binding.item = item
+
             time.text = hourMinute.getTimeText()
             days.text = item.weekDays.getWeekDaysText()
+            days.isVisible = !item.isExpanded
+
+            isActive.isChecked = item.isActive
 
             snooze.text = root.context?.getString(R.string.snooze_until, (item.hour to item.minute).getTimeText())
             snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
+
+            label.label.text = item.label
 
             setupCheckList(item.weekDays)
 
             repeat.isChecked = item.weekDays.isNotEmpty()
 
             expand.scaleY = if(item.isExpanded) -1F else 1F
+
+            groupHidden.isVisible = item.isExpanded
+            groupWeekdays.isVisible = item.isExpanded
 
             isActive.setOnCheckedChangeListener { _, isChecked ->
                 updateAlarm(item, isActive = isChecked, weekDays = weekdaysList)
@@ -89,9 +98,13 @@ class AlarmDelegate :
                 updateAlarm(item, isActive = true, weekDays = weekdaysList)
             }
 
-            onWeekdayClicked = {
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-            }
+            sunday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
+            monday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
+            tuesday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
+            wednesday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
+            thursday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
+            friday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
+            saturday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
 
             label.setOnClickListener {
                 bundle.onClickLabel(bundle.alarmDelegateItem)

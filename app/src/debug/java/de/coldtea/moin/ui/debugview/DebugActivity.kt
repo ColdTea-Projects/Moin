@@ -3,9 +3,7 @@ package de.coldtea.moin.ui.debugview
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityDebugBinding
 import de.coldtea.moin.services.model.*
 import de.coldtea.moin.ui.debugview.mp3.Mp3Activity
@@ -15,7 +13,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class DebugActivity : AppCompatActivity() {
 
@@ -27,7 +24,8 @@ class DebugActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_debug)
+        binding = ActivityDebugBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
 
         initCurrentResponse()
         initWeatherResponse()

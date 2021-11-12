@@ -40,7 +40,8 @@ class SpotifySearchResultDelegate :
         private val context: Context
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SpotifySearchResultBundle) {
-            binding.searchItem = item.spotifySearchResultDelegateItem
+            binding.songName.text = item.spotifySearchResultDelegateItem.songName
+            binding.artistName.text = item.spotifySearchResultDelegateItem.artistName
 
             //TODO: Replace with lotti
             with(binding.play){

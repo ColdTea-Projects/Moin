@@ -54,8 +54,10 @@ android {
         }
     }
 
-    dataBinding{
-        enabled=true
+    android {
+        buildFeatures {
+            viewBinding = true
+        }
     }
 }
 

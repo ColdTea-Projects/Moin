@@ -40,7 +40,8 @@ class PlaylistDelegate :
         private val context: Context
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PlaylistBundle) {
-            binding.playlistItem = item.playlistDelegateItem
+            binding.songName.text = item.playlistDelegateItem.songName
+            binding.artistName.text = item.playlistDelegateItem.artistName
 
             binding.delete.setOnClickListener {
                 item.onClickDelete(item.id)
