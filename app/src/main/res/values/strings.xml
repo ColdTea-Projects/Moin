@@ -29,6 +29,10 @@
     <string name="cancel">CANCEL</string>
     <string name="search_bar_hint">Search</string>
 
+
+    <!-- Playlist -->
+    <string name="song_search_message">Search songs from Spotify or your local storage for your alarm playlist. </string>
+
     <!-- Search spotify -->
 
     <string name="spotify_connection_failed_title">Spotify connection has failed! </string>

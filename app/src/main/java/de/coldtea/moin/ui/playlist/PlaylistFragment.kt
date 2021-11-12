@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +27,7 @@ import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.playlist.PlaylistViewModel.Companion.PLAY_LIST_FRAGMENT_WEATHER_KEY
 import de.coldtea.moin.ui.playlist.adapter.PlaylistAdapter
 import de.coldtea.moin.ui.searchspotify.SearchSpotifyActivity
+import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -156,6 +158,14 @@ class PlaylistFragment : BaseFragment() {
     fun onPlaylistReceived(songs: List<Song>){
         playlistAdapter.items = songs.map {
             it.getPlaylistBundle (::onDeleteClicked)
+        }
+
+        with(binding){
+            this?:return@with
+
+            playlistRecyclerView.post {
+                songEmptyListMessage.isVisible = songs.isEmpty()
+            }
         }
     }
 
