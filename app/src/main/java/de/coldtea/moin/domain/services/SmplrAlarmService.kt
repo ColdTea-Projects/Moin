@@ -27,7 +27,7 @@ class SmplrAlarmService(private val context: Context) {
     private val _alarmList = MutableSharedFlow<AlarmObject>()
     val alarmList: SharedFlow<AlarmObject> = _alarmList
 
-    private var lastAlarmEvent : AlarmEvent? = null
+    private var lastAlarmEvent: AlarmEvent? = null
 
     private val onClickIntent = Intent(
         context.applicationContext,
@@ -45,7 +45,7 @@ class SmplrAlarmService(private val context: Context) {
     )
 
     init {
-        smplrAlarmChangeOrRequestListener(context){
+        smplrAlarmChangeOrRequestListener(context) {
             it.convertToAlarmList().let { alarmList ->
                 CoroutineScope(Dispatchers.IO).launch {
                     Timber.d("Moin --> _alarmList.emit(alarmList) -- $lastAlarmEvent")
@@ -58,37 +58,48 @@ class SmplrAlarmService(private val context: Context) {
 
     }
 
-    fun setAlarm(hour: Int, minute: Int, @DrawableRes smallIcon: Int, weekDays: List<WeekDays>? = null, alarmEvent: AlarmEvent? = null, label: String, snooze: Intent, dismiss: Intent): Int {
+    fun setAlarm(
+        hour: Int,
+        minute: Int,
+        @DrawableRes smallIcon: Int,
+        weekDays: List<WeekDays>? = null,
+        alarmEvent: AlarmEvent? = null,
+        label: String,
+        snooze: Intent,
+        dismiss: Intent
+    ): Int {
         lastAlarmEvent = alarmEvent
 
 
-        return smplrAlarmSet(context = context){
+        return smplrAlarmSet(context = context) {
             hour { hour }
             min { minute }
             if (weekDays != null) weekdays {
-                if(WeekDays.MONDAY in weekDays) monday()
-                if(WeekDays.TUESDAY in weekDays) tuesday()
-                if(WeekDays.WEDNESDAY in weekDays) wednesday()
-                if(WeekDays.THURSDAY in weekDays) thursday()
-                if(WeekDays.FRIDAY in weekDays) friday()
-                if(WeekDays.SATURDAY in weekDays) saturday()
-                if(WeekDays.SUNDAY in weekDays) sunday()
+                if (WeekDays.MONDAY in weekDays) monday()
+                if (WeekDays.TUESDAY in weekDays) tuesday()
+                if (WeekDays.WEDNESDAY in weekDays) wednesday()
+                if (WeekDays.THURSDAY in weekDays) thursday()
+                if (WeekDays.FRIDAY in weekDays) friday()
+                if (WeekDays.SATURDAY in weekDays) saturday()
+                if (WeekDays.SUNDAY in weekDays) sunday()
             }
             notification {
                 alarmNotification {
-                smallIcon { smallIcon }
-                title { "Moin! Your alarm is ringing" }
-                message { "It is $hour:$minute" }
-                bigText { "It is $hour:$minute" }
-                autoCancel { true }
-                firstButtonText { "Snooze" }
-                secondButtonText { "Dismiss" }
-                firstButtonIntent { snooze }
-                secondButtonIntent { dismiss }
-            } }
-            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
+                    smallIcon { smallIcon }
+                    title { "Moin! Your alarm is ringing" }
+                    message { "It is $hour:$minute" }
+                    bigText { "It is $hour:$minute" }
+                    autoCancel { true }
+                    firstButtonText { "Snooze" }
+                    secondButtonText { "Dismiss" }
+                    firstButtonIntent { snooze }
+                    secondButtonIntent { dismiss }
+                    notificationDismissedIntent { dismiss }
+                }
+            }
+            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI }
             intent { onClickIntent }
-            receiverIntent{ fullScreenIntent }
+            receiverIntent { fullScreenIntent }
             alarmReceivedIntent { alarmReceivedIntent }
             infoPairs {
                 listOf(
@@ -102,35 +113,43 @@ class SmplrAlarmService(private val context: Context) {
         }
     }
 
-    fun cancelAlarm(requestId: Int, alarmEvent: AlarmEvent? = null){
+    fun cancelAlarm(requestId: Int, alarmEvent: AlarmEvent? = null) {
         lastAlarmEvent = alarmEvent
-        smplrAlarmCancel(context){
+        smplrAlarmCancel(context) {
             requestCode { requestId }
-            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
+            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI }
         }
 
     }
 
-    fun updateAlarm(requestId: Int, hour: Int? = null, minute: Int? = null, weekDays: List<WeekDays>? = null, isActive: Boolean? = null, infoPairs: List<Pair<String, String>>? = null, alarmEvent: AlarmEvent? = null){
+    fun updateAlarm(
+        requestId: Int,
+        hour: Int? = null,
+        minute: Int? = null,
+        weekDays: List<WeekDays>? = null,
+        isActive: Boolean? = null,
+        infoPairs: List<Pair<String, String>>? = null,
+        alarmEvent: AlarmEvent? = null
+    ) {
         lastAlarmEvent = alarmEvent
 
-        smplrAlarmUpdate(context){
+        smplrAlarmUpdate(context) {
             requestCode { requestId }
-            if(hour != null) hour { hour }
-            if(minute != null) min { minute }
+            if (hour != null) hour { hour }
+            if (minute != null) min { minute }
             if (weekDays != null) weekdays {
-                if(WeekDays.MONDAY in weekDays) monday()
-                if(WeekDays.TUESDAY in weekDays) tuesday()
-                if(WeekDays.WEDNESDAY in weekDays) wednesday()
-                if(WeekDays.THURSDAY in weekDays) thursday()
-                if(WeekDays.FRIDAY in weekDays) friday()
-                if(WeekDays.SATURDAY in weekDays) saturday()
-                if(WeekDays.SUNDAY in weekDays) sunday()
-            }else {
+                if (WeekDays.MONDAY in weekDays) monday()
+                if (WeekDays.TUESDAY in weekDays) tuesday()
+                if (WeekDays.WEDNESDAY in weekDays) wednesday()
+                if (WeekDays.THURSDAY in weekDays) thursday()
+                if (WeekDays.FRIDAY in weekDays) friday()
+                if (WeekDays.SATURDAY in weekDays) saturday()
+                if (WeekDays.SUNDAY in weekDays) sunday()
+            } else {
                 listOf<WeekDays>()
             }
-            if(isActive != null) isActive { isActive }
-            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI}
+            if (isActive != null) isActive { isActive }
+            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI }
             if (infoPairs != null) infoPairs { infoPairs }
         }
         lastAlarmEvent = SnoozeAlarmUpdate
