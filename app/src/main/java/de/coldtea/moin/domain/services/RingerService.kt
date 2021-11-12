@@ -66,6 +66,8 @@ class RingerService(
                 }
             }
             MediaType.MP3.ordinal -> {
+                if (mp3PlayerService != null) return@launch
+
                 mp3PlayerService = MP3PlayerService(
                     context,
                     FilePickerConverter.stringToUri(ringerScreenInfo?.song?.source.orEmpty())
@@ -82,7 +84,6 @@ class RingerService(
             MediaType.SPOTIFY.ordinal -> pauseTrack()
             MediaType.MP3.ordinal -> {
                 mp3PlayerService?.stop()
-                mp3PlayerService = null
 
                 mainCoroutineScope.launch {
                     _ringerStateInfo.emit(Stops)
@@ -91,6 +92,7 @@ class RingerService(
             null -> stopDefaultAlarm()
         }
         isStartedPlaying = false
+        mp3PlayerService = null
 
         vibrator.cancel()
     }
