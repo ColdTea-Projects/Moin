@@ -100,7 +100,7 @@ class AlarmFragment : BaseFragment() {
 
     private fun observeAlarms() = lifecycleScope.launchWhenCreated {
         viewModel.alarmList.collect { alarmList ->
-            alarmsAdapter.items = alarmList.alarmItems.reversed().map {
+            alarmsAdapter.items = alarmList.alarmItems.map {
                 val item = it.convertToDelegateItem()
 
                 AlarmBundle(
@@ -111,8 +111,8 @@ class AlarmFragment : BaseFragment() {
             }.also {
                 val alarmsRecyclerView =  binding?.alarmList?:return@also
                 val adapterItemCount = alarmsRecyclerView.adapter?.itemCount?:return@also
-                if(alarmList.alarmItems.isNotEmpty() && alarmList.alarmItems.size > adapterItemCount)
-                    alarmsRecyclerView.smoothScrollToPosition(alarmList.alarmItems.size - 1)
+                if(alarmList.alarmItems.isNotEmpty() && it.size > adapterItemCount)
+                    alarmsRecyclerView.smoothScrollToPosition(it.size - 1)
             }
         }
     }

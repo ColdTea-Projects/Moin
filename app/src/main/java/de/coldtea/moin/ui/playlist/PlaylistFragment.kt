@@ -158,15 +158,17 @@ class PlaylistFragment : BaseFragment() {
     fun onPlaylistReceived(songs: List<Song>){
         playlistAdapter.items = songs.map {
             it.getPlaylistBundle (::onDeleteClicked)
-        }
+        }.also {
+            with(binding){
+                this?:return@with
 
-        with(binding){
-            this?:return@with
-
-            playlistRecyclerView.post {
-                songEmptyListMessage.isVisible = songs.isEmpty()
+                songEmptyListMessage.isVisible = it.isEmpty()
+                if(it.size > playlistRecyclerView.adapter?.itemCount?:Int.MAX_VALUE){
+                    playlistRecyclerView.smoothScrollToPosition(it.size - 1)
+                }
             }
         }
+
     }
 
     fun refreshPlaylist() = lifecycleScope.launch(Dispatchers.IO) {
