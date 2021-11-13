@@ -37,7 +37,6 @@ class RingerService(
         })
 
     private var ringerScreenInfo: RingerScreenInfo? = null
-    private var isStartedPlaying = false
     private val vibrator: Vibrator
         get() = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
@@ -52,6 +51,7 @@ class RingerService(
     //region ringer
     private val _ringerStateInfo = MutableSharedFlow<RingerStateInfo?>()
     val ringerStateInfo = _ringerStateInfo.asSharedFlow()
+    var isStartedPlaying = false
 
     fun ring() = ioCoroutineScope.launch {
         if(isStartedPlaying) return@launch
@@ -86,13 +86,13 @@ class RingerService(
             MediaType.MP3.ordinal -> {
                 mp3PlayerService?.stop()
 
+                isStartedPlaying = false
                 mainCoroutineScope.launch {
                     _ringerStateInfo.emit(Stops)
                 }
             }
             null -> stopDefaultAlarm()
         }
-        isStartedPlaying = false
         mp3PlayerService = null
 
         vibrator.cancel()
@@ -214,6 +214,7 @@ class RingerService(
 
     private fun stopDefaultAlarm() {
         ringtone?.stop()
+        isStartedPlaying = false
         mainCoroutineScope.launch {
             _ringerStateInfo.emit(Stops)
         }

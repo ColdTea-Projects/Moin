@@ -49,11 +49,19 @@ class LockScreenAlarmActivity : AppCompatActivity() {
 
     private fun setupUIItems() = with(binding) {
         dismiss.setOnClickListener {
-            viewModel.dismissAlarm()
+            if (viewModel.isRinging) {
+                viewModel.dismissAlarm()
+            } else {
+                finish()
+            }
         }
 
         snooze.setOnClickListener {
-            viewModel.snoozeAlarm()
+            if (viewModel.isRinging) {
+                viewModel.snoozeAlarm()
+            } else {
+                finish()
+            }
         }
     }
 

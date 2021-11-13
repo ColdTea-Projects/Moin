@@ -31,6 +31,9 @@ class LockScreenAlarmViewModel(
     private val _label = MutableSharedFlow<String>()
     val label: SharedFlow<String> = _label
 
+    val isRinging
+        get() = ringerService.isStartedPlaying
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
 
