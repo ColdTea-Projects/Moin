@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.domain.model.alarm.AlarmItem
 import de.coldtea.moin.domain.model.alarm.DismissAlarmRequest
 import de.coldtea.moin.domain.model.alarm.DismissAlarmUpdate
@@ -25,6 +26,7 @@ import java.util.*
 class ActionReceiver: BroadcastReceiver() {
     private val smplrAlarmService: SmplrAlarmService by KoinJavaComponent.inject(SmplrAlarmService::class.java)
     private val ringerService: RingerService by KoinJavaComponent.inject(RingerService::class.java)
+    private val sharedPreferencesRepository: SharedPreferencesRepository by KoinJavaComponent.inject(SharedPreferencesRepository::class.java)
 
     private val mainCoroutineScope
         get() = CoroutineScope(Dispatchers.Main + CoroutineExceptionHandler { _, t ->
@@ -75,7 +77,7 @@ class ActionReceiver: BroadcastReceiver() {
 
     private val snoozeTime: Pair<Int, Int>
         get() = Calendar.getInstance().let {
-            it.add(Calendar.MINUTE, 15)
+            it.add(Calendar.MINUTE, sharedPreferencesRepository.snoozeDuration)
             it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
         }
 

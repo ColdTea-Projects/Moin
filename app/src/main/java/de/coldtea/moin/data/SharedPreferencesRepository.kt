@@ -49,7 +49,7 @@ class SharedPreferencesRepository(val context: Context) {
         }.apply()
 
     var volume: Float
-        get() = sharedPreferences.getFloat(VOLUME, 0.8f)
+        get() = sharedPreferences.getFloat(VOLUME, 1.0f)
         set(value) = sharedPreferences.edit().apply {
             putFloat(VOLUME, value)
         }.apply()
@@ -58,6 +58,12 @@ class SharedPreferencesRepository(val context: Context) {
         get() = sharedPreferences.getBoolean(RAISE_VOLUME_GRADUALLY, true)
         set(value) = sharedPreferences.edit().apply {
             putBoolean(RAISE_VOLUME_GRADUALLY, value)
+        }.apply()
+
+    var snoozeDuration: Int
+        get() = sharedPreferences.getInt(SNOOZE_DURATION, 15)
+        set(value) = sharedPreferences.edit().apply {
+            putInt(SNOOZE_DURATION, value)
         }.apply()
 
     companion object {
@@ -70,6 +76,7 @@ class SharedPreferencesRepository(val context: Context) {
         private const val LAST_VISITED_CITY = "last_visited_city"
         private const val VOLUME = "volume"
         private const val RAISE_VOLUME_GRADUALLY = "raise_volume_gradually"
+        private const val SNOOZE_DURATION = "snooze_duration"
 
     }
 

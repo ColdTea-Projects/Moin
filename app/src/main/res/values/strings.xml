@@ -57,4 +57,5 @@
     <string name="volume">Volume</string>
     <string name="gradually_raise">Raise volume gradually</string>
     <string name="pick_default">Select default alarm</string>
+    <string name="snooze_duration">Snooze Duration - %1$s min.</string>
 </resources>
