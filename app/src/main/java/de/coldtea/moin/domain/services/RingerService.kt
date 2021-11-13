@@ -54,14 +54,13 @@ class RingerService(
     val ringerStateInfo = _ringerStateInfo.asSharedFlow()
 
     fun ring() = ioCoroutineScope.launch {
-        isStartedPlaying = false
+        if(isStartedPlaying) return@launch
+
         ringerScreenInfo = songRandomizeService.getRingerScreenInfo()
-        _ringerStateInfo.emit(
-            Randomized(ringerScreenInfo)
-        )
+        _ringerStateInfo.emit( Randomized(ringerScreenInfo) )
         when (ringerScreenInfo?.song?.mediaType) {
             MediaType.SPOTIFY.ordinal -> {
-                withContext(mainCoroutineScope.coroutineContext){
+                withContext(mainCoroutineScope.coroutineContext) {
                     connectSpotify()
                 }
             }
@@ -74,6 +73,8 @@ class RingerService(
                 )
 
                 mp3PlayerService?.play()
+
+                isStartedPlaying = true
             }
             null -> ringDefaultAlarm()
         }
@@ -158,8 +159,7 @@ class RingerService(
                 if (playerState.isPaused && isStartedPlaying) {
                     isStartedPlaying = false
                     _ringerStateInfo.emit(Stops)
-                }
-                else if (!playerState.isPaused && !isStartedPlaying){
+                } else if (!playerState.isPaused && !isStartedPlaying) {
                     isStartedPlaying = true
                 }
             }
@@ -208,9 +208,11 @@ class RingerService(
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
             .build()
         ringtone?.play()
+
+        isStartedPlaying = true
     }
 
-    private fun stopDefaultAlarm(){
+    private fun stopDefaultAlarm() {
         ringtone?.stop()
         mainCoroutineScope.launch {
             _ringerStateInfo.emit(Stops)
