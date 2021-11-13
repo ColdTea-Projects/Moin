@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/moinBlueTone1">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/volume_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_s"
+        android:paddingEnd="@dimen/margin_s"
+        android:paddingTop="@dimen/margin_s"
+        android:text="@string/volume"
+        android:textColor="@color/moinGray4"
+        app:flow_horizontalAlign="start"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_s"
+        android:progress="100"
+        android:progressBackgroundTint="@color/moinGray4"
+        android:progressTint="@color/moinBlueTone7"
+        android:thumbTint="@color/moinBlueTone7"
+        app:layout_constraintTop_toBottomOf="@id/volume_header" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/raise_volume_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_s"
+        android:paddingStart="@dimen/margin_s"
+        android:paddingTop="@dimen/margin_s"
+        android:paddingEnd="@dimen/margin_xxs"
+        android:text="@string/gradually_raise"
+        android:textColor="@color/moinGray4"
+        app:flow_horizontalAlign="start"
+        app:layout_constraintEnd_toStartOf="@+id/raise_volume"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/volume" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/raise_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:paddingStart="@dimen/margin_s"
+        android:paddingEnd="@dimen/margin_xxs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/raise_volume_header"
+        app:thumbTint="@color/moinBlueTone7"
+        app:trackTint="@color/moinGray3" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/pick_default_alarm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_s"
+        android:paddingStart="@dimen/margin_s"
+        android:paddingTop="@dimen/margin_s"
+        android:paddingEnd="@dimen/margin_xxs"
+        android:text="@string/pick_default"
+        android:textColor="@color/moinGray4"
+        app:flow_horizontalAlign="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/raise_volume_header" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

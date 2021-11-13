@@ -2,6 +2,7 @@ package de.coldtea.moin.domain.services
 
 import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -12,6 +13,7 @@ import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.PlayerApi
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.domain.model.playlist.MediaType
 import de.coldtea.moin.domain.model.ringer.Randomized
 import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
@@ -21,10 +23,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import timber.log.Timber
+import kotlin.math.roundToInt
 
 class RingerService(
     private val context: Context,
-    private val songRandomizeService: SongRandomizeService
+    private val songRandomizeService: SongRandomizeService,
+    private val sharedPreferencesRepository: SharedPreferencesRepository
 ) {
     private var mp3PlayerService: MP3PlayerService? = null
     private val ioCoroutineScope
@@ -64,18 +68,7 @@ class RingerService(
                     connectSpotify()
                 }
             }
-            MediaType.MP3.ordinal -> {
-                if (mp3PlayerService != null) return@launch
-
-                mp3PlayerService = MP3PlayerService(
-                    context,
-                    FilePickerConverter.stringToUri(ringerScreenInfo?.song?.source.orEmpty())
-                )
-
-                mp3PlayerService?.play()
-
-                isStartedPlaying = true
-            }
+            MediaType.MP3.ordinal -> playMP3()
             null -> ringDefaultAlarm()
         }
     }
@@ -102,7 +95,7 @@ class RingerService(
         disconnectSpotify()
     }
 
-    //end region
+    //endregion
 
     //region spotify
 //    private var _spotifyState = MutableSharedFlow<SpotifyState>()
@@ -113,6 +106,7 @@ class RingerService(
     private val connectionListener = object : Connector.ConnectionListener {
         override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
             _spotifyAppRemote = spotifyAppRemote
+
             Timber.d("Moin --> Spotify Connected!")
             ioCoroutineScope.launch {
                 onConnectionSuccess()
@@ -160,6 +154,7 @@ class RingerService(
                     isStartedPlaying = false
                     _ringerStateInfo.emit(Stops)
                 } else if (!playerState.isPaused && !isStartedPlaying) {
+                    adjustVolume()
                     isStartedPlaying = true
                 }
             }
@@ -170,7 +165,7 @@ class RingerService(
     private fun playTrack(songId: String) =
         _spotifyAppRemote
             ?.playerApi
-            ?.play("spotify:track:${songId}", PlayerApi.StreamType.ALARM)
+            ?.play("spotify:track:${songId}", PlayerApi.StreamType.ALARM)//
             ?.also {
                 subscribePlayerState()
             }
@@ -183,7 +178,24 @@ class RingerService(
                 subscribePlayerState()
             }
 
-    //end region
+    //endregion
+
+    // region local media
+
+    private fun playMP3(){
+        if (mp3PlayerService != null) return
+
+        mp3PlayerService = MP3PlayerService(
+            context,
+            FilePickerConverter.stringToUri(ringerScreenInfo?.song?.source.orEmpty())
+        )
+
+        mp3PlayerService?.play()
+        adjustVolume()
+        isStartedPlaying = true
+    }
+
+    //endregion
 
     //region vibration
 
@@ -197,9 +209,9 @@ class RingerService(
     } else {
         vibrator.vibrate(10000)
     }
-    //end region
+    //endregion
 
-    //Region default alarm
+    //region default alarm
     private fun ringDefaultAlarm() {
         val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         ringtone = RingtoneManager.getRingtone(context, notification)
@@ -208,6 +220,7 @@ class RingerService(
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
             .build()
         ringtone?.play()
+        adjustVolume()
 
         isStartedPlaying = true
     }
@@ -220,5 +233,35 @@ class RingerService(
         }
 
     }
-    //end region
+    //endregion
+
+    //region volume adjusment
+
+    private fun adjustVolume(){
+        if(sharedPreferencesRepository.raiseVolumeGradually){
+            mainCoroutineScope.launch {
+                var startVolume = 0f
+                while (startVolume <= sharedPreferencesRepository.volume){
+                    startVolume += 0.03f
+                    setAlarmVolume(startVolume)
+                    delay(1000)
+                }
+            }
+        }else{
+            setAlarmVolume(sharedPreferencesRepository.volume)
+        }
+    }
+
+    private fun setAlarmVolume(volume: Float){
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+
+        audioManager.setStreamVolume(
+            AudioManager.STREAM_ALARM,
+            (volume * maxVolume).roundToInt(),
+            0
+        )
+    }
+
+    //endregion
 }

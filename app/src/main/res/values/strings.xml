@@ -3,6 +3,7 @@
     <string name="title_alarms">Alarms</string>
     <string name="title_playlists">Playlists</string>
     <string name="debug_menu_title">Debug</string>
+    <string name="settings_menu_title">Settings</string>
 
     <string name="alarm_item_repeat_checkbox">Repeat</string>
 
@@ -50,4 +51,10 @@
     <!-- Alarm delegate -->
 
     <string name="add_song">Add Song</string>
+
+    <!-- Settings -->
+
+    <string name="volume">Volume</string>
+    <string name="gradually_raise">Raise volume gradually</string>
+    <string name="pick_default">Select default alarm</string>
 </resources>

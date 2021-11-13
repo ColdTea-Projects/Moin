@@ -48,6 +48,18 @@ class SharedPreferencesRepository(val context: Context) {
             putString(LAST_VISITED_CITY, value)
         }.apply()
 
+    var volume: Float
+        get() = sharedPreferences.getFloat(VOLUME, 0.8f)
+        set(value) = sharedPreferences.edit().apply {
+            putFloat(VOLUME, value)
+        }.apply()
+
+    var raiseVolumeGradually: Boolean
+        get() = sharedPreferences.getBoolean(RAISE_VOLUME_GRADUALLY, true)
+        set(value) = sharedPreferences.edit().apply {
+            putBoolean(RAISE_VOLUME_GRADUALLY, value)
+        }.apply()
+
     companion object {
         private const val MOIN_APP_SHARED_PREFERENCES = "moin_app_shared_preferences"
         private const val DID_WORKS_START = "did_works_start"
@@ -56,6 +68,9 @@ class SharedPreferencesRepository(val context: Context) {
         private const val REFRESH_TOKEN = "refresh_token"
         private const val SPOTIFY_AUTHORIZATION_BACKUP = "spotify_authorization_backup"
         private const val LAST_VISITED_CITY = "last_visited_city"
+        private const val VOLUME = "volume"
+        private const val RAISE_VOLUME_GRADUALLY = "raise_volume_gradually"
+
     }
 
 }

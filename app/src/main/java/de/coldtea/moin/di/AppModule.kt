@@ -8,6 +8,7 @@ import de.coldtea.moin.ui.dialogfragments.label.AlarmLabelDialogViewModel
 import de.coldtea.moin.ui.lockscreen.LockScreenAlarmViewModel
 import de.coldtea.moin.ui.playlist.PlaylistViewModel
 import de.coldtea.moin.ui.searchspotify.SearchSpotifyViewModel
+import de.coldtea.moin.ui.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -21,4 +22,5 @@ val appModule = module {
     viewModel { AlarmLabelDialogViewModel(get()) }
     viewModel { AlarmViewModel(get()) }
     viewModel { Mp3ViewModel() }
+    viewModel { SettingsViewModel(get()) }
 }

@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/layout/activity_lock_screen_alarm.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.26992753623188404" />
         <entry key="app/src/main/res/layout/activity_search_spotify.xml" value="0.39947916666666666" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.67" />
         <entry key="app/src/main/res/layout/dialog_alarm_label.xml" value="0.2641843971631206" />
         <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.25" />
