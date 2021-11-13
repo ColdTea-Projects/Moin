@@ -55,7 +55,7 @@ class SharedPreferencesRepository(val context: Context) {
         }.apply()
 
     var raiseVolumeGradually: Boolean
-        get() = sharedPreferences.getBoolean(RAISE_VOLUME_GRADUALLY, true)
+        get() = sharedPreferences.getBoolean(RAISE_VOLUME_GRADUALLY, false)
         set(value) = sharedPreferences.edit().apply {
             putBoolean(RAISE_VOLUME_GRADUALLY, value)
         }.apply()
