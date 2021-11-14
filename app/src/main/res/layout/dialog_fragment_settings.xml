@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
@@ -12,11 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/margin_s"
-        android:paddingEnd="@dimen/margin_s"
         android:paddingTop="@dimen/margin_s"
+        android:paddingEnd="@dimen/margin_s"
         android:text="@string/volume"
         android:textColor="@color/moinGray4"
         app:flow_horizontalAlign="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
@@ -28,6 +31,8 @@
         android:progressBackgroundTint="@color/moinGray4"
         android:progressTint="@color/moinBlueTone7"
         android:thumbTint="@color/moinBlueTone7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/volume_header" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -78,13 +83,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/margin_s"
-        android:paddingEnd="@dimen/margin_s"
         android:paddingTop="@dimen/margin_s"
+        android:paddingEnd="@dimen/margin_s"
         android:text="@string/snooze_duration"
         android:textColor="@color/moinGray4"
-        tools:text="Snooze Duration 15 min."
         app:flow_horizontalAlign="start"
-        app:layout_constraintTop_toBottomOf="@id/pick_default_alarm" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pick_default_alarm"
+        tools:text="Snooze Duration 15 min." />
 
     <SeekBar
         android:id="@+id/snooze_duration"
@@ -95,6 +102,8 @@
         android:progressBackgroundTint="@color/moinGray4"
         android:progressTint="@color/moinBlueTone7"
         android:thumbTint="@color/moinBlueTone7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/snooze_duration_header" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

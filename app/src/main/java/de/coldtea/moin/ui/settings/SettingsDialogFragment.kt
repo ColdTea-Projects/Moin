@@ -4,44 +4,49 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.coldtea.moin.R
-import de.coldtea.moin.databinding.ActivitySettingsBinding
-import de.coldtea.moin.ui.settings.SettingsViewModel.Companion.DEF_SNOOZE_DURATION
-import de.coldtea.moin.ui.settings.SettingsViewModel.Companion.MAX_SNOOZE_DURATION
-import de.coldtea.moin.ui.settings.SettingsViewModel.Companion.MAX_VOLUME
-import de.coldtea.moin.ui.settings.SettingsViewModel.Companion.MIN_SNOOZE_DURATION
-import de.coldtea.moin.ui.settings.SettingsViewModel.Companion.MIN_VOLUME
-import de.coldtea.moin.ui.settings.SettingsViewModel.Companion.STEP_SNOOZE_DURATION
+import de.coldtea.moin.databinding.DialogFragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class SettingsActivity: AppCompatActivity() {
+class SettingsDialogFragment : BottomSheetDialogFragment() {
     private val viewModel: SettingsViewModel by viewModel()
-    private var binding: ActivitySettingsBinding? = null
+    private var binding: DialogFragmentSettingsBinding? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = DialogFragmentSettingsBinding.inflate(inflater, container, false).apply {
+        initUIItems()
+    }.also {
+        Timber.d("Moin --> onCreateView")
+        binding = it
+    }.root
+
+    private fun DialogFragmentSettingsBinding.initUIItems(){
         val registerActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
-        binding?.pickDefaultAlarm?.setOnClickListener {
+        pickDefaultAlarm.setOnClickListener {
             registerActivityResult.launch(Intent(Settings.ACTION_SOUND_SETTINGS))
         }
 
-        setContentView(binding?.root)
-
-        binding?.initUIItems()
+        initVolumeItems()
+        initSnoozeItems()
 
     }
 
-    private fun ActivitySettingsBinding.initUIItems(){
+    private fun DialogFragmentSettingsBinding.initVolumeItems(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            volume.min = MIN_VOLUME
+            volume.min = SettingsViewModel.MIN_VOLUME
         }
-        volume.max = MAX_VOLUME
+        volume.max = SettingsViewModel.MAX_VOLUME
 
         volume.setOnSeekBarChangeListener(
             VolumeSeekbarChangeListener()
@@ -53,16 +58,18 @@ class SettingsActivity: AppCompatActivity() {
             viewModel.raiseVolumeGradually = isChecked
         }
         raiseVolume.isChecked = viewModel.raiseVolumeGradually
+    }
 
+    private fun DialogFragmentSettingsBinding.initSnoozeItems(){
         snoozeDuration.progress = viewModel.snoozeDuration
-        snoozeDuration.max = MAX_SNOOZE_DURATION
+        snoozeDuration.max = SettingsViewModel.MAX_SNOOZE_DURATION
         snoozeDuration.setOnSeekBarChangeListener(
             SnoozeDurationSeekbarChangeListener()
         )
 
-        binding?.snoozeDurationHeader?.text = getString(R.string.snooze_duration, viewModel.snoozeDuration.toString())
-
+        snoozeDurationHeader.text = getString(R.string.snooze_duration, viewModel.snoozeDuration.toString())
     }
+
 
     inner class VolumeSeekbarChangeListener: SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -82,8 +89,9 @@ class SettingsActivity: AppCompatActivity() {
 
     inner class SnoozeDurationSeekbarChangeListener: SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-            var snoozeDuration = progress - progress%STEP_SNOOZE_DURATION
-            if (snoozeDuration < MIN_SNOOZE_DURATION) snoozeDuration = MIN_SNOOZE_DURATION
+            var snoozeDuration = progress - progress% SettingsViewModel.STEP_SNOOZE_DURATION
+            if (snoozeDuration < SettingsViewModel.MIN_SNOOZE_DURATION) snoozeDuration =
+                SettingsViewModel.MIN_SNOOZE_DURATION
 
             binding?.snoozeDuration?.progress = snoozeDuration
             binding?.snoozeDurationHeader?.text = getString(R.string.snooze_duration, snoozeDuration.toString())
@@ -95,8 +103,12 @@ class SettingsActivity: AppCompatActivity() {
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             Timber.i("Moin.onStopTrackingTouch SnoozeDuration--> ${seekBar?.progress}")
-            viewModel.snoozeDuration = seekBar?.progress?: DEF_SNOOZE_DURATION
+            viewModel.snoozeDuration = seekBar?.progress?: SettingsViewModel.DEF_SNOOZE_DURATION
         }
 
+    }
+
+    companion object{
+        val TAG = SettingsDialogFragment.javaClass.canonicalName
     }
 }
