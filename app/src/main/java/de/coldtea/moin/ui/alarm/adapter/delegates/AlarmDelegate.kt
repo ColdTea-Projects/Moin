@@ -12,6 +12,13 @@ import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.moin.extensions.*
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmBundle
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ISACTIVE
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ISEXPANDED
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_LABEL
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ORIGINALHOUR
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ORIGINALMINUTE
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_TIME
+import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_WEEKDAYS
 import de.coldtea.smplr.smplralarm.models.WeekDays
 import kotlinx.android.synthetic.main.view_alarm_delegate_item.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -43,35 +50,23 @@ class AlarmDelegate :
         item: AlarmBundle,
         holder: AlarmViewHolder,
         payloads: MutableList<Any>
-    ) = holder.bind(item)
+    ) = holder.bind(item, payloads)
 
     class AlarmViewHolder(
         private val binding: ViewAlarmDelegateItemBinding,
         private val smplrAlarmService: SmplrAlarmService
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(bundle: AlarmBundle) = with(binding) {
+        fun bind(bundle: AlarmBundle, payloads: MutableList<Any>) = with(binding) {
+
+            initActionListeners(bundle)
+
+            if(payloads.isNotEmpty()) upgradeByPayload(payloads[0])
+            else drawAlarmListItem(bundle.alarmDelegateItem)
+
+        }
+
+        private fun ViewAlarmDelegateItemBinding.initActionListeners(bundle: AlarmBundle){
             val item = bundle.alarmDelegateItem
-            val hourMinute = item.originalHour to item.originalMinute
-
-            time.text = hourMinute.getTimeText()
-            days.text = item.weekDays.getWeekDaysText()
-            days.isVisible = !item.isExpanded
-
-            isActive.isChecked = item.isActive
-
-            snooze.text = root.context?.getString(R.string.snooze_until, (item.hour to item.minute).getTimeText())
-            snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
-
-            label.label.text = item.label
-
-            setupCheckList(item.weekDays)
-
-            repeat.isChecked = item.weekDays.isNotEmpty()
-
-            expand.scaleY = if(item.isExpanded) -1F else 1F
-
-            groupHidden.isVisible = item.isExpanded
-            groupWeekdays.isVisible = item.isExpanded
 
             isActive.setOnCheckedChangeListener { _, isChecked ->
                 updateAlarm(item, isActive = isChecked, weekDays = weekdaysList)
@@ -97,6 +92,7 @@ class AlarmDelegate :
                 unifyChecklist(repeat.isChecked)
                 updateAlarm(item, isActive = true, weekDays = weekdaysList)
             }
+
 
             sunday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
             monday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
@@ -129,7 +125,61 @@ class AlarmDelegate :
                     true
                 ).show()
             }
+        }
 
+        private fun ViewAlarmDelegateItemBinding.drawAlarmListItem(item: AlarmDelegateItem){
+            val hourMinute = item.originalHour to item.originalMinute
+
+            time.text = hourMinute.getTimeText()
+            days.text = item.weekDays.getWeekDaysText()
+            days.isVisible = !item.isExpanded
+
+            isActive.isChecked = item.isActive
+
+            snooze.text = root.context?.getString(R.string.snooze_until, (item.hour to item.minute).getTimeText())
+            snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
+
+            label.label.text = item.label
+
+            setupCheckList(item.weekDays)
+
+            repeat.isChecked = item.weekDays.isNotEmpty()
+
+            expand.scaleY = if(item.isExpanded) -1F else 1F
+
+            groupHidden.isVisible = item.isExpanded
+            groupWeekdays.isVisible = item.isExpanded
+        }
+
+        private fun ViewAlarmDelegateItemBinding.upgradeByPayload(payloads: Any?){
+            if (payloads is Map<*, *>){
+                payloads.map {  payload ->
+                    when(payload.key){
+                        KEY_TIME -> {
+                            time.text = payload.value as String
+                        }
+                        KEY_WEEKDAYS -> {}
+                        KEY_ISACTIVE -> {
+                            isActive.isChecked = payload.value as Boolean
+                        }
+                        KEY_ISEXPANDED -> {
+                            val expanded = payload.value as Boolean
+                            days.isVisible = !expanded
+
+                            expand.scaleY = if(expanded) -1F else 1F
+                            groupHidden.isVisible = expanded
+                            groupWeekdays.isVisible = expanded
+                        }
+                        KEY_ORIGINALHOUR -> {}
+                        KEY_ORIGINALMINUTE -> {}
+                        KEY_LABEL -> {
+                            label.label.text = payload.value as String
+                        }
+                    }
+                }
+
+
+            }
         }
 
         private fun updateAlarm(
