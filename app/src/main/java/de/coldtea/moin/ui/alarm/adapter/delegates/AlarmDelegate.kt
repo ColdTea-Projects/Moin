@@ -3,24 +3,14 @@ package de.coldtea.moin.ui.alarm.adapter.delegates
 import android.app.TimePickerDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
-import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ViewAlarmDelegateItemBinding
 import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.moin.extensions.*
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmBundle
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
-import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ISACTIVE
-import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ISEXPANDED
-import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_LABEL
-import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ORIGINALHOUR
-import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_ORIGINALMINUTE
-import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_TIME
-import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback.Companion.KEY_WEEKDAYS
 import de.coldtea.smplr.smplralarm.models.WeekDays
-import kotlinx.android.synthetic.main.view_alarm_delegate_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,7 +59,11 @@ class AlarmDelegate :
             val item = bundle.alarmDelegateItem
 
             isActive.setOnCheckedChangeListener { _, isChecked ->
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+
                 updateAlarm(item, isActive = isChecked, weekDays = weekdaysList)
+                cleanSnoozeView()
             }
 
             expand.setOnClickListener {
@@ -94,13 +88,49 @@ class AlarmDelegate :
             }
 
 
-            sunday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
-            monday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
-            tuesday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
-            wednesday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
-            thursday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
-            friday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
-            saturday.setOnClickListener {updateAlarm(item, isActive = true, weekDays = weekdaysList)}
+            sunday.setOnClickListener {
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+
+                updateAlarm(item, isActive = true, weekDays = weekdaysList)
+                cleanSnoozeView()
+            }
+            monday.setOnClickListener {
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+                updateAlarm(item, isActive = true, weekDays = weekdaysList)
+                cleanSnoozeView()
+            }
+            tuesday.setOnClickListener {
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+                updateAlarm(item, isActive = true, weekDays = weekdaysList)
+                cleanSnoozeView()
+            }
+            wednesday.setOnClickListener {
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+                updateAlarm(item, isActive = true, weekDays = weekdaysList)
+                cleanSnoozeView()
+            }
+            thursday.setOnClickListener {
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+                updateAlarm(item, isActive = true, weekDays = weekdaysList)
+                cleanSnoozeView()
+            }
+            friday.setOnClickListener {
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+                updateAlarm(item, isActive = true, weekDays = weekdaysList)
+                cleanSnoozeView()
+            }
+            saturday.setOnClickListener {
+                item.hour = item.originalHour
+                item.minute = item.originalMinute
+                updateAlarm(item, isActive = true, weekDays = weekdaysList)
+                cleanSnoozeView()
+            }
 
             label.setOnClickListener {
                 bundle.onClickLabel(bundle.alarmDelegateItem)
@@ -127,60 +157,7 @@ class AlarmDelegate :
             }
         }
 
-        private fun ViewAlarmDelegateItemBinding.drawAlarmListItem(item: AlarmDelegateItem){
-            val hourMinute = item.originalHour to item.originalMinute
 
-            time.text = hourMinute.getTimeText()
-            days.text = item.weekDays.getWeekDaysText()
-            days.isVisible = !item.isExpanded
-
-            isActive.isChecked = item.isActive
-
-            snooze.text = root.context?.getString(R.string.snooze_until, (item.hour to item.minute).getTimeText())
-            snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
-
-            label.label.text = item.label
-
-            setupCheckList(item.weekDays)
-
-            repeat.isChecked = item.weekDays.isNotEmpty()
-
-            expand.scaleY = if(item.isExpanded) -1F else 1F
-
-            groupHidden.isVisible = item.isExpanded
-            groupWeekdays.isVisible = item.isExpanded
-        }
-
-        private fun ViewAlarmDelegateItemBinding.upgradeByPayload(payloads: Any?){
-            if (payloads is Map<*, *>){
-                payloads.map {  payload ->
-                    when(payload.key){
-                        KEY_TIME -> {
-                            time.text = payload.value as String
-                        }
-                        KEY_WEEKDAYS -> {}
-                        KEY_ISACTIVE -> {
-                            isActive.isChecked = payload.value as Boolean
-                        }
-                        KEY_ISEXPANDED -> {
-                            val expanded = payload.value as Boolean
-                            days.isVisible = !expanded
-
-                            expand.scaleY = if(expanded) -1F else 1F
-                            groupHidden.isVisible = expanded
-                            groupWeekdays.isVisible = expanded
-                        }
-                        KEY_ORIGINALHOUR -> {}
-                        KEY_ORIGINALMINUTE -> {}
-                        KEY_LABEL -> {
-                            label.label.text = payload.value as String
-                        }
-                    }
-                }
-
-
-            }
-        }
 
         private fun updateAlarm(
             item: AlarmDelegateItem,
