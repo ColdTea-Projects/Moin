@@ -87,7 +87,6 @@ class AlarmDelegate :
                 updateAlarm(item, isActive = true, weekDays = weekdaysList)
             }
 
-
             sunday.setOnClickListener {
                 item.hour = item.originalHour
                 item.minute = item.originalMinute

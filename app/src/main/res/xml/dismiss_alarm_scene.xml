@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@id/end_dismiss"
+        motion:constraintSetStart="@+id/start_dismiss"
+        motion:duration="1000">
+
+        <OnSwipe
+            motion:dragDirection="dragRight"
+            motion:touchAnchorId="@+id/dismiss_icon"
+            motion:touchAnchorSide="right" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start_dismiss">
+        <Constraint
+            android:id="@+id/dismiss_icon"
+            android:layout_width="@dimen/alarm_control_icon_size"
+            android:layout_height="@dimen/alarm_control_icon_size"
+            android:layout_marginStart="@dimen/margin_xxs"
+            motion:layout_constraintBottom_toBottomOf="@+id/dismiss_slider"
+            motion:layout_constraintStart_toStartOf="@+id/dismiss_slider"
+            motion:layout_constraintTop_toTopOf="@+id/dismiss_slider" />
+        <Constraint
+            android:id="@+id/dismiss_slider"
+            android:layout_width="@dimen/alarm_slider_width"
+            android:layout_height="@dimen/alarm_slider_height"
+            android:layout_marginTop="@dimen/margin_m"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/weather">
+            <CustomAttribute
+                motion:attributeName="crossfade"
+                motion:customFloatValue="0" />
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end_dismiss">
+        <Constraint
+            android:id="@+id/dismiss_icon"
+            android:layout_width="@dimen/alarm_control_icon_size"
+            android:layout_height="@dimen/alarm_control_icon_size"
+            android:layout_marginEnd="@dimen/margin_xxs"
+            motion:layout_constraintBottom_toBottomOf="@+id/dismiss_slider"
+            motion:layout_constraintEnd_toEndOf="@+id/dismiss_slider"
+            motion:layout_constraintTop_toTopOf="@+id/dismiss_slider" />
+        <Constraint
+            android:id="@+id/dismiss_slider"
+            android:layout_width="@dimen/alarm_slider_width"
+            android:layout_height="@dimen/alarm_slider_height"
+            android:layout_marginTop="@dimen/margin_m"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/weather">
+            <CustomAttribute
+                motion:attributeName="crossfade"
+                motion:customFloatValue="1" />
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>

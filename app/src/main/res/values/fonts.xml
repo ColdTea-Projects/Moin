@@ -2,6 +2,7 @@
 <resources>
     <!-- Alarm view-->
     <dimen name="clock_font_size">70sp</dimen>
+    <dimen name="slider_font_size">20sp</dimen>
     <!-- Alarm item-->
     <dimen name="alarm_item_clock_font_size">50sp</dimen>
     <dimen name="alarm_item_weekdays_font_size">12sp</dimen>

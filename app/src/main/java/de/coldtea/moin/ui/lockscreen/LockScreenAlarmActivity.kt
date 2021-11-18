@@ -3,12 +3,16 @@ package de.coldtea.moin.ui.lockscreen
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.databinding.ActivityLockScreenAlarmBinding
 import de.coldtea.moin.extensions.activateLockScreen
 import de.coldtea.moin.extensions.deactivateLockScreen
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
 import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
+import de.coldtea.moin.ui.lockscreen.models.MotionLayoutAction
+import de.coldtea.moin.ui.lockscreen.models.OnDismissDrag
+import de.coldtea.moin.ui.lockscreen.models.OnSnoozeDrag
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -48,21 +52,8 @@ class LockScreenAlarmActivity : AppCompatActivity() {
     }
 
     private fun setupUIItems() = with(binding) {
-        dismiss.setOnClickListener {
-            if (viewModel.isRinging) {
-                viewModel.dismissAlarm()
-            } else {
-                finish()
-            }
-        }
-
-        snooze.setOnClickListener {
-            if (viewModel.isRinging) {
-                viewModel.snoozeAlarm()
-            } else {
-                finish()
-            }
-        }
+        snoozeMotionLayout.setTransitionListener(LockScreenTransitionListener(OnSnoozeDrag))
+        dismissMotionLayout.setTransitionListener(LockScreenTransitionListener(OnDismissDrag))
     }
 
     private fun initStateObserver() = lifecycleScope.launch {
@@ -85,6 +76,58 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         viewModel.label.collect {
             binding.label.text = it
         }
+    }
+
+    inner class LockScreenTransitionListener(private val motionLayoutAction: MotionLayoutAction) :
+        MotionLayout.TransitionListener {
+        var progress = 0F
+        override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
+
+        }
+
+        override fun onTransitionChange(
+            motionLayout: MotionLayout?,
+            startId: Int,
+            endId: Int,
+            progress: Float
+        ) {
+            this.progress = progress
+        }
+
+        override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+            if (progress > TRANSITION_ACTIVATION_THRESHOLD) {
+                when (motionLayoutAction) {
+                    OnDismissDrag -> {
+                        if (viewModel.isRinging) {
+                            viewModel.dismissAlarm()
+                        } else {
+                            finish()
+                        }
+                    }
+                    OnSnoozeDrag -> {
+                        if (viewModel.isRinging) {
+                            viewModel.snoozeAlarm()
+                        } else {
+                            finish()
+                        }
+                    }
+                }
+            }
+        }
+
+        override fun onTransitionTrigger(
+            motionLayout: MotionLayout?,
+            triggerId: Int,
+            positive: Boolean,
+            progress: Float
+        ) {
+        }
+
+
+    }
+
+    companion object {
+        private const val TRANSITION_ACTIVATION_THRESHOLD = 0.5F
     }
 
 }

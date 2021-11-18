@@ -5,7 +5,8 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/moinBlueTone1">
+    android:background="@color/moinBlueTone1"
+    app:layoutDescription="@xml/snooze_alarm_scene">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/time"
@@ -40,36 +41,83 @@
         app:layout_constraintTop_toBottomOf="@id/weather"
         tools:text="This field is reserved for user message" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/alarm"
-        android:layout_width="@dimen/alarm_control_icon_size"
-        android:layout_height="@dimen/alarm_control_icon_size"
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/snooze_motion_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_xxl"
-        android:tint="@color/moinBlueTone7"
+        app:layoutDescription="@xml/snooze_alarm_scene"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weather"
-        app:srcCompat="@drawable/ic_baseline_alarm_24" />
+        app:layout_constraintTop_toBottomOf="@id/weather">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/dismiss"
-        android:layout_width="@dimen/alarm_control_icon_size"
-        android:layout_height="@dimen/alarm_control_icon_size"
-        android:layout_marginTop="@dimen/margin_xxl"
-        android:tint="@color/moinBlueTone7"
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/snooze_slider"
+            android:layout_width="@dimen/alarm_slider_width"
+            android:layout_height="@dimen/alarm_slider_height"
+            android:src="@drawable/background_slider_item"
+            app:altSrc="@drawable/background_slider_item_disappear" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/snooze_icon"
+            android:layout_width="@dimen/alarm_control_icon_size"
+            android:layout_height="@dimen/alarm_control_icon_size"
+            android:layout_marginStart="@dimen/margin_xxs"
+            app:layout_constraintBottom_toBottomOf="@+id/snooze_slider"
+            app:layout_constraintStart_toStartOf="@+id/snooze_slider"
+            app:layout_constraintTop_toTopOf="@+id/snooze_slider"
+            app:srcCompat="@drawable/ic_baseline_snooze_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/snooze_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/snooze"
+            android:textSize="@dimen/slider_font_size"
+            app:layout_constraintBottom_toBottomOf="@+id/snooze_slider"
+            app:layout_constraintEnd_toEndOf="@+id/snooze_slider"
+            app:layout_constraintStart_toStartOf="@+id/snooze_slider"
+            app:layout_constraintTop_toTopOf="@+id/snooze_slider" />
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/dismiss_motion_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_m"
+        app:layoutDescription="@xml/dismiss_alarm_scene"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/alarm"
-        app:layout_constraintTop_toBottomOf="@id/weather"
-        app:srcCompat="@drawable/ic_baseline_alarm_off_24" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/snooze"
-        android:layout_width="@dimen/alarm_control_icon_size"
-        android:layout_height="@dimen/alarm_control_icon_size"
-        android:layout_marginTop="@dimen/margin_xxl"
-        android:tint="@color/moinBlueTone7"
-        app:layout_constraintEnd_toEndOf="@id/alarm"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weather"
-        app:srcCompat="@drawable/ic_baseline_snooze_24" />
+        app:layout_constraintTop_toBottomOf="@id/snooze_motion_layout">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/dismiss_slider"
+            android:layout_width="@dimen/alarm_slider_width"
+            android:layout_height="@dimen/alarm_slider_height"
+            android:src="@drawable/background_slider_item"
+            app:altSrc="@drawable/background_slider_item_disappear" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/dismiss_icon"
+            android:layout_width="@dimen/alarm_control_icon_size"
+            android:layout_height="@dimen/alarm_control_icon_size"
+            android:layout_marginStart="@dimen/margin_xxs"
+            app:layout_constraintBottom_toBottomOf="@+id/dismiss_slider"
+            app:layout_constraintStart_toStartOf="@+id/dismiss_slider"
+            app:layout_constraintTop_toTopOf="@+id/dismiss_slider"
+            app:srcCompat="@drawable/ic_baseline_alarm_off_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dismiss_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dismiss"
+            android:textSize="@dimen/slider_font_size"
+            app:layout_constraintBottom_toBottomOf="@+id/dismiss_slider"
+            app:layout_constraintEnd_toEndOf="@+id/dismiss_slider"
+            app:layout_constraintStart_toStartOf="@+id/dismiss_slider"
+            app:layout_constraintTop_toTopOf="@+id/dismiss_slider" />
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
