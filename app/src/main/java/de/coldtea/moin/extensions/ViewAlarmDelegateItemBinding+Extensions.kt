@@ -54,6 +54,7 @@ fun ViewAlarmDelegateItemBinding.upgradeByPayload(payloads: Any?){
             when(payload.key){
                 AlarmsDiffUtilCallback.KEY_TIME -> {
                     time.text = payload.value as String
+                    cleanSnoozeView()
                 }
                 AlarmsDiffUtilCallback.KEY_SNOOZETIME -> {
                     val snoozeTime = payload.value as String
@@ -63,8 +64,6 @@ fun ViewAlarmDelegateItemBinding.upgradeByPayload(payloads: Any?){
                 AlarmsDiffUtilCallback.KEY_WEEKDAYS -> {}
                 AlarmsDiffUtilCallback.KEY_ISACTIVE -> {
                     isActive.isChecked = payload.value as Boolean
-
-
                 }
                 AlarmsDiffUtilCallback.KEY_ISEXPANDED -> {
                     val expanded = payload.value as Boolean
