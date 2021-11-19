@@ -32,6 +32,7 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         requestId = intent?.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)?:return
+        Timber.d("Moin.AlarmBroadcastReceiver --> alarm received: $requestId")
         if (requestId == -1) return
 
         onNotificationPosted(context)
@@ -42,6 +43,7 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
 
         //is screen not locked
         if (!keyguardManager.isKeyguardLocked){
+            Timber.d("Moin.AlarmBroadcastReceiver --> onNotificationPosted")
             observeAlarmList()
             observeRingerState(applicationContext)
             smplrAlarmService.callRequestAlarmList(NotificationListenerRequest)
@@ -70,5 +72,6 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
     private fun dismissNotification(applicationContext: Context){
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(requestId)
+        ringerService.invalidate()
     }
 }

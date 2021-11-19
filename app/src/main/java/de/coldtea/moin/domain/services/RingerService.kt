@@ -98,8 +98,6 @@ class RingerService(
     //endregion
 
     //region spotify
-//    private var _spotifyState = MutableSharedFlow<SpotifyState>()
-//    val spotifyState: SharedFlow<SpotifyState> = _spotifyState
 
     private var _spotifyAppRemote: SpotifyAppRemote? = null
 
