@@ -60,6 +60,6 @@
     <string name="snooze_duration">Snooze Duration - %1$s min.</string>
 
     <!-- Lock Screen -->
-    <string name="snooze">SNOOZE</string>
-    <string name="dismiss">DISMISS</string>
+    <string name="snooze">Slide to Snooze</string>
+    <string name="dismiss">Slide to Dismiss</string>
 </resources>

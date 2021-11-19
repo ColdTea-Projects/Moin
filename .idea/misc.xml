@@ -14,7 +14,7 @@
         <entry key="app/src/main/res/drawable/divider_alarm_list.xml" value="0.29444444444444445" />
         <entry key="app/src/main/res/drawable/ic_baseline_music_note_24.xml" value="0.3848958333333333" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.3307291666666667" />
-        <entry key="app/src/main/res/layout/activity_lock_screen_alarm.xml" value="0.14615384615384616" />
+        <entry key="app/src/main/res/layout/activity_lock_screen_alarm.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.26992753623188404" />
         <entry key="app/src/main/res/layout/activity_search_spotify.xml" value="0.39947916666666666" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.4426002766251729" />
