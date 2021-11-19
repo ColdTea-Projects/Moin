@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.DrawableRes
 import de.coldtea.moin.MainActivity
+import de.coldtea.moin.R
 import de.coldtea.moin.domain.model.alarm.AlarmEvent
 import de.coldtea.moin.domain.model.alarm.AlarmObject
 import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
@@ -86,12 +87,12 @@ class SmplrAlarmService(private val context: Context) {
             notification {
                 alarmNotification {
                     smallIcon { smallIcon }
-                    title { "Moin! Your alarm is ringing" }
-                    message { "It is $hour:$minute" }
-                    bigText { "It is $hour:$minute" }
+                    title { context.getString(R.string.alarm_title) }
+                    message { label }
+                    bigText { label }
                     autoCancel { true }
-                    firstButtonText { "Snooze" }
-                    secondButtonText { "Dismiss" }
+                    firstButtonText { context.getString(R.string.snooze_button) }
+                    secondButtonText { context.getString(R.string.dismiss_button) }
                     firstButtonIntent { snooze }
                     secondButtonIntent { dismiss }
                     notificationDismissedIntent { dismiss }

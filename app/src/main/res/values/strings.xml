@@ -62,4 +62,12 @@
     <!-- Lock Screen -->
     <string name="snooze">Slide to Snooze</string>
     <string name="dismiss">Slide to Dismiss</string>
+
+    <!-- Alarm constants -->
+    <string name="alarm_title">Moin! Your alarm is ringing</string>
+    <string name="snooze_button">Snooze</string>
+    <string name="dismiss_button">Dismiss</string>
+
+
+
 </resources>
