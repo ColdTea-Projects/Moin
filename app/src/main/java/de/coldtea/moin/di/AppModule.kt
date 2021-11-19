@@ -18,7 +18,7 @@ val appModule = module {
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { SearchSpotifyViewModel(get(), get(), get(), get()) }
     viewModel { PlaylistViewModel(get()) }
-    viewModel { LockScreenAlarmViewModel(get(), get()) }
+    viewModel { LockScreenAlarmViewModel(get(), get(), get()) }
     viewModel { AlarmLabelDialogViewModel(get()) }
     viewModel { AlarmViewModel(get()) }
     viewModel { Mp3ViewModel() }

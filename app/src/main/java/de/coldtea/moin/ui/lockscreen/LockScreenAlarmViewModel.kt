@@ -1,11 +1,12 @@
-
 package de.coldtea.moin.ui.lockscreen
 
 import android.app.NotificationManager
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.domain.model.alarm.*
+import de.coldtea.moin.domain.model.extensions.onAlarmObjectReceived
 import de.coldtea.moin.domain.model.ringer.Plays
 import de.coldtea.moin.domain.model.ringer.Randomized
 import de.coldtea.moin.domain.model.ringer.Stops
@@ -21,7 +22,8 @@ import java.util.*
 
 class LockScreenAlarmViewModel(
     private val ringerService: RingerService,
-    private val smplrAlarmService: SmplrAlarmService
+    private val smplrAlarmService: SmplrAlarmService,
+    private val sharedPreferencesRepository: SharedPreferencesRepository
 ) : ViewModel() {
     var requestId = -1
 
@@ -42,11 +44,10 @@ class LockScreenAlarmViewModel(
                 when (alarmObject.alarmEvent) {
                     SnoozeAlarmUpdate,
                     DismissAlarmUpdate -> ringerService.stop()
-                    DismissAlarmRequest -> alarmObject.alarmList.alarmItems
-                        .find { alarmItem -> alarmItem.requestId == requestId }
-                        ?.let { alarmItem ->
-                            setAlarmForDismissal(alarmItem)
-                        }
+                    SnoozeAlarmRequest -> alarmObject
+                        .onAlarmObjectReceived(requestId){ updateAlarmForSnooze(it) }
+                    DismissAlarmRequest -> alarmObject
+                        .onAlarmObjectReceived(requestId){ updateAlarmForDismissal(it) }
                     RequestAlarms -> _label.emit(alarmObject.alarmList.alarmItems[0].info.label)
                 }
             }
@@ -56,7 +57,7 @@ class LockScreenAlarmViewModel(
 
             ringerService.ringerStateInfo.collect { ringerStateInfo ->
 
-                when(ringerStateInfo){
+                when (ringerStateInfo) {
                     is Plays -> {
                         //TODO add info to screen
                     }
@@ -79,7 +80,35 @@ class LockScreenAlarmViewModel(
         }
     }
 
-    fun snoozeAlarm() =
+    fun snoozeAlarm() {
+        viewModelScope.launch(Dispatchers.IO) {
+            smplrAlarmService.callRequestAlarmList(SnoozeAlarmRequest)
+        }
+    }
+
+    fun requestAlarmForUI() = smplrAlarmService.callRequestAlarmList(
+        alarmEvent = RequestAlarms
+    )
+
+    fun onScreenDestroyed(context: Context) {
+        ringerService.stop()
+        ringerService.invalidate()
+        dismissNotification(context)
+    }
+
+    private fun updateAlarmForDismissal(alarmItem: AlarmItem) {
+        smplrAlarmService.updateAlarm(
+            requestId = requestId,
+            hour = alarmItem.info.originalHour.toIntOrNull(),
+            minute = alarmItem.info.originalMinute.toIntOrNull(),
+            isActive = false,
+            alarmEvent = DismissAlarmUpdate
+        )
+    }
+
+    fun updateAlarmForSnooze(alarmItem: AlarmItem) {
+        val snoozeTime = getSnoozeTime(alarmItem.hour, alarmItem.minute)
+
         viewModelScope.launch(Dispatchers.IO) {
             smplrAlarmService.updateAlarm(
                 requestId = requestId,
@@ -91,35 +120,20 @@ class LockScreenAlarmViewModel(
         }.also {
             ringerService.stop()
         }
-
-    fun requestAlarmForUI() = smplrAlarmService.callRequestAlarmList(
-        alarmEvent = RequestAlarms
-    )
-
-    fun onScreenDestroyed(context: Context){
-        ringerService.stop()
-        ringerService.invalidate()
-        dismissNotification(context)
     }
 
-    private fun setAlarmForDismissal(alarmItem: AlarmItem) {
-        smplrAlarmService.updateAlarm(
-            requestId = requestId,
-            hour = alarmItem.info.originalHour.toIntOrNull(),
-            minute = alarmItem.info.originalMinute.toIntOrNull(),
-            isActive = false,
-            alarmEvent = DismissAlarmUpdate
-        )
-    }
+    private fun getSnoozeTime(hour: Int?, minute: Int?): Pair<Int, Int> =
+        Calendar.getInstance().let {
+            if (hour != null) it.set(Calendar.HOUR_OF_DAY, hour)
+            if (minute != null) it.set(Calendar.MINUTE, minute)
 
-    private val snoozeTime: Pair<Int, Int>
-        get() = Calendar.getInstance().let {
-            it.add(Calendar.MINUTE, 15)
+            it.add(Calendar.MINUTE, sharedPreferencesRepository.snoozeDuration)
             it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
         }
 
-    private fun dismissNotification(context: Context){
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private fun dismissNotification(context: Context) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(requestId)
     }
 }

@@ -5,10 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import de.coldtea.moin.data.SharedPreferencesRepository
-import de.coldtea.moin.domain.model.alarm.AlarmItem
-import de.coldtea.moin.domain.model.alarm.DismissAlarmRequest
-import de.coldtea.moin.domain.model.alarm.DismissAlarmUpdate
-import de.coldtea.moin.domain.model.alarm.SnoozeAlarmUpdate
+import de.coldtea.moin.domain.model.alarm.*
+import de.coldtea.moin.domain.model.extensions.onAlarmObjectReceived
 import de.coldtea.moin.domain.services.RingerService
 import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.moin.ui.alarm.AlarmViewModel.Companion.ACTION_DISMISS
@@ -28,8 +26,8 @@ class ActionReceiver: BroadcastReceiver() {
     private val ringerService: RingerService by KoinJavaComponent.inject(RingerService::class.java)
     private val sharedPreferencesRepository: SharedPreferencesRepository by KoinJavaComponent.inject(SharedPreferencesRepository::class.java)
 
-    private val mainCoroutineScope
-        get() = CoroutineScope(Dispatchers.Main + CoroutineExceptionHandler { _, t ->
+    private val ioCoroutineScope
+        get() = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { _, t ->
             Timber.d("Moin.RingerService --> mainCoroutineScope crashed: $t")
         })
 
@@ -37,58 +35,65 @@ class ActionReceiver: BroadcastReceiver() {
         val notificationId = intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_NOTIFICATION_ID, -1)
         val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        mainCoroutineScope.launch(Dispatchers.IO) {
+        ioCoroutineScope.launch {
 
             smplrAlarmService.alarmList.collect { alarmObject ->
-
                 when (alarmObject.alarmEvent) {
                     SnoozeAlarmUpdate,
                     DismissAlarmUpdate -> ringerService.stop()
-                    DismissAlarmRequest -> alarmObject.alarmList.alarmItems
-                        .find { alarmItem -> alarmItem.requestId == notificationId }
-                        ?.let { alarmItem ->
-                            setAlarmForDismissal(alarmItem, notificationId)
-                        }
+                    SnoozeAlarmRequest -> alarmObject.onAlarmObjectReceived(notificationId){ updateAlarmForSnooze(it) }
+                    DismissAlarmRequest -> alarmObject.onAlarmObjectReceived(notificationId){ updateAlarmForDismissal(it) }
                 }
             }
         }
 
         if(intent.action == ACTION_SNOOZE){
             notificationManager.cancel(notificationId)
-            mainCoroutineScope.launch(Dispatchers.IO) {
-                smplrAlarmService.updateAlarm(
-                    requestId = notificationId,
-                    hour = snoozeTime.first,
-                    minute = snoozeTime.second,
-                    isActive = true,
-                    alarmEvent = SnoozeAlarmUpdate
-                )
-            }.also {
-                ringerService.stop()
+            ioCoroutineScope.launch {
+                smplrAlarmService.callRequestAlarmList(SnoozeAlarmRequest)
             }
         }
         if (intent.action == ACTION_DISMISS){
             notificationManager.cancel(notificationId)
-            mainCoroutineScope.launch(Dispatchers.IO) {
+            ioCoroutineScope.launch {
                 smplrAlarmService.callRequestAlarmList(DismissAlarmRequest)
             }
         }
     }
 
-    private val snoozeTime: Pair<Int, Int>
-        get() = Calendar.getInstance().let {
-            it.add(Calendar.MINUTE, sharedPreferencesRepository.snoozeDuration)
-            it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
-        }
-
-    private fun setAlarmForDismissal(alarmItem: AlarmItem, requestId: Int) {
+    private fun updateAlarmForDismissal(alarmItem: AlarmItem) {
         smplrAlarmService.updateAlarm(
-            requestId = requestId,
+            requestId = alarmItem.requestId,
             hour = alarmItem.info.originalHour.toIntOrNull(),
             minute = alarmItem.info.originalMinute.toIntOrNull(),
             isActive = false,
             alarmEvent = DismissAlarmUpdate
         )
     }
+
+    fun updateAlarmForSnooze(alarmItem: AlarmItem) {
+        val snoozeTime = getSnoozeTime(alarmItem.hour, alarmItem.minute)
+
+        ioCoroutineScope.launch {
+            smplrAlarmService.updateAlarm(
+                requestId = alarmItem.requestId,
+                hour = snoozeTime.first,
+                minute = snoozeTime.second,
+                isActive = true,
+                alarmEvent = SnoozeAlarmUpdate
+            )
+        }.also {
+            ringerService.stop()
+        }
+    }
+
+    private fun getSnoozeTime(hour: Int?, minute: Int?): Pair<Int, Int> =
+        Calendar.getInstance().let {
+            if (hour != null) it.set(Calendar.HOUR_OF_DAY, hour)
+            if (minute != null) it.set(Calendar.MINUTE, minute)
+
+            it.add(Calendar.MINUTE, sharedPreferencesRepository.snoozeDuration)
+            it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
+        }
 
 }
