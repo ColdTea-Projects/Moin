@@ -59,6 +59,8 @@ class AlarmDelegate :
             val item = bundle.alarmDelegateItem
 
             isActive.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked == item.isActive) return@setOnCheckedChangeListener
+
                 item.hour = item.originalHour
                 item.minute = item.originalMinute
 
