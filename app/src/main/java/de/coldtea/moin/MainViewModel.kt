@@ -1,10 +1,12 @@
 package de.coldtea.moin
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.WeatherRepository
 import de.coldtea.moin.domain.services.GeolocationService
+import de.coldtea.moin.domain.workmanager.ForecastUpdateWorkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -15,7 +17,6 @@ class MainViewModel(
     private val weatherRepository: WeatherRepository
 ) : ViewModel() {
     val locationServicesPermited = geolocationService.permitted
-    val didWorksStart = sharedPreferencesRepository.didWorksStart
 
     fun requestLocationServicePermissions(activity: MainActivity) =
         geolocationService.requestLocationPermit(activity)
@@ -24,14 +25,23 @@ class MainViewModel(
         sharedPreferencesRepository.lastVisitedCity = geolocationService.getCityName()
     }
 
-    fun updateForecastIfLocationChanged() = viewModelScope.launch(Dispatchers.IO) {
-        val currentCity = geolocationService.getCityName()//TODO: why the hell this is null now?
+    fun updateForecastIfNeeded() = viewModelScope.launch(Dispatchers.IO) {
+        val currentCity = geolocationService.getCityName()?:return@launch
 
-        if (!currentCity.isNullOrEmpty() && currentCity != sharedPreferencesRepository.lastVisitedCity) {
+        if (weatherRepository.isUpdateNeeded(currentCity)) {
             Timber.i("Moin --> updateWeatherForecast - main view model")
             weatherRepository.updateWeatherForecast(currentCity)
             sharedPreferencesRepository.lastVisitedCity = currentCity
         }
+    }
+
+    fun startUpdateWork(applicationContext: Context) = viewModelScope.launch(Dispatchers.IO){
+        saveLocation()
+        startWeatherForecastPeriodicalUpdateWork(applicationContext)
+    }
+
+    private fun startWeatherForecastPeriodicalUpdateWork(applicationContext: Context) {
+        ForecastUpdateWorkManager.startPeriodicalForecastUpdate(applicationContext)
     }
 
 

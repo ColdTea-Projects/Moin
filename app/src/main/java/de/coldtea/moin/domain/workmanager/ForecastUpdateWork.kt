@@ -5,7 +5,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.WeatherRepository
-import de.coldtea.moin.domain.model.extensions.toForecastBoundary
 import de.coldtea.moin.domain.services.GeolocationService
 import org.koin.java.KoinJavaComponent.inject
 import retrofit2.HttpException
@@ -27,7 +26,7 @@ class ForecastUpdateWork(context: Context, workerParameters: WorkerParameters) :
         Timber.i("Moin --> city $city")
         try {
             Timber.i("Moin --> updateWeatherForecast - ForecastUpdateWork")
-            if (isUpdateNeeded(city)) weatherRepository.updateWeatherForecast(city)
+            if (weatherRepository.isUpdateNeeded(city)) weatherRepository.updateWeatherForecast(city)
             Timber.i("Moin-getWeatherForecast- the weather forecast is updated")
         } catch (ex: HttpException) {
             Timber.i("Moin-getWeatherForecast- HTTP Request Error: $ex")
@@ -38,18 +37,5 @@ class ForecastUpdateWork(context: Context, workerParameters: WorkerParameters) :
         }
 
         return Result.success()
-    }
-
-    private suspend fun isUpdateNeeded(cityName: String): Boolean {
-        val forecastBoundaryObject = weatherRepository
-            .getHourlyForecastByCity(cityName)
-            .toForecastBoundary()
-
-        if (forecastBoundaryObject.noForecastData()
-            || forecastBoundaryObject.dataSizeNotBigEnough()
-            || forecastBoundaryObject.isOutdated()
-        ) return true
-
-        return false
     }
 }

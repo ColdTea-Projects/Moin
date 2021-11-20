@@ -4,6 +4,7 @@ import de.coldtea.moin.data.database.MoinDatabase
 import de.coldtea.moin.data.network.forecast.WeatherForecastApi
 import de.coldtea.moin.data.network.forecast.model.WeatherResponse
 import de.coldtea.moin.domain.model.alarm.LatLong
+import de.coldtea.moin.domain.model.extensions.toForecastBoundary
 import de.coldtea.moin.domain.model.extensions.toHourlyForecast
 import de.coldtea.moin.domain.model.forecast.HourlyForecast
 import de.coldtea.moin.extensions.convertToEntitylist
@@ -56,5 +57,14 @@ class WeatherRepository(
     suspend fun getCurrentByLatLong(latLong: LatLong?) =
         latLong?.let { weatherForecastApi.getCurrent("${latLong.lat},${latLong.long}") }
 
+    suspend fun isUpdateNeeded(cityName: String): Boolean {
+        val forecastBoundaryObject = getHourlyForecastByCity(cityName).toForecastBoundary()
 
+        if (forecastBoundaryObject.noForecastData()
+            || forecastBoundaryObject.dataSizeNotBigEnough()
+            || forecastBoundaryObject.isOutdated()
+        ) return true
+
+        return false
+    }
 }

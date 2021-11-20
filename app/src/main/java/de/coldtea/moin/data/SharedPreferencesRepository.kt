@@ -12,12 +12,6 @@ class SharedPreferencesRepository(val context: Context) {
         )
     }
 
-    var didWorksStart: Boolean
-        get() = sharedPreferences.getBoolean(DID_WORKS_START, false)
-        set(value) = sharedPreferences.edit().apply {
-            putBoolean(DID_WORKS_START, value)
-        }.apply()
-
     var authorizationCode: String?
         get() = sharedPreferences.getString(AUTHORIZATION_CODE,null)
         set(value) = sharedPreferences.edit().apply {

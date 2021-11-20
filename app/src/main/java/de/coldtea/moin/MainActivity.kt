@@ -8,17 +8,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
-import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.databinding.ActivityMainBinding
 import de.coldtea.moin.domain.services.GeolocationService.Companion.LOCATION_PERMIT_REQUEST_CODE
 import de.coldtea.moin.domain.services.GeolocationService.Companion.REQUESTED_LOCATION_PERMISSIONS
-import de.coldtea.moin.domain.workmanager.ForecastUpdateWorkManager
 import de.coldtea.moin.ui.alarm.AlarmFragment
 import de.coldtea.moin.ui.debugview.DebugActivity
 import de.coldtea.moin.ui.playlists.PlaylistsFragment
 import de.coldtea.moin.ui.settings.SettingsDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -75,8 +71,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(mainViewModel.locationServicesPermited && mainViewModel.didWorksStart) mainViewModel.updateForecastIfLocationChanged()
-
+        with(mainViewModel){
+            if(locationServicesPermited) {
+                startUpdateWork(applicationContext)
+                updateForecastIfNeeded()
+            }
+        }
     }
 
     private fun ActivityMainBinding.setupBottomNavigation() =
@@ -108,9 +108,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private fun startWeatherForecastPeriodicalUpdateWork() {
-        ForecastUpdateWorkManager.startPeriodicalForecastUpdate(applicationContext)
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -126,12 +123,7 @@ class MainActivity : AppCompatActivity() {
 
             if(grantResults.contains(PERMISSION_DENIED)) return
 
-            onLocationPermissionsGranted()
+            mainViewModel.startUpdateWork(applicationContext)
         }
-    }
-
-    private fun onLocationPermissionsGranted() = lifecycleScope.launch(Dispatchers.IO){
-        mainViewModel.saveLocation()
-        startWeatherForecastPeriodicalUpdateWork()
     }
 }
