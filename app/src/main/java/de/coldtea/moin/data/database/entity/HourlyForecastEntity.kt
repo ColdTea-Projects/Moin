@@ -2,11 +2,9 @@ package de.coldtea.moin.data.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "hourly_forecast")
+@Entity(tableName = "hourly_forecast", primaryKeys = ["hourly_forecast_id", "city"])
 data class HourlyForecastEntity(
-    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "hourly_forecast_id")
     val hourlyForecastId: Int = 0,
     @ColumnInfo(name = "city")
