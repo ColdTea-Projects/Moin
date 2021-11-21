@@ -9,6 +9,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
+import com.google.android.material.snackbar.Snackbar
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentAlarmBinding
 import de.coldtea.moin.domain.model.alarm.convertToDelegateItem
@@ -48,7 +50,7 @@ class AlarmFragment : BaseFragment() {
     ): View = FragmentAlarmBinding.inflate(inflater, container, false).apply {
         initAlarmList()
         initFAB()
-    }.also{
+    }.also {
         Timber.d("Moin --> onCreateView")
         binding = it
     }.root
@@ -71,8 +73,10 @@ class AlarmFragment : BaseFragment() {
     private fun FragmentAlarmBinding.initAlarmList() =
         alarmList.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            val itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-            AppCompatResources.getDrawable(requireContext(), R.drawable.divider_alarm_list)?.let { itemDecoration.setDrawable(it) }
+            val itemDecoration =
+                DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+            AppCompatResources.getDrawable(requireContext(), R.drawable.divider_alarm_list)
+                ?.let { itemDecoration.setDrawable(it) }
 
             if (itemDecorationCount == 0) addItemDecoration(itemDecoration)
 
@@ -109,15 +113,18 @@ class AlarmFragment : BaseFragment() {
                     ::openLabelDialogFragment
                 )
             }.also {
-                val alarmsRecyclerView =  binding?.alarmList?:return@also
-                val adapterItemCount = alarmsRecyclerView.adapter?.itemCount?:return@also
-                if(alarmList.alarmItems.isNotEmpty() && it.size > adapterItemCount)
+                val alarmsRecyclerView = binding?.alarmList ?: return@also
+                val adapterItemCount = alarmsRecyclerView.adapter?.itemCount ?: return@also
+                if (alarmList.alarmItems.isNotEmpty() && adapterItemCount > 0 && it.size > adapterItemCount){
                     alarmsRecyclerView.smoothScrollToPosition(it.size - 1)
+                    binding?.showRemainingTimeSnackbar(it.last())
+                }
+
             }
         }
     }
 
-    private fun openLabelDialogFragment(alarmDelegateItem: AlarmDelegateItem){
+    private fun openLabelDialogFragment(alarmDelegateItem: AlarmDelegateItem) {
         AlarmLabelDialogFragment
             .getInstance(alarmDelegateItem)
             .show(
@@ -126,10 +133,20 @@ class AlarmFragment : BaseFragment() {
             )
     }
 
-    private fun getAlarmTime(duration: Int): Pair<Int, Int>
-        = Calendar.getInstance().let {
-            it.add(Calendar.MINUTE, duration)
-            it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
-        }
+    private fun getAlarmTime(duration: Int): Pair<Int, Int> = Calendar.getInstance().let {
+        it.add(Calendar.MINUTE, duration)
+        it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
+    }
+
+    private fun FragmentAlarmBinding.showRemainingTimeSnackbar(alarmBundle: AlarmBundle) =
+        Snackbar.make(
+            this.root,
+            viewModel.getRemainingTimeText(
+                alarmBundle.alarmDelegateItem.hour,
+                alarmBundle.alarmDelegateItem.minute,
+                alarmBundle.alarmDelegateItem.weekDays
+            ),
+            LENGTH_LONG
+        ).show()
     // endregion
 }

@@ -8,11 +8,16 @@ import de.coldtea.moin.R
 import de.coldtea.moin.domain.model.alarm.AlarmList
 import de.coldtea.moin.domain.receivers.ActionReceiver
 import de.coldtea.moin.domain.services.SmplrAlarmService
+import de.coldtea.moin.extensions.getTimeExactForAlarm
+import de.coldtea.smplr.smplralarm.models.WeekDays
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.*
+import java.util.Calendar.MILLISECOND
+import java.util.Calendar.SECOND
 
 class AlarmViewModel(
     private val smplrAlarmService: SmplrAlarmService
@@ -54,11 +59,41 @@ class AlarmViewModel(
 
     fun getAlarms() = smplrAlarmService.callRequestAlarmList()
 
+    fun getRemainingTimeText(
+        hour: Int,
+        minute: Int,
+        weekDays: List<WeekDays>
+    ): String{
+        val cal = Calendar
+            .getInstance()
+
+        cal.set(SECOND, 0)
+        cal.set(MILLISECOND, 0)
+
+        val nowInMillis = cal.timeInMillis
+
+        val alarmTimeInMillis = Calendar
+            .getInstance()
+            .getTimeExactForAlarm(hour, minute, weekDays)
+            .timeInMillis
+
+        val remainingTimeInMillis = alarmTimeInMillis - nowInMillis
+
+        val days: Long = remainingTimeInMillis / DAY_IN_MILLIS
+        val hours: Long = remainingTimeInMillis / HOUR_IN_MILLIS % 60
+        val minutes: Long = remainingTimeInMillis / MIN_IN_MILLIS % 60
+
+        return "$days days, $hours hours $minutes minutes"
+    }
 
     companion object {
         internal const val ACTION_SNOOZE = "action_snooze"
         internal const val ACTION_DISMISS = "action_dismiss"
         internal const val HOUR = "hour"
         internal const val MINUTE = "minute"
+
+        private const val MIN_IN_MILLIS = 60000
+        private const val HOUR_IN_MILLIS = 60 * MIN_IN_MILLIS
+        private const val DAY_IN_MILLIS = 24 * HOUR_IN_MILLIS
     }
 }
