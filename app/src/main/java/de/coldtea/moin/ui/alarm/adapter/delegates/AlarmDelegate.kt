@@ -89,49 +89,13 @@ class AlarmDelegate :
                 updateAlarm(item, isActive = true, weekDays = weekdaysList)
             }
 
-            sunday.setOnClickListener {
-                item.hour = item.originalHour
-                item.minute = item.originalMinute
-
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-                cleanSnoozeView()
-            }
-            monday.setOnClickListener {
-                item.hour = item.originalHour
-                item.minute = item.originalMinute
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-                cleanSnoozeView()
-            }
-            tuesday.setOnClickListener {
-                item.hour = item.originalHour
-                item.minute = item.originalMinute
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-                cleanSnoozeView()
-            }
-            wednesday.setOnClickListener {
-                item.hour = item.originalHour
-                item.minute = item.originalMinute
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-                cleanSnoozeView()
-            }
-            thursday.setOnClickListener {
-                item.hour = item.originalHour
-                item.minute = item.originalMinute
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-                cleanSnoozeView()
-            }
-            friday.setOnClickListener {
-                item.hour = item.originalHour
-                item.minute = item.originalMinute
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-                cleanSnoozeView()
-            }
-            saturday.setOnClickListener {
-                item.hour = item.originalHour
-                item.minute = item.originalMinute
-                updateAlarm(item, isActive = true, weekDays = weekdaysList)
-                cleanSnoozeView()
-            }
+            sunday.setOnClickListener { onWeekdayClicked(item) }
+            monday.setOnClickListener { onWeekdayClicked(item) }
+            tuesday.setOnClickListener { onWeekdayClicked(item) }
+            wednesday.setOnClickListener { onWeekdayClicked(item) }
+            thursday.setOnClickListener { onWeekdayClicked(item) }
+            friday.setOnClickListener { onWeekdayClicked(item) }
+            saturday.setOnClickListener { onWeekdayClicked(item) }
 
             label.setOnClickListener {
                 bundle.onClickLabel(bundle.alarmDelegateItem)
@@ -159,6 +123,13 @@ class AlarmDelegate :
         }
 
 
+        private fun ViewAlarmDelegateItemBinding.onWeekdayClicked(item: AlarmDelegateItem){
+            item.hour = item.originalHour
+            item.minute = item.originalMinute
+            updateAlarm(item, isActive = true, weekDays = weekdaysList)
+            repeat.isChecked = weekdaysList.isNotEmpty()
+            cleanSnoozeView()
+        }
 
         private fun updateAlarm(
             item: AlarmDelegateItem,
