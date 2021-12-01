@@ -102,7 +102,8 @@ class LockScreenAlarmViewModel(
             hour = alarmItem.info.originalHour.toIntOrNull(),
             minute = alarmItem.info.originalMinute.toIntOrNull(),
             isActive = false,
-            alarmEvent = DismissAlarmUpdate
+            alarmEvent = DismissAlarmUpdate,
+            weekDays = alarmItem.weekDays
         )
     }
 
@@ -115,7 +116,8 @@ class LockScreenAlarmViewModel(
                 hour = snoozeTime.first,
                 minute = snoozeTime.second,
                 isActive = true,
-                alarmEvent = SnoozeAlarmUpdate
+                alarmEvent = SnoozeAlarmUpdate,
+                weekDays = alarmItem.weekDays
             )
         }.also {
             ringerService.stop()
