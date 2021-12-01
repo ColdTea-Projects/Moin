@@ -18,6 +18,7 @@ import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class LockScreenAlarmViewModel(
@@ -48,7 +49,12 @@ class LockScreenAlarmViewModel(
                         .onAlarmObjectReceived(requestId){ updateAlarmForSnooze(it) }
                     DismissAlarmRequest -> alarmObject
                         .onAlarmObjectReceived(requestId){ updateAlarmForDismissal(it) }
-                    RequestAlarms -> _label.emit(alarmObject.alarmList.alarmItems[0].info.label)
+                    RequestAlarms -> alarmObject
+                        .onAlarmObjectReceived(requestId){
+                            emitAlarmItem(it)
+                        }
+                    else -> Timber.e("Moin --> Wrong state received at LockScreenAlarmViewModel.smplrAlarmService.alarmList.collect")
+
                 }
             }
         }
@@ -107,7 +113,7 @@ class LockScreenAlarmViewModel(
         )
     }
 
-    fun updateAlarmForSnooze(alarmItem: AlarmItem) {
+    private fun updateAlarmForSnooze(alarmItem: AlarmItem) {
         val snoozeTime = getSnoozeTime(alarmItem.hour, alarmItem.minute)
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -122,6 +128,10 @@ class LockScreenAlarmViewModel(
         }.also {
             ringerService.stop()
         }
+    }
+
+    private fun emitAlarmItem(alarmItem: AlarmItem) = viewModelScope.launch {
+        _label.emit(alarmItem.info.label)
     }
 
     private fun getSnoozeTime(hour: Int?, minute: Int?): Pair<Int, Int> =
