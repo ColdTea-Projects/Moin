@@ -12,22 +12,16 @@ class AlarmsDiffUtilCallback : DiffUtil.ItemCallback<AlarmBundle>() {
     override fun areContentsTheSame(oldItem: AlarmBundle, newItem: AlarmBundle): Boolean =
         oldItem.hashCode() == newItem.hashCode()
 
-    override fun getChangePayload(oldItem: AlarmBundle, newItem: AlarmBundle): Any? {
+    override fun getChangePayload(oldItem: AlarmBundle, newItem: AlarmBundle): Any {
         val changePayload: MutableMap<String, Any> = mutableMapOf()
 
         when {
-            isAlarmChanged(oldItem, newItem) && !isAlarmSnoozed(newItem) -> {
-                val hourMinute = newItem.alarmDelegateItem.hour to newItem.alarmDelegateItem.minute
-                changePayload[KEY_TIME] = hourMinute.getTimeText()
-            }
-            isAlarmChanged(oldItem, newItem) && isAlarmSnoozed(newItem) -> {
-                val hourMinute =
-                    newItem.alarmDelegateItem.originalHour to newItem.alarmDelegateItem.originalMinute
-                changePayload[KEY_TIME] = hourMinute.getTimeText()
+            isAlarmChanged(oldItem, newItem) && !isAlarmSnoozed(newItem) ->
+                changePayload[KEY_TIME] = with(newItem.alarmDelegateItem){ hour to minute}.getTimeText()
 
-                val snoozeHourMinute =
-                    newItem.alarmDelegateItem.hour to newItem.alarmDelegateItem.minute
-                changePayload[KEY_SNOOZETIME] = snoozeHourMinute.getTimeText()
+            isAlarmChanged(oldItem, newItem) && isAlarmSnoozed(newItem) -> {
+                changePayload[KEY_TIME] = with(newItem.alarmDelegateItem){ originalHour to originalMinute}.getTimeText()
+                changePayload[KEY_SNOOZETIME] = with(newItem.alarmDelegateItem){ hour to minute}.getTimeText()
             }
             isSnoozedCancelled(oldItem, newItem) -> changePayload[KEY_SNOOZETIME] = ""
         }

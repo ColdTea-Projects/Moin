@@ -12,11 +12,14 @@ import de.coldtea.moin.domain.model.ringer.Randomized
 import de.coldtea.moin.domain.model.ringer.Stops
 import de.coldtea.moin.domain.services.RingerService
 import de.coldtea.moin.domain.services.SmplrAlarmService
+import de.coldtea.moin.ui.alarm.lockscreen.models.AlarmItemReceived
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
 import de.coldtea.moin.ui.alarm.lockscreen.models.LockScreenState
 import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -30,9 +33,6 @@ class LockScreenAlarmViewModel(
 
     private val _lockScreenState = MutableStateFlow<LockScreenState>(Ringing)
     val lockScreenState: StateFlow<LockScreenState> = _lockScreenState
-
-    private val _label = MutableSharedFlow<String>()
-    val label: SharedFlow<String> = _label
 
     val isRinging
         get() = ringerService.isStartedPlaying
@@ -131,7 +131,9 @@ class LockScreenAlarmViewModel(
     }
 
     private fun emitAlarmItem(alarmItem: AlarmItem) = viewModelScope.launch {
-        _label.emit(alarmItem.info.label)
+        _lockScreenState.emit(
+            AlarmItemReceived(alarmItem)
+        )
     }
 
     private fun getSnoozeTime(hour: Int?, minute: Int?): Pair<Int, Int> =

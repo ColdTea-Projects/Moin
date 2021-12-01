@@ -20,6 +20,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="07:15" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/forecast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLength="100"
+        android:textColor="@color/moinBlueTone7"
+        app:layout_constraintTop_toBottomOf="@id/time"
+        app:layout_constraintBottom_toTopOf="@id/weather"
+        tools:text="This field is reserved for weather forecast" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/weather"
         android:layout_width="@dimen/weather_icon_size"

@@ -6,9 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.databinding.ActivityLockScreenAlarmBinding
+import de.coldtea.moin.domain.model.alarm.AlarmItem
+import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
 import de.coldtea.moin.extensions.activateLockScreen
 import de.coldtea.moin.extensions.deactivateLockScreen
+import de.coldtea.moin.extensions.getTimeText
+import de.coldtea.moin.ui.alarm.lockscreen.models.AlarmItemReceived
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
+import de.coldtea.moin.ui.alarm.lockscreen.models.RingerScreenInfoReceived
 import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
 import de.coldtea.moin.ui.lockscreen.models.MotionLayoutAction
 import de.coldtea.moin.ui.lockscreen.models.OnDismissDrag
@@ -32,8 +37,6 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initStateObserver()
-        observeSavedAlarmInfo()
-
     }
 
     override fun onStart() {
@@ -65,6 +68,8 @@ class LockScreenAlarmActivity : AppCompatActivity() {
                         intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
                     viewModel.ring()
                 }
+                is AlarmItemReceived -> binding.projectAlarmItem(alarmItem = state.alarmItem)
+                is RingerScreenInfoReceived -> binding.projectRingerScreenInfo(ringerScreenInfo = state.ringerScreenInfo)
                 is Done -> {
                     finish()
                 }
@@ -72,10 +77,13 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeSavedAlarmInfo() = lifecycleScope.launch {
-        viewModel.label.collect {
-            binding.label.text = it
-        }
+    private fun ActivityLockScreenAlarmBinding.projectAlarmItem(alarmItem: AlarmItem){
+        time.text = with(alarmItem){ hour to minute}.getTimeText()
+        label.text = alarmItem.info.label
+    }
+
+    private fun ActivityLockScreenAlarmBinding.projectRingerScreenInfo(ringerScreenInfo: RingerScreenInfo){
+
     }
 
     inner class LockScreenTransitionListener(private val motionLayoutAction: MotionLayoutAction) :
@@ -122,7 +130,6 @@ class LockScreenAlarmActivity : AppCompatActivity() {
             progress: Float
         ) {
         }
-
 
     }
 

@@ -25,15 +25,16 @@ val ViewAlarmDelegateItemBinding.weekdaysList: List<WeekDays>
     }
 
 fun ViewAlarmDelegateItemBinding.drawAlarmListItem(item: AlarmDelegateItem){
-    val hourMinute = item.originalHour to item.originalMinute
-
-    time.text = hourMinute.getTimeText()
+    time.text = with(item){ originalHour to originalMinute}.getTimeText()
     days.text = item.weekDays.getWeekDaysText()
     days.isVisible = !item.isExpanded
 
     isActive.isChecked = item.isActive
 
-    snooze.text = root.context?.getString(R.string.snooze_until, (item.hour to item.minute).getTimeText())
+    snooze.text = root.context?.getString(
+        R.string.snooze_until,
+        with(item){ hour to minute}.getTimeText()
+    )
     snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
 
     label.label.text = item.label
