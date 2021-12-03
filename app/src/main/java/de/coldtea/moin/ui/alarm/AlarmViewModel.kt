@@ -83,7 +83,7 @@ class AlarmViewModel(
         val hours: Long = remainingTimeInMillis / HOUR_IN_MILLIS  % 24
         val minutes: Long = remainingTimeInMillis / MIN_IN_MILLIS % 60
 
-        var remainingTimeText = StringBuilder()
+        val remainingTimeText = StringBuilder()
 
         if(days > 0) remainingTimeText.append("$days days")
         if(hours > 0) remainingTimeText.append(" $hours hours")
