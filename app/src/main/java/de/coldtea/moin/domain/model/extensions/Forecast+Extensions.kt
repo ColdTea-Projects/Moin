@@ -8,6 +8,7 @@ import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
 
 fun HourlyForecast.toRingerScreenInfo(song: Song?) =
     RingerScreenInfo(
+        forecastCode = conditionCode,
         forecastText = conditionText,
         song = song,
         tempC = tempC,

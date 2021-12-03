@@ -20,6 +20,7 @@ class SongRandomizeService(
     private val sharedPreferencesRepository: SharedPreferencesRepository,
     private val songRepository: SongRepository
 ) {
+    var ringerScreenInfoOfPlayingSong: RingerScreenInfo? = null
 
     suspend fun getRingerScreenInfo(): RingerScreenInfo? = withContext(Dispatchers.IO) {
         val city = geolocationService.getCityName()
@@ -31,19 +32,25 @@ class SongRandomizeService(
                     weatherRepository.updateWeatherForecast(city).also {
                         sharedPreferencesRepository.lastVisitedCity = city
                     }
-                }catch (e: HttpException){
+                } catch (e: HttpException) {
                     Timber.e("Moin --> $e")
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     Timber.e("Moin --> $e")
                 }
             }
         }
 
-        val forecast = weatherRepository.getForecast()
+        val forecast = try {
+            weatherRepository.getForecast()
+        } catch (exception: HttpException) {
+            Timber.e("Moin --> $exception")
+            null
+        }
 
-        return@withContext forecast?.toRingerScreenInfo(
+        ringerScreenInfoOfPlayingSong = forecast?.toRingerScreenInfo(
             getRandomSong(forecast)
         )
+        return@withContext ringerScreenInfoOfPlayingSong
     }
 
     private suspend fun getRandomSong(forecast: HourlyForecast?): Song? {
@@ -63,7 +70,7 @@ class SongRandomizeService(
             return songs.shuffled().take(1)[0]
         } else {
             val songs = songRepository.getSongs()
-            if(songs.isEmpty()){
+            if (songs.isEmpty()) {
                 return null
             }
             return songs.shuffled().take(1)[0]

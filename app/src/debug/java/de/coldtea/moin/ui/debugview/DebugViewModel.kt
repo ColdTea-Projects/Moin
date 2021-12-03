@@ -36,8 +36,8 @@ class DebugViewModel(
 
     private var _spotifyAppRemote: SpotifyAppRemote? = null
 
-    private var _weatherResponse = MutableSharedFlow<List<HourlyForecast>>()
-    val weatherResponse: SharedFlow<List<HourlyForecast>> = _weatherResponse
+    private var _weatherResponse = MutableSharedFlow<List<HourlyForecast>?>()
+    val weatherResponse: SharedFlow<List<HourlyForecast>?> = _weatherResponse
 
     private var _currentResponse = MutableSharedFlow<CurrentWeatherResponse>()
     val currentResponse: SharedFlow<CurrentWeatherResponse> = _currentResponse

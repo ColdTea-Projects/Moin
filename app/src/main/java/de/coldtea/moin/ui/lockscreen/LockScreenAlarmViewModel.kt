@@ -7,15 +7,12 @@ import androidx.lifecycle.viewModelScope
 import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.domain.model.alarm.*
 import de.coldtea.moin.domain.model.extensions.onAlarmObjectReceived
-import de.coldtea.moin.domain.model.ringer.Plays
+import de.coldtea.moin.domain.model.ringer.Playing
 import de.coldtea.moin.domain.model.ringer.Randomized
 import de.coldtea.moin.domain.model.ringer.Stops
 import de.coldtea.moin.domain.services.RingerService
 import de.coldtea.moin.domain.services.SmplrAlarmService
-import de.coldtea.moin.ui.alarm.lockscreen.models.AlarmItemReceived
-import de.coldtea.moin.ui.alarm.lockscreen.models.Done
-import de.coldtea.moin.ui.alarm.lockscreen.models.LockScreenState
-import de.coldtea.moin.ui.alarm.lockscreen.models.Ringing
+import de.coldtea.moin.ui.alarm.lockscreen.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,11 +61,19 @@ class LockScreenAlarmViewModel(
             ringerService.ringerStateInfo.collect { ringerStateInfo ->
 
                 when (ringerStateInfo) {
-                    is Plays -> {
-                        //TODO add info to screen
+                    is Playing -> {
+                        if(ringerStateInfo.ringerScreenInfo == null) return@collect
+
+                        _lockScreenState.emit(
+                            RingerScreenInfoReceived(ringerStateInfo.ringerScreenInfo)
+                        )
                     }
                     is Randomized -> {
-                        //TODO add info to screen
+                        if(ringerStateInfo.ringerScreenInfo == null) return@collect
+
+                        _lockScreenState.emit(
+                            RingerScreenInfoReceived(ringerStateInfo.ringerScreenInfo)
+                        )
                     }
                     Stops -> {
                         _lockScreenState.emit(Done)
@@ -107,7 +112,7 @@ class LockScreenAlarmViewModel(
             requestId = requestId,
             hour = alarmItem.info.originalHour.toIntOrNull(),
             minute = alarmItem.info.originalMinute.toIntOrNull(),
-            isActive = false,
+            isActive = alarmItem.weekDays.isNotEmpty(),
             alarmEvent = DismissAlarmUpdate,
             weekDays = alarmItem.weekDays
         )

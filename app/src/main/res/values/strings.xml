@@ -62,6 +62,8 @@
     <!-- Lock Screen -->
     <string name="snooze">Slide to Snooze</string>
     <string name="dismiss">Slide to Dismiss</string>
+    <string name="weather_forecast">%1$s, %2$s C°/%3$s F°</string>
+    <string name="song_playing">Playing %1$s</string>
 
     <!-- Alarm constants -->
     <string name="alarm_title">Moin! Your alarm is ringing</string>

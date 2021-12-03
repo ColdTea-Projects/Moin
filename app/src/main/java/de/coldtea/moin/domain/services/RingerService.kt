@@ -15,10 +15,7 @@ import com.spotify.android.appremote.api.PlayerApi
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.domain.model.playlist.MediaType
-import de.coldtea.moin.domain.model.ringer.Randomized
-import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
-import de.coldtea.moin.domain.model.ringer.RingerStateInfo
-import de.coldtea.moin.domain.model.ringer.Stops
+import de.coldtea.moin.domain.model.ringer.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -58,7 +55,11 @@ class RingerService(
     var isStartedPlaying = false
 
     fun ring() = ioCoroutineScope.launch {
-        if(isStartedPlaying) return@launch
+        if(isStartedPlaying) {
+            ringerScreenInfo = songRandomizeService.ringerScreenInfoOfPlayingSong
+            _ringerStateInfo.emit( Playing(ringerScreenInfo) )
+            return@launch
+        }
 
         ringerScreenInfo = songRandomizeService.getRingerScreenInfo()
         _ringerStateInfo.emit( Randomized(ringerScreenInfo) )

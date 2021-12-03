@@ -66,8 +66,9 @@ class ActionReceiver: BroadcastReceiver() {
             requestId = alarmItem.requestId,
             hour = alarmItem.info.originalHour.toIntOrNull(),
             minute = alarmItem.info.originalMinute.toIntOrNull(),
-            isActive = false,
-            alarmEvent = DismissAlarmUpdate
+            isActive = alarmItem.weekDays.isNotEmpty(),
+            alarmEvent = DismissAlarmUpdate,
+            weekDays = alarmItem.weekDays
         )
     }
 
@@ -80,7 +81,8 @@ class ActionReceiver: BroadcastReceiver() {
                 hour = snoozeTime.first,
                 minute = snoozeTime.second,
                 isActive = true,
-                alarmEvent = SnoozeAlarmUpdate
+                alarmEvent = SnoozeAlarmUpdate,
+                weekDays = alarmItem.weekDays
             )
         }.also {
             ringerService.stop()

@@ -92,7 +92,7 @@ class DebugActivity : AppCompatActivity() {
         var weatherText: String = "Weather for 3 days : \n"
 
         debugViewModel.weatherResponse.collect{
-            it.map { forecast ->
+            it?.map { forecast ->
 
                 val date = SimpleDateFormat("HH:mm dd.MM", Locale.GERMAN)
                     .format(

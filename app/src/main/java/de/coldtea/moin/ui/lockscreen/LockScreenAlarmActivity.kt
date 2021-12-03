@@ -5,12 +5,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.lottie.LottieDrawable
+import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityLockScreenAlarmBinding
 import de.coldtea.moin.domain.model.alarm.AlarmItem
+import de.coldtea.moin.domain.model.forecast.CLOUDY_WEATHER_BUNDLE
+import de.coldtea.moin.domain.model.forecast.RAINY_WEATHER_BUNDLE
+import de.coldtea.moin.domain.model.forecast.SNOWY_WEATHER_BUNDLE
+import de.coldtea.moin.domain.model.forecast.SUNNY_WEATHER_BUNDLE
 import de.coldtea.moin.domain.model.ringer.RingerScreenInfo
 import de.coldtea.moin.extensions.activateLockScreen
 import de.coldtea.moin.extensions.deactivateLockScreen
 import de.coldtea.moin.extensions.getTimeText
+import de.coldtea.moin.extensions.isDayTime
 import de.coldtea.moin.ui.alarm.lockscreen.models.AlarmItemReceived
 import de.coldtea.moin.ui.alarm.lockscreen.models.Done
 import de.coldtea.moin.ui.alarm.lockscreen.models.RingerScreenInfoReceived
@@ -23,6 +30,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.util.*
 
 class LockScreenAlarmActivity : AppCompatActivity() {
 
@@ -77,13 +85,44 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         }
     }
 
-    private fun ActivityLockScreenAlarmBinding.projectAlarmItem(alarmItem: AlarmItem){
-        time.text = with(alarmItem){ hour to minute}.getTimeText()
+    private fun ActivityLockScreenAlarmBinding.projectAlarmItem(alarmItem: AlarmItem) {
+        time.text = with(alarmItem) { hour to minute }.getTimeText()
         label.text = alarmItem.info.label
     }
 
-    private fun ActivityLockScreenAlarmBinding.projectRingerScreenInfo(ringerScreenInfo: RingerScreenInfo){
+    private fun ActivityLockScreenAlarmBinding.projectRingerScreenInfo(ringerScreenInfo: RingerScreenInfo) {
+        setAnimation(ringerScreenInfo.forecastCode)
+        forecast.text = getString(
+            R.string.weather_forecast,
+            ringerScreenInfo.forecastText,
+            ringerScreenInfo.tempC.toString(),
+            ringerScreenInfo.tempF.toString()
+        )
+        ringerScreenInfo.song?.let { playingSong ->
+            song.text = getString(R.string.song_playing, playingSong.name)
+        }
+    }
 
+    private fun ActivityLockScreenAlarmBinding.setAnimation(forecastCode: Int) {
+        val animation = when {
+
+            SUNNY_WEATHER_BUNDLE.conditionCodes.contains(forecastCode) -> {
+                if(!Calendar.getInstance().isDayTime()) R.raw.sunny
+                else R.raw.clear
+            }
+            CLOUDY_WEATHER_BUNDLE.conditionCodes.contains(forecastCode) -> R.raw.cloudy
+            RAINY_WEATHER_BUNDLE.conditionCodes.contains(forecastCode) -> R.raw.rainy
+            SNOWY_WEATHER_BUNDLE.conditionCodes.contains(forecastCode) -> R.raw.snow
+
+            else -> R.raw.default_anim
+        }
+
+        with(weather){
+            repeatCount = LottieDrawable.INFINITE
+            repeatMode = LottieDrawable.RESTART
+            setAnimation(animation)
+            playAnimation()
+        }
     }
 
     inner class LockScreenTransitionListener(private val motionLayoutAction: MotionLayoutAction) :

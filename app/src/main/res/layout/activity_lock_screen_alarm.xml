@@ -27,20 +27,31 @@
         android:gravity="center"
         android:maxLength="100"
         android:textColor="@color/moinBlueTone7"
+        app:layout_constraintBottom_toTopOf="@id/song"
         app:layout_constraintTop_toBottomOf="@id/time"
-        app:layout_constraintBottom_toTopOf="@id/weather"
         tools:text="This field is reserved for weather forecast" />
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/song"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLength="100"
+        android:textColor="@color/moinBlueTone7"
+        app:layout_constraintBottom_toTopOf="@id/weather"
+        app:layout_constraintTop_toBottomOf="@id/forecast"
+        tools:text="This field is reserved for weather forecast" />
+
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/weather"
         android:layout_width="@dimen/weather_icon_size"
         android:layout_height="@dimen/weather_icon_size"
-        android:layout_marginTop="@dimen/margin_xl"
-        android:tint="@color/moinBlueTone3"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/default_anim"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/time"
-        app:srcCompat="@drawable/ic_baseline_wb_cloudy_70" />
+        app:layout_constraintTop_toBottomOf="@id/song" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/label"
