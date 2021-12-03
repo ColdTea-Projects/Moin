@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ViewAlarmDelegateItemBinding
+import de.coldtea.moin.ui.alarm.adapter.model.AlarmBundle
 import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.moin.ui.diffutils.AlarmsDiffUtilCallback
 import de.coldtea.smplr.smplralarm.models.WeekDays
@@ -24,8 +25,8 @@ val ViewAlarmDelegateItemBinding.weekdaysList: List<WeekDays>
         return weekDays.toList()
     }
 
-fun ViewAlarmDelegateItemBinding.drawAlarmListItem(item: AlarmDelegateItem){
-    time.text = with(item){ originalHour to originalMinute}.getTimeText()
+fun ViewAlarmDelegateItemBinding.drawAlarmListItem(item: AlarmDelegateItem) {
+    time.text = with(item) { originalHour to originalMinute }.getTimeText()
     days.text = item.weekDays.getWeekDaysText()
     days.isVisible = !item.isExpanded
 
@@ -33,7 +34,7 @@ fun ViewAlarmDelegateItemBinding.drawAlarmListItem(item: AlarmDelegateItem){
 
     snooze.text = root.context?.getString(
         R.string.snooze_until,
-        with(item){ hour to minute}.getTimeText()
+        with(item) { hour to minute }.getTimeText()
     )
     snooze.isVisible = item.hour != item.originalHour || item.minute != item.originalMinute
 
@@ -43,34 +44,41 @@ fun ViewAlarmDelegateItemBinding.drawAlarmListItem(item: AlarmDelegateItem){
 
     repeat.isChecked = item.weekDays.isNotEmpty()
 
-    expand.scaleY = if(item.isExpanded) -1F else 1F
+    expand.scaleY = if (item.isExpanded) -1F else 1F
 
     groupHidden.isVisible = item.isExpanded
     groupWeekdays.isVisible = item.isExpanded
 }
 
-fun ViewAlarmDelegateItemBinding.upgradeByPayload(payloads: Any?){
-    if (payloads is Map<*, *>){
-        payloads.map {  payload ->
-            when(payload.key){
+fun ViewAlarmDelegateItemBinding.upgradeByPayload(
+    payloads: Any?,
+    alarmBundle: AlarmBundle
+) {
+    if (payloads is Map<*, *>) {
+        payloads.map { payload ->
+            when (payload.key) {
                 AlarmsDiffUtilCallback.KEY_TIME -> {
                     time.text = payload.value as String
                     cleanSnoozeView()
+                    alarmBundle.onTimeSet(alarmBundle.alarmDelegateItem)
                 }
                 AlarmsDiffUtilCallback.KEY_SNOOZETIME -> {
                     val snoozeTime = payload.value as String
                     snooze.text = root.context?.getString(R.string.snooze_until, snoozeTime)
                     snooze.isVisible = true
                 }
-                AlarmsDiffUtilCallback.KEY_WEEKDAYS -> {}
+                AlarmsDiffUtilCallback.KEY_WEEKDAYS -> {
+                    alarmBundle.onTimeSet(alarmBundle.alarmDelegateItem)
+                }
                 AlarmsDiffUtilCallback.KEY_ISACTIVE -> {
                     isActive.isChecked = payload.value as Boolean
+                    if(isActive.isChecked) alarmBundle.onTimeSet(alarmBundle.alarmDelegateItem)
                 }
                 AlarmsDiffUtilCallback.KEY_ISEXPANDED -> {
                     val expanded = payload.value as Boolean
                     days.isVisible = !expanded
 
-                    expand.scaleY = if(expanded) -1F else 1F
+                    expand.scaleY = if (expanded) -1F else 1F
                     groupHidden.isVisible = expanded
                     groupWeekdays.isVisible = expanded
                 }
@@ -104,7 +112,7 @@ fun ViewAlarmDelegateItemBinding.setupCheckList(weekDays: List<WeekDays>) {
     sunday.isChecked = weekDays.contains(WeekDays.SUNDAY)
 }
 
-fun ViewAlarmDelegateItemBinding.activateAlarmUI(){
+fun ViewAlarmDelegateItemBinding.activateAlarmUI() {
     groupHidden.isVisible = false
     groupWeekdays.isVisible = false
     days.isVisible = true
@@ -118,7 +126,7 @@ fun ViewAlarmDelegateItemBinding.activateAlarmUI(){
 
 }
 
-fun ViewAlarmDelegateItemBinding.deactivateAlarmUI(){
+fun ViewAlarmDelegateItemBinding.deactivateAlarmUI() {
     groupHidden.isVisible = false
     groupWeekdays.isVisible = false
     days.isVisible = true
@@ -132,7 +140,7 @@ fun ViewAlarmDelegateItemBinding.deactivateAlarmUI(){
 
 }
 
-fun ViewAlarmDelegateItemBinding.cleanSnoozeView(){
+fun ViewAlarmDelegateItemBinding.cleanSnoozeView() {
     snooze.text = ""
     snooze.isVisible = false
 }

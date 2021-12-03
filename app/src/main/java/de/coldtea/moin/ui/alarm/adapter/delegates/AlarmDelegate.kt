@@ -50,7 +50,7 @@ class AlarmDelegate :
 
             initActionListeners(bundle)
 
-            if(payloads.isNotEmpty()) upgradeByPayload(payloads[0])
+            if(payloads.isNotEmpty()) upgradeByPayload(payloads[0], bundle)
             else drawAlarmListItem(bundle.alarmDelegateItem)
 
         }

@@ -79,11 +79,17 @@ class AlarmViewModel(
 
         val remainingTimeInMillis = alarmTimeInMillis - nowInMillis
 
-        val days: Long = remainingTimeInMillis / DAY_IN_MILLIS
-        val hours: Long = remainingTimeInMillis / HOUR_IN_MILLIS % 60
+        val days: Long = (remainingTimeInMillis / DAY_IN_MILLIS) - 1
+        val hours: Long = remainingTimeInMillis / HOUR_IN_MILLIS  % 24
         val minutes: Long = remainingTimeInMillis / MIN_IN_MILLIS % 60
 
-        return "$days days, $hours hours $minutes minutes"
+        var remainingTimeText = StringBuilder()
+
+        if(days > 0) remainingTimeText.append("$days days")
+        if(hours > 0) remainingTimeText.append(" $hours hours")
+        remainingTimeText.append(" $minutes minutes")
+
+        return remainingTimeText.toString()
     }
 
     companion object {

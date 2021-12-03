@@ -104,23 +104,28 @@ class AlarmFragment : BaseFragment() {
 
     private fun observeAlarms() = lifecycleScope.launchWhenCreated {
         viewModel.alarmList.collect { alarmList ->
-            alarmsAdapter.items = alarmList.alarmItems.map {
-                val item = it.convertToDelegateItem()
+            alarmsAdapter.items = alarmList.alarmItems
+                .sortedByDescending { it.requestId }
+                .map {
+                    val item = it.convertToDelegateItem()
 
-                AlarmBundle(
-                    item.requestId,
-                    item,
-                    ::openLabelDialogFragment
-                )
-            }.also {
-                val alarmsRecyclerView = binding?.alarmList ?: return@also
-                val adapterItemCount = alarmsRecyclerView.adapter?.itemCount ?: return@also
-                if (alarmList.alarmItems.isNotEmpty() && adapterItemCount > 0 && it.size > adapterItemCount){
-                    alarmsRecyclerView.smoothScrollToPosition(it.size - 1)
-                    binding?.showRemainingTimeSnackbar(it.last())
+                    AlarmBundle(
+                        item.requestId,
+                        item,
+                        ::openLabelDialogFragment,
+                        ::showRemainingTimeSnackbar
+                    )
+                }.also {
+                    val alarmsRecyclerView = binding?.alarmList ?: return@also
+                    val adapterItemCount = alarmsRecyclerView.adapter?.itemCount ?: return@also
+
+                    if (alarmList.alarmItems.isNotEmpty() && adapterItemCount > 0 && it.size > adapterItemCount) {
+                        alarmsRecyclerView.smoothScrollToPosition(it.size - 1)
+                    }
+                    if(it.size == adapterItemCount + 1){
+                        showRemainingTimeSnackbar(it.last().alarmDelegateItem)
+                    }
                 }
-
-            }
         }
     }
 
@@ -138,15 +143,16 @@ class AlarmFragment : BaseFragment() {
         it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
     }
 
-    private fun FragmentAlarmBinding.showRemainingTimeSnackbar(alarmBundle: AlarmBundle) =
+    private fun showRemainingTimeSnackbar(alarmDelegateItem: AlarmDelegateItem) = binding?.let{
         Snackbar.make(
-            this.root,
+            it.root,
             viewModel.getRemainingTimeText(
-                alarmBundle.alarmDelegateItem.hour,
-                alarmBundle.alarmDelegateItem.minute,
-                alarmBundle.alarmDelegateItem.weekDays
+                alarmDelegateItem.hour,
+                alarmDelegateItem.minute,
+                alarmDelegateItem.weekDays
             ),
             LENGTH_LONG
         ).show()
+    }
     // endregion
 }
