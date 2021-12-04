@@ -8,6 +8,7 @@ sealed class SpotifyState
 
 object ConnectionSuccess: SpotifyState()
 object ConnectionFailed: SpotifyState()
+object AccessTokenFailed: SpotifyState()
 
 data class Play(val playerState: PlayerState): SpotifyState()
 data class AccessTokenReceived(val tokenResponse: TokenResponse?): SpotifyState()

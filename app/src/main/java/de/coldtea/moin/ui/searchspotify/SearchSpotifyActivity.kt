@@ -127,6 +127,7 @@ class SearchSpotifyActivity : AppCompatActivity() {
                 ConnectionFailed -> onConnectionFailed()
                 is AccessTokenReceived -> onActivationTokenReceived(it.tokenResponse)
                 is SearchResultReceived -> onSearchResultReceived(it.searchResult)
+                is AccessTokenFailed -> onAccessTokenFailed()
                 else -> Timber.w("Received illegal spotify state")
             }
         }
@@ -161,6 +162,10 @@ class SearchSpotifyActivity : AppCompatActivity() {
     private fun onSearchResultReceived(searchResult: SearchResult?) {
         searchResultAdapter.items = searchResult
             ?.getSearchResultBundle(::onPlayClicked, ::onItemClicked)
+    }
+
+    private fun onAccessTokenFailed(){
+        startActivity(viewModel.getAuthorizationIntent())
     }
 
     private fun onPlayClicked(id: String) {

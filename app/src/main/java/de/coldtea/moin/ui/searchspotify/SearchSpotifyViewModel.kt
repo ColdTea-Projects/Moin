@@ -11,6 +11,8 @@ import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.SongRepository
 import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
+import de.coldtea.moin.data.network.spotify.model.SpotifyErrorResponse
+import de.coldtea.moin.di.json
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
 import de.coldtea.moin.domain.model.playlist.MediaType
 import de.coldtea.moin.domain.model.playlist.PlaylistName
@@ -22,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
 import retrofit2.HttpException
 import timber.log.Timber
 
@@ -96,6 +99,7 @@ class SearchSpotifyViewModel(
 
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     fun getAccessTokenByRefreshToken() = viewModelScope.launch(Dispatchers.IO) {
         try {
             val tokenResponse = sharedPreferencesRepository.refreshToken?.let {
@@ -108,6 +112,17 @@ class SearchSpotifyViewModel(
             _spotifyState.emit(AccessTokenReceived(tokenResponse))
         }catch (ex: HttpException){
             Timber.e("Moin -->  $ex")
+
+            val errorBody = ex.response()?.errorBody()?.string()
+            val errorResponse = json.decodeFromString(
+                SpotifyErrorResponse.serializer(),
+                errorBody.orEmpty()
+            )
+
+            if(errorResponse.isInvalidGrant()){
+                sharedPreferencesRepository.refreshToken = null
+                _spotifyState.emit(AccessTokenFailed)
+            }
         }catch (ex: Exception){
             Timber.e("Moin -->  $ex")
         }
