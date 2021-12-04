@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
@@ -20,6 +22,7 @@ import de.coldtea.moin.ui.alarm.adapter.model.AlarmDelegateItem
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.dialogfragments.label.AlarmLabelDialogFragment
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
@@ -37,9 +40,10 @@ class AlarmFragment : BaseFragment() {
 
     // region lifecycle
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("Moin --> onCreate")
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.d("Moin --> onViewCreated")
+        super.onViewCreated(view, savedInstanceState)
+
         observeAlarms()
     }
 
@@ -102,30 +106,32 @@ class AlarmFragment : BaseFragment() {
             ).show()
         }
 
-    private fun observeAlarms() = lifecycleScope.launchWhenCreated {
-        viewModel.alarmList.collect { alarmList ->
-            alarmsAdapter.items = alarmList.alarmItems
-                .sortedByDescending { it.requestId }
-                .map {
-                    val item = it.convertToDelegateItem()
+    private fun observeAlarms() = viewLifecycleOwner.lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.alarmList.collect { alarmList ->
+                alarmsAdapter.items = alarmList.alarmItems
+                    .sortedByDescending { it.requestId }
+                    .map {
+                        val item = it.convertToDelegateItem()
 
-                    AlarmBundle(
-                        item.requestId,
-                        item,
-                        ::openLabelDialogFragment,
-                        ::showRemainingTimeSnackbar
-                    )
-                }.also {
-                    val alarmsRecyclerView = binding?.alarmList ?: return@also
-                    val adapterItemCount = alarmsRecyclerView.adapter?.itemCount ?: return@also
+                        AlarmBundle(
+                            item.requestId,
+                            item,
+                            ::openLabelDialogFragment,
+                            ::showRemainingTimeSnackbar
+                        )
+                    }.also {
+                        val alarmsRecyclerView = binding?.alarmList ?: return@also
+                        val adapterItemCount = alarmsRecyclerView.adapter?.itemCount ?: return@also
 
-                    if (alarmList.alarmItems.isNotEmpty() && adapterItemCount > 0 && it.size > adapterItemCount) {
-                        alarmsRecyclerView.smoothScrollToPosition(it.size - 1)
+                        if (alarmList.alarmItems.isNotEmpty() && adapterItemCount > 0 && it.size > adapterItemCount) {
+                            alarmsRecyclerView.smoothScrollToPosition(it.size - 1)
+                        }
+                        if (it.size == adapterItemCount + 1) {
+                            showRemainingTimeSnackbar(it.last().alarmDelegateItem)
+                        }
                     }
-                    if(it.size == adapterItemCount + 1){
-                        showRemainingTimeSnackbar(it.last().alarmDelegateItem)
-                    }
-                }
+            }
         }
     }
 
@@ -143,7 +149,7 @@ class AlarmFragment : BaseFragment() {
         it.get(Calendar.HOUR_OF_DAY) to it.get(Calendar.MINUTE)
     }
 
-    private fun showRemainingTimeSnackbar(alarmDelegateItem: AlarmDelegateItem) = binding?.let{
+    private fun showRemainingTimeSnackbar(alarmDelegateItem: AlarmDelegateItem) = binding?.let {
         Snackbar.make(
             it.root,
             viewModel.getRemainingTimeText(

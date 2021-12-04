@@ -5,6 +5,7 @@ import de.coldtea.moin.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 
 class MoinApp : Application() {
@@ -15,7 +16,7 @@ class MoinApp : Application() {
 
         // Start Koin
         startKoin{
-            androidLogger()
+            androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
             androidContext(this@MoinApp)
 
             modules(

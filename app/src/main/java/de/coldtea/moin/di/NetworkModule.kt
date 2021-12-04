@@ -20,13 +20,13 @@ private const val WEATHER_API_RETROFIT = "WeatherApiRetrofit"
 private const val SPOTIFY_AUTH_API_RETROFIT = "SpotifyAuthRetrofit"
 private const val SPOTIFY_API_RETROFIT = "SpotifyRetrofit"
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 val json = Json{
     ignoreUnknownKeys = true
     explicitNulls = false
 }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 val networkModule = module {
     factory { AuthInterceptor() }
     factory { HttpLoggingInterceptor() }
@@ -40,7 +40,7 @@ val networkModule = module {
     single { AuthenticationService() }
 }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun provideRetrofitWeatherApi(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.ROOT_URL_WEATHER_API)
@@ -49,7 +49,7 @@ fun provideRetrofitWeatherApi(okHttpClient: OkHttpClient): Retrofit {
         .build()
 }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun provideRetrofitSpotifyAuth(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.ROOT_URL_SPOTIFY_AUTH)
@@ -58,7 +58,7 @@ fun provideRetrofitSpotifyAuth(okHttpClient: OkHttpClient): Retrofit {
         .build()
 }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun provideRetrofitSpotify(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.ROOT_URL_SPOTIFY)

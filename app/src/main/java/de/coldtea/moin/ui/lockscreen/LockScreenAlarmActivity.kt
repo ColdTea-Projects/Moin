@@ -4,7 +4,9 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.airbnb.lottie.LottieDrawable
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.ActivityLockScreenAlarmBinding
@@ -52,7 +54,6 @@ class LockScreenAlarmActivity : AppCompatActivity() {
         setupUIItems()
         viewModel.requestAlarmForUI()
         activateLockScreen()
-
     }
 
     override fun onDestroy() {
@@ -68,18 +69,20 @@ class LockScreenAlarmActivity : AppCompatActivity() {
     }
 
     private fun initStateObserver() = lifecycleScope.launch {
-        viewModel.lockScreenState.collect { state ->
-            Timber.i("Moin --> $state")
-            when (state) {
-                is Ringing -> {
-                    viewModel.requestId =
-                        intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
-                    viewModel.ring()
-                }
-                is AlarmItemReceived -> binding.projectAlarmItem(alarmItem = state.alarmItem)
-                is RingerScreenInfoReceived -> binding.projectRingerScreenInfo(ringerScreenInfo = state.ringerScreenInfo)
-                is Done -> {
-                    finish()
+        repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewModel.lockScreenState.collect { state ->
+                Timber.i("Moin --> $state")
+                when (state) {
+                    is Ringing -> {
+                        viewModel.requestId =
+                            intent.getIntExtra(SmplrAlarmAPI.SMPLR_ALARM_REQUEST_ID, -1)
+                        viewModel.ring()
+                    }
+                    is AlarmItemReceived -> binding.projectAlarmItem(alarmItem = state.alarmItem)
+                    is RingerScreenInfoReceived -> binding.projectRingerScreenInfo(ringerScreenInfo = state.ringerScreenInfo)
+                    is Done -> {
+                        finish()
+                    }
                 }
             }
         }

@@ -5,12 +5,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "de.coldtea.moin"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -20,7 +20,7 @@ android {
 
     buildTypes {
 
-        debug{
+        debug {
             minifyEnabled false
             buildConfigField "String", "ROOT_URL_WEATHER_API", "\"https://api.weatherapi.com/v1/\""
             buildConfigField "String", "ROOT_URL_SPOTIFY_AUTH", "\"https://accounts.spotify.com/\""
@@ -56,7 +56,7 @@ android {
 
     android {
         buildFeatures {
-            viewBinding = true
+            viewBinding true
         }
     }
 }
@@ -64,40 +64,36 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core-ktx:1.6.0"
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation "androidx.core:core-ktx:1.7.0"
+    implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.fragment:fragment-ktx:1.3.6'
+    implementation 'androidx.fragment:fragment-ktx:1.4.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.0'
 
     //SmplrAlarm
-    implementation 'com.github.ColdTea-Projects:SmplrAlarm:v1.3.0'
+    implementation 'com.github.ColdTea-Projects:SmplrAlarm:2.0.1'
 //    implementation project(':smplrAlarm')
 
     //Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
 
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
     // timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Koin
-    // Koin main features for Android (Scope,ViewModel ...)
     implementation "io.insert-koin:koin-android:$koin_version"
-    // Koin Android - experimental builder extensions
-    implementation "io.insert-koin:koin-android-ext:$koin_version"
-    // Koin for Jetpack WorkManager
+    implementation "io.insert-koin:koin-android-compat:$koin_version"
     implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
 
     //Kotlin Serialization
-//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.0"){
-//        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-serialization-runtime:0.20.0'
-//    }
-
-    implementation"org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
@@ -106,7 +102,7 @@ dependencies {
     //Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    
+
     // Room
     implementation "androidx.room:room-runtime:2.3.0"
     kapt "androidx.room:room-compiler:2.3.0"
