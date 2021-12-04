@@ -83,7 +83,7 @@ class SearchSpotifyActivity : AppCompatActivity() {
     }
 
     private fun initUIItems() = with(binding) {
-        this?:return@with
+        this ?: return@with
 
         searchResultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchSpotifyActivity)
@@ -108,7 +108,9 @@ class SearchSpotifyActivity : AppCompatActivity() {
             pauseTrackAndCleanPlaylist()
             when {
                 viewModel.refreshTokenExist -> viewModel.getAccessTokenByRefreshToken()
-                !viewModel.refreshTokenExist -> startActivity(viewModel.getAuthorizationIntent())
+                !viewModel.refreshTokenExist ->
+                    if (viewModel.authorizationCodeExist) viewModel.requestAccessTokenWithSavedCode()
+                    else startActivity(viewModel.getAuthorizationIntent())
             }
 
             binding?.searchMessage?.isVisible = false
@@ -127,7 +129,6 @@ class SearchSpotifyActivity : AppCompatActivity() {
                 ConnectionFailed -> onConnectionFailed()
                 is AccessTokenReceived -> onActivationTokenReceived(it.tokenResponse)
                 is SearchResultReceived -> onSearchResultReceived(it.searchResult)
-                is AccessTokenFailed -> onAccessTokenFailed()
                 else -> Timber.w("Received illegal spotify state")
             }
         }
@@ -162,10 +163,6 @@ class SearchSpotifyActivity : AppCompatActivity() {
     private fun onSearchResultReceived(searchResult: SearchResult?) {
         searchResultAdapter.items = searchResult
             ?.getSearchResultBundle(::onPlayClicked, ::onItemClicked)
-    }
-
-    private fun onAccessTokenFailed(){
-        startActivity(viewModel.getAuthorizationIntent())
     }
 
     private fun onPlayClicked(id: String) {

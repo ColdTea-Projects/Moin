@@ -11,20 +11,18 @@ import de.coldtea.moin.data.SharedPreferencesRepository
 import de.coldtea.moin.data.SongRepository
 import de.coldtea.moin.data.SpotifyAuthRepository
 import de.coldtea.moin.data.SpotifyRepository
-import de.coldtea.moin.data.network.spotify.model.SpotifyErrorResponse
-import de.coldtea.moin.di.json
 import de.coldtea.moin.domain.model.alarm.AuthorizationResponse
 import de.coldtea.moin.domain.model.playlist.MediaType
 import de.coldtea.moin.domain.model.playlist.PlaylistName
 import de.coldtea.moin.domain.model.playlist.Song
 import de.coldtea.moin.domain.services.SpotifyService
+import de.coldtea.moin.extensions.getSpotifyErrorResponse
 import de.coldtea.moin.services.model.*
 import de.coldtea.moin.ui.searchspotify.adapter.model.SpotifySearchResultBundle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.ExperimentalSerializationApi
 import retrofit2.HttpException
 import timber.log.Timber
 
@@ -33,12 +31,11 @@ class SearchSpotifyViewModel(
     private val spotifyRepo: SpotifyRepository,
     private val sharedPreferencesRepository: SharedPreferencesRepository,
     private val songRepository: SongRepository
-) : ViewModel()
-{
+) : ViewModel() {
 
     var playlist: PlaylistName? = null
         set(value) {
-            sharedPreferencesRepository.spotifyAuthorizationBackup?.let{ key ->
+            sharedPreferencesRepository.spotifyAuthorizationBackup?.let { key ->
                 field = PlaylistName.values().find { it.key == key }
                 sharedPreferencesRepository.spotifyAuthorizationBackup = null
                 return
@@ -79,6 +76,9 @@ class SearchSpotifyViewModel(
     val refreshTokenExist: Boolean
         get() = sharedPreferencesRepository.refreshToken != null
 
+    val authorizationCodeExist: Boolean
+        get() = sharedPreferencesRepository.authorizationCode != null
+
     fun getAuthorizationIntent(): Intent? = spotifyAuthRepo.getAuthorizationIntent()
 
     fun registerAuthorizationCode(response: AuthorizationResponse?) =
@@ -91,15 +91,15 @@ class SearchSpotifyViewModel(
             sharedPreferencesRepository.refreshToken = tokenResponse?.refreshToken
 
             _spotifyState.emit(AccessTokenReceived(tokenResponse))
-        }catch (ex: HttpException){
+        } catch (ex: HttpException) {
             Timber.e("Moin -->  $ex")
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             Timber.e("Moin -->  $ex")
         }
-
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
+    fun requestAccessTokenWithSavedCode() = getAccessToken(sharedPreferencesRepository.authorizationCode)
+
     fun getAccessTokenByRefreshToken() = viewModelScope.launch(Dispatchers.IO) {
         try {
             val tokenResponse = sharedPreferencesRepository.refreshToken?.let {
@@ -110,20 +110,13 @@ class SearchSpotifyViewModel(
             sharedPreferencesRepository.refreshToken = tokenResponse?.refreshToken
 
             _spotifyState.emit(AccessTokenReceived(tokenResponse))
-        }catch (ex: HttpException){
+        } catch (ex: HttpException) {
             Timber.e("Moin -->  $ex")
 
-            val errorBody = ex.response()?.errorBody()?.string()
-            val errorResponse = json.decodeFromString(
-                SpotifyErrorResponse.serializer(),
-                errorBody.orEmpty()
-            )
-
-            if(errorResponse.isInvalidGrant()){
-                sharedPreferencesRepository.refreshToken = null
-                _spotifyState.emit(AccessTokenFailed)
+            if (ex.getSpotifyErrorResponse()?.isInvalidGrant() == true) {
+                requestAccessTokenWithSavedCode()
             }
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             Timber.e("Moin -->  $ex")
         }
 
@@ -137,9 +130,9 @@ class SearchSpotifyViewModel(
             )
 
             _spotifyState.emit(SearchResultReceived(searchResponse))
-        }catch (ex: HttpException){
+        } catch (ex: HttpException) {
             Timber.e("Moin -->  $ex")
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             Timber.e("Moin -->  $ex")
         }
     }
@@ -176,7 +169,7 @@ class SearchSpotifyViewModel(
                 subscribePlayerState()
             }
 
-    fun addSong(spotifySearchResultBundle: SpotifySearchResultBundle){
+    fun addSong(spotifySearchResultBundle: SpotifySearchResultBundle) {
         val selectedTrack = Song(
             localId = -1,
             trackId = spotifySearchResultBundle.id,
@@ -185,7 +178,7 @@ class SearchSpotifyViewModel(
             imageUrl = spotifySearchResultBundle.spotifySearchResultDelegateItem.imageUrl.orEmpty(),
             mediaType = MediaType.SPOTIFY.ordinal,
             source = "",
-            playlist = playlist?.ordinal?:-1
+            playlist = playlist?.ordinal ?: -1
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -193,7 +186,7 @@ class SearchSpotifyViewModel(
         }
     }
 
-    fun backUpPlaylist(){
+    fun backUpPlaylist() {
         sharedPreferencesRepository.spotifyAuthorizationBackup = playlist?.key
     }
 }
