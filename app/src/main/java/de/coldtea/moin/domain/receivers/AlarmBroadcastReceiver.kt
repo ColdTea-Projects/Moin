@@ -10,11 +10,8 @@ import de.coldtea.moin.domain.model.ringer.Stops
 import de.coldtea.moin.domain.services.RingerService
 import de.coldtea.moin.domain.services.SmplrAlarmService
 import de.coldtea.smplr.smplralarm.apis.SmplrAlarmAPI
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 import timber.log.Timber
 
@@ -25,6 +22,8 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
     private val ioCoroutineScope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { _, t ->
         Timber.d("Moin.AlarmBroadcastReceiver --> ioCoroutineScope crashed: $t")
     })
+
+    private var observeAlarmListJob: Job? = null
     private val mainCoroutineScope
         get() = CoroutineScope(Dispatchers.Main + CoroutineExceptionHandler { _, t ->
             Timber.d("Moin.RingerService --> mainCoroutineScope crashed: $t")
@@ -44,7 +43,7 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
         //is screen not locked
         if (!keyguardManager.isKeyguardLocked){
             Timber.d("Moin.AlarmBroadcastReceiver --> onNotificationPosted")
-            observeAlarmList()
+            observeAlarmListJob = observeAlarmList()
             observeRingerState(applicationContext)
             smplrAlarmService.callRequestAlarmList(NotificationListenerRequest)
         }
@@ -73,5 +72,6 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(requestId)
         ringerService.invalidate()
+        observeAlarmListJob?.cancel()
     }
 }
