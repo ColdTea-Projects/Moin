@@ -7,7 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import de.coldtea.moin.databinding.ActivityDebugBinding
 import de.coldtea.moin.services.model.*
 import de.coldtea.moin.ui.debugview.mp3.Mp3Activity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,7 +30,7 @@ class DebugActivity : AppCompatActivity() {
         initWeatherResponse()
         initSpotify()
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             val city = debugViewModel.getCity()
             val location = debugViewModel.getLocation()
 

@@ -68,50 +68,52 @@ class SmplrAlarmService(private val context: Context) {
         label: String,
         snooze: Intent,
         dismiss: Intent
-    ): Int {
-        lastAlarmEvent = alarmEvent
+    ): Int = smplrAlarmSet(context = context) {
 
+        hour { hour }
+        min { minute }
 
-        return smplrAlarmSet(context = context) {
-            hour { hour }
-            min { minute }
-            if (weekDays != null) weekdays {
-                if (WeekDays.MONDAY in weekDays) monday()
-                if (WeekDays.TUESDAY in weekDays) tuesday()
-                if (WeekDays.WEDNESDAY in weekDays) wednesday()
-                if (WeekDays.THURSDAY in weekDays) thursday()
-                if (WeekDays.FRIDAY in weekDays) friday()
-                if (WeekDays.SATURDAY in weekDays) saturday()
-                if (WeekDays.SUNDAY in weekDays) sunday()
-            }
-            notification {
-                alarmNotification {
-                    smallIcon { smallIcon }
-                    title { context.getString(R.string.alarm_title) }
-                    message { label }
-                    bigText { label }
-                    autoCancel { true }
-                    firstButtonText { context.getString(R.string.snooze_button) }
-                    secondButtonText { context.getString(R.string.dismiss_button) }
-                    firstButtonIntent { snooze }
-                    secondButtonIntent { dismiss }
-                    notificationDismissedIntent { dismiss }
-                }
-            }
-            if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI }
-            intent { onClickIntent }
-            receiverIntent { fullScreenIntent }
-            alarmReceivedIntent { alarmReceivedIntent }
-            infoPairs {
-                listOf(
-                    "originalHour" to "$hour",
-                    "originalMinute" to "$minute",
-                    "isExpanded" to "false",
-                    "label" to label
-                )
-            }
-
+        if (weekDays != null) weekdays {
+            if (WeekDays.MONDAY in weekDays) monday()
+            if (WeekDays.TUESDAY in weekDays) tuesday()
+            if (WeekDays.WEDNESDAY in weekDays) wednesday()
+            if (WeekDays.THURSDAY in weekDays) thursday()
+            if (WeekDays.FRIDAY in weekDays) friday()
+            if (WeekDays.SATURDAY in weekDays) saturday()
+            if (WeekDays.SUNDAY in weekDays) sunday()
         }
+
+        notification {
+            alarmNotification {
+                smallIcon { smallIcon }
+                title { context.getString(R.string.alarm_title) }
+                message { label }
+                bigText { label }
+                autoCancel { true }
+                firstButtonText { context.getString(R.string.snooze_button) }
+                secondButtonText { context.getString(R.string.dismiss_button) }
+                firstButtonIntent { snooze }
+                secondButtonIntent { dismiss }
+                notificationDismissedIntent { dismiss }
+            }
+        }
+
+        if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI }
+
+        intent { onClickIntent }
+        receiverIntent { fullScreenIntent }
+        alarmReceivedIntent { alarmReceivedIntent }
+        infoPairs {
+            listOf(
+                "originalHour" to "$hour",
+                "originalMinute" to "$minute",
+                "isExpanded" to "false",
+                "label" to label
+            )
+        }
+
+    }.also {
+        lastAlarmEvent = alarmEvent
     }
 
     fun cancelAlarm(requestId: Int, alarmEvent: AlarmEvent? = null) {
@@ -152,6 +154,15 @@ class SmplrAlarmService(private val context: Context) {
             if (isActive != null) isActive { isActive }
             if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI }
             if (infoPairs != null) infoPairs { infoPairs }
+
+            infoPairs?.getLabel()?.let { label ->
+                notification {
+                    alarmNotification {
+                        message { label }
+                        bigText { label }
+                    }
+                }
+            }
         }
         lastAlarmEvent = SnoozeAlarmUpdate
 
@@ -164,5 +175,8 @@ class SmplrAlarmService(private val context: Context) {
 
     }
 
+    private fun List<Pair<String, String>>.getLabel(): String? = this.find {
+        it.first == "label"
+    }?.second
 
 }

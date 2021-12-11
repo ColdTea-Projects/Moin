@@ -75,7 +75,7 @@ dependencies {
     implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.0'
 
     //SmplrAlarm
-    implementation 'com.github.ColdTea-Projects:SmplrAlarm:2.0.1'
+    implementation 'com.github.ColdTea-Projects:SmplrAlarm:2.0.2'
 //    implementation project(':smplrAlarm')
 
     //Coroutines
@@ -109,8 +109,8 @@ dependencies {
     implementation "androidx.room:room-ktx:2.3.0"
 
     // Work managers
-    implementation "androidx.work:work-runtime:2.6.0"
-    implementation "androidx.work:work-runtime-ktx:2.6.0"
+    implementation "androidx.work:work-runtime:2.7.1"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     //Spotify
     implementation files('../libs/spotify-app-remote.aar')
