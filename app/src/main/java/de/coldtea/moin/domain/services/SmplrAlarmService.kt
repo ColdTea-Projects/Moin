@@ -33,7 +33,9 @@ class SmplrAlarmService(private val context: Context) {
     private val onClickIntent = Intent(
         context.applicationContext,
         MainActivity::class.java
-    )
+    ).apply {
+        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+    }
 
     private val fullScreenIntent = Intent(
         context.applicationContext,
@@ -100,7 +102,7 @@ class SmplrAlarmService(private val context: Context) {
 
         if (smplrAlarmListRequestAPI != null) requestAPI { smplrAlarmListRequestAPI as SmplrAlarmListRequestAPI }
 
-        intent { onClickIntent }
+        contentIntent { onClickIntent }
         receiverIntent { fullScreenIntent }
         alarmReceivedIntent { alarmReceivedIntent }
         infoPairs {

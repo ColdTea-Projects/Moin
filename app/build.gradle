@@ -75,7 +75,7 @@ dependencies {
     implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.0'
 
     //SmplrAlarm
-    implementation 'com.github.ColdTea-Projects:SmplrAlarm:2.0.2'
+    implementation 'com.github.ColdTea-Projects:SmplrAlarm:2.1.1'
 //    implementation project(':smplrAlarm')
 
     //Coroutines
