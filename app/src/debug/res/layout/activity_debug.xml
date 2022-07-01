@@ -14,52 +14,12 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/debug_search"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/keyword"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/background_alarm_item"
-                app:layout_constraintBottom_toBottomOf="@id/search"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/search"
-                app:layout_constraintTop_toTopOf="@id/search">
-
-            </androidx.appcompat.widget.AppCompatEditText>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/spotify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/debug_placeholder_text"
-                app:layout_constraintBottom_toTopOf="@id/play"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:text="@string/debug_play"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spotify" />
-
-            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/mp3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/debug_mp3"
-                app:layout_constraintStart_toEndOf="@id/play"
-                app:layout_constraintTop_toBottomOf="@id/spotify" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/city"
@@ -68,7 +28,7 @@
                 android:text="@string/debug_placeholder_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/play" />
+                app:layout_constraintTop_toBottomOf="@id/mp3" />
 
             <View
                 android:layout_width="match_parent"

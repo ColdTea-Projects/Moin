@@ -71,7 +71,6 @@ class AlarmBroadcastReceiver: BroadcastReceiver() {
     private fun dismissNotification(applicationContext: Context){
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(requestId)
-        ringerService.invalidate()
         observeAlarmListJob?.cancel()
     }
 }

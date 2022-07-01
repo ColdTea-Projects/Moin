@@ -112,6 +112,7 @@ fun ViewAlarmDelegateItemBinding.setupCheckList(weekDays: List<WeekDays>) {
     sunday.isChecked = weekDays.contains(WeekDays.SUNDAY)
 }
 
+//TODO: Check if it is still in use
 fun ViewAlarmDelegateItemBinding.activateAlarmUI() {
     groupHidden.isVisible = false
     groupWeekdays.isVisible = false
@@ -126,6 +127,7 @@ fun ViewAlarmDelegateItemBinding.activateAlarmUI() {
 
 }
 
+//TODO: Check if it is still in use
 fun ViewAlarmDelegateItemBinding.deactivateAlarmUI() {
     groupHidden.isVisible = false
     groupWeekdays.isVisible = false

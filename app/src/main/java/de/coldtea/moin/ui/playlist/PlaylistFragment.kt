@@ -26,8 +26,6 @@ import de.coldtea.moin.domain.services.MP3PlayerService
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.playlist.PlaylistViewModel.Companion.PLAY_LIST_FRAGMENT_WEATHER_KEY
 import de.coldtea.moin.ui.playlist.adapter.PlaylistAdapter
-import de.coldtea.moin.ui.searchspotify.SearchSpotifyActivity
-import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -40,7 +38,6 @@ class PlaylistFragment : BaseFragment() {
     private val playlistAdapter = PlaylistAdapter()
 
     var binding: FragmentPlaylistBinding? = null
-    var isFabsCollapsed = true
 
     private var registerActivityResult: ActivityResultLauncher<Intent>? = null
 
@@ -52,7 +49,6 @@ class PlaylistFragment : BaseFragment() {
             .find {
                 it.key == arguments?.getString(PLAY_LIST_FRAGMENT_WEATHER_KEY).orEmpty()
             }
-
 
         registerActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             onFilePickerActivityResult(result)
@@ -76,17 +72,6 @@ class PlaylistFragment : BaseFragment() {
         viewModel.playlistName?.let { playlistName ->
 
             requireActivity().title = playlistName.getTitle()
-
-            addSong.setOnClickListener {
-                if(isFabsCollapsed) expandFAB()
-                else shrinkFAB()
-            }
-
-            addSpotify.setOnClickListener {
-                val intent = Intent(requireActivity(), SearchSpotifyActivity::class.java)
-                intent.putExtra(PLAY_LIST_FRAGMENT_WEATHER_KEY, playlistName.key)
-                startActivity(intent)
-            }
 
             addLocalMusic.setOnClickListener {
                 val intent = Intent()
@@ -116,30 +101,9 @@ class PlaylistFragment : BaseFragment() {
         }
     }
 
-    private fun FragmentPlaylistBinding.expandFAB(){
-        addSpotify.show()
-        addLocalMusic.show()
-
-        addSong.extend()
-
-        isFabsCollapsed = false
-
-    }
-
-    private fun FragmentPlaylistBinding.shrinkFAB(){
-        addSpotify.hide()
-        addLocalMusic.hide()
-
-        addSong.shrink()
-
-        isFabsCollapsed = true
-
-    }
-
     override fun onResume() {
         super.onResume()
 
-        binding?.shrinkFAB()
         refreshPlaylist()
     }
 
@@ -163,7 +127,7 @@ class PlaylistFragment : BaseFragment() {
                 this?:return@with
 
                 songEmptyListMessage.isVisible = it.isEmpty()
-                if(it.size > playlistRecyclerView.adapter?.itemCount?:Int.MAX_VALUE){
+                if(it.size > (playlistRecyclerView.adapter?.itemCount ?: Int.MAX_VALUE)){
                     playlistRecyclerView.smoothScrollToPosition(it.size - 1)
                 }
             }

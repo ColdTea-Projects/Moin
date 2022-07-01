@@ -64,11 +64,6 @@ class RingerService(
         ringerScreenInfo = songRandomizeService.getRingerScreenInfo()
         _ringerStateInfo.emit( Randomized(ringerScreenInfo) )
         when (ringerScreenInfo?.song?.mediaType) {
-            MediaType.SPOTIFY.ordinal -> {
-                withContext(mainCoroutineScope.coroutineContext) {
-                    connectSpotify()
-                }
-            }
             MediaType.MP3.ordinal -> playMP3()
             null -> ringDefaultAlarm()
         }
@@ -76,7 +71,6 @@ class RingerService(
 
     fun stop() {
         when (ringerScreenInfo?.song?.mediaType) {
-            MediaType.SPOTIFY.ordinal -> pauseTrack()
             MediaType.MP3.ordinal -> {
                 mp3PlayerService?.stop()
 
@@ -92,91 +86,6 @@ class RingerService(
         vibrator.cancel()
     }
 
-    fun invalidate() {
-        disconnectSpotify()
-    }
-
-    //endregion
-
-    //region spotify
-
-    private var _spotifyAppRemote: SpotifyAppRemote? = null
-
-    private val connectionListener = object : Connector.ConnectionListener {
-        override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
-            _spotifyAppRemote = spotifyAppRemote
-
-            Timber.d("Moin --> Spotify Connected!")
-            ioCoroutineScope.launch {
-                onConnectionSuccess()
-            }
-        }
-
-        override fun onFailure(error: Throwable?) {
-            ioCoroutineScope.launch {
-                Timber.d("Moin --> $error")
-                onConnectionFailed()
-            }
-        }
-    }
-
-    private fun onConnectionSuccess() {
-        val songId = ringerScreenInfo?.song?.trackId
-        startVibrating()
-
-        if (songId != null) playTrack(songId)
-        else ringDefaultAlarm()
-    }
-
-    private fun onConnectionFailed() {
-        ringDefaultAlarm()
-    }
-
-    private val connectionParams by lazy {
-        ConnectionParams.Builder(SpotifyService.CLIENT_ID)
-            .setRedirectUri(SpotifyService.REDIRECT_URI)
-            .showAuthView(true)
-            .build()
-    }
-
-    private fun connectSpotify() = SpotifyAppRemote.connect(
-        context,
-        connectionParams,
-        connectionListener
-    )
-
-    private fun subscribePlayerState() =
-        _spotifyAppRemote?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
-            mainCoroutineScope.launch {
-                Timber.d("Moin --> Player state: ${playerState.isPaused} - $isStartedPlaying")
-                if (playerState.isPaused && isStartedPlaying) {
-                    isStartedPlaying = false
-                    _ringerStateInfo.emit(Stops)
-                } else if (!playerState.isPaused && !isStartedPlaying) {
-                    adjustVolume()
-                    isStartedPlaying = true
-                }
-            }
-        }
-
-    private fun disconnectSpotify() = SpotifyAppRemote.disconnect(_spotifyAppRemote)
-
-    private fun playTrack(songId: String) =
-        _spotifyAppRemote
-            ?.playerApi
-            ?.play("spotify:track:${songId}", PlayerApi.StreamType.ALARM)//
-            ?.also {
-                subscribePlayerState()
-            }
-
-    private fun pauseTrack() =
-        _spotifyAppRemote
-            ?.playerApi
-            ?.pause()
-            ?.also {
-                subscribePlayerState()
-            }
-
     //endregion
 
     // region local media
@@ -191,6 +100,7 @@ class RingerService(
 
         mp3PlayerService?.play()
         adjustVolume()
+        startVibrating()
         isStartedPlaying = true
     }
 

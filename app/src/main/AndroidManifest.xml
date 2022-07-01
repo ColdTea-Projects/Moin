@@ -54,19 +54,6 @@
             android:screenOrientation="portrait"
             />
 
-        <activity
-            android:name=".ui.searchspotify.SearchSpotifyActivity"
-            android:label="@string/debug_menu_title"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="de.coldtea.moin" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
