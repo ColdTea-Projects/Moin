@@ -7,25 +7,28 @@ import android.net.Uri
 import okio.IOException
 import timber.log.Timber
 
-class MP3PlayerService(private val applicationContext: Context, private val uri: Uri) {
+class MP3PlayerService(private val applicationContext: Context) {
 
-    private val mediaPlayer: MediaPlayer
-        get() {
-            val audioAttributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ALARM)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build()
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
 
-            return MediaPlayer().apply {
-                Timber.i("Moin --> MediaPlayer creation uri : $uri")
-                setDataSource(applicationContext, uri)
-                setAudioAttributes(audioAttributes)
-                prepare()
-            }
+    fun play(uri: Uri): Boolean = try {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
         }
 
-    fun play(): Boolean = try {
-        if (!mediaPlayer.isPlaying) mediaPlayer.start()
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ALARM)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build()
+
+        mediaPlayer.apply {
+            Timber.i("Moin --> MediaPlayer creation uri : $uri")
+            setDataSource(applicationContext, uri)
+            setAudioAttributes(audioAttributes)
+            prepare()
+        }
+
+         mediaPlayer.start()
         true
     } catch (e: IOException) {
         Timber.e(e, "Moin --> MediaPlayer play exception")
@@ -34,6 +37,7 @@ class MP3PlayerService(private val applicationContext: Context, private val uri:
 
     fun stop() {
         mediaPlayer.stop()
+        mediaPlayer.reset()
     }
 
     companion object {

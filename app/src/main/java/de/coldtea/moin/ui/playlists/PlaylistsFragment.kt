@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import de.coldtea.moin.R
 import de.coldtea.moin.databinding.FragmentPlaylistsBinding
 import de.coldtea.moin.domain.model.playlist.PlaylistName
+import de.coldtea.moin.domain.model.playlist.getIcon
+import de.coldtea.moin.domain.model.playlist.getTitle
 import de.coldtea.moin.ui.base.BaseFragment
 import de.coldtea.moin.ui.services.DialogManager
 import de.coldtea.moin.ui.services.FragmentNavigationService
@@ -30,6 +32,9 @@ class PlaylistsFragment : BaseFragment() {
     }.root
 
     private fun FragmentPlaylistsBinding.initButtons() {
+        sunnyIcon.setImageResource(PlaylistName.SUNNY.getIcon())
+        sunnyText.text = PlaylistName.SUNNY.getTitle()
+
         sunny.setOnClickListener {
             try {
                 FragmentNavigationService.addPlaylistFragmentToStack(PlaylistName.SUNNY, requireActivity())
@@ -38,6 +43,9 @@ class PlaylistsFragment : BaseFragment() {
                 showSomethingWentWrongDialog()
             }
         }
+
+        cloudyIcon.setImageResource(PlaylistName.CLOUDY.getIcon())
+        cloudyText.text = PlaylistName.CLOUDY.getTitle()
 
         cloudy.setOnClickListener {
             try {
@@ -48,6 +56,9 @@ class PlaylistsFragment : BaseFragment() {
             }
         }
 
+        rainyIcon.setImageResource(PlaylistName.RAINY.getIcon())
+        rainyText.text = PlaylistName.RAINY.getTitle()
+
         rainy.setOnClickListener {
             try {
                 FragmentNavigationService.addPlaylistFragmentToStack(PlaylistName.RAINY, requireActivity())
@@ -57,6 +68,8 @@ class PlaylistsFragment : BaseFragment() {
             }
         }
 
+        snowyIcon.setImageResource(PlaylistName.SNOWY.getIcon())
+        snowyText.text = PlaylistName.SNOWY.getTitle()
         snowy.setOnClickListener {
             try {
                 FragmentNavigationService.addPlaylistFragmentToStack(PlaylistName.SNOWY, requireActivity())

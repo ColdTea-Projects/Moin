@@ -94,11 +94,12 @@ class RingerService(
         if (mp3PlayerService != null) return
 
         mp3PlayerService = MP3PlayerService(
-            context,
-            FilePickerConverter.stringToUri(ringerScreenInfo?.song?.source.orEmpty())
+            context
         )
 
-        isStartedPlaying = mp3PlayerService?.play() == true
+        val uri = FilePickerConverter.stringToUri(ringerScreenInfo?.song?.source.orEmpty())
+
+        isStartedPlaying = mp3PlayerService?.play(uri) == true
 
         if (!isStartedPlaying) {
             ringDefaultAlarm()

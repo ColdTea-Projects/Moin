@@ -2,10 +2,10 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:color="@color/moinBlueTone1"
-tools:targetApi="lollipop"> <!-- ripple effect color -->
+> <!-- ripple effect color -->
 <item android:id="@android:id/background">
     <shape>
-        <solid android:color="@color/moinBlueTone2"/>
+        <solid android:color="@color/moinBlueTone7"/>
         <corners android:radius="10dp"/>
         <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
     </shape>

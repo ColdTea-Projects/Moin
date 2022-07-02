@@ -12,4 +12,7 @@
     <dimen name="song_name_size">18sp</dimen>
     <dimen name="artist_name_size">14sp</dimen>
 
+    <!-- Playlist-->
+    <dimen name="playlist_name_font_size">25sp</dimen>
+
 </resources>

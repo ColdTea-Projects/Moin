@@ -38,7 +38,8 @@ class Mp3Activity : AppCompatActivity() {
         }
 
         binding?.play?.setOnClickListener{
-            mp3ViewModel.mP3PlayerService?.play()
+            val uri = mp3ViewModel.mp3Uri?:return@setOnClickListener
+            mp3ViewModel.mP3PlayerService?.play(uri)
         }
 
         binding?.stop?.setOnClickListener {
@@ -50,7 +51,7 @@ class Mp3Activity : AppCompatActivity() {
         mp3ViewModel.mp3Uri = Uri.parse(result.data?.data.toString())
 
         mp3ViewModel.mp3Uri?.let { uri ->
-            mp3ViewModel.mP3PlayerService = MP3PlayerService(applicationContext, uri)
+            mp3ViewModel.mP3PlayerService = MP3PlayerService(applicationContext)
             Timber.i("Moin --> $uri")
 
             val mP3Object = FilePickerConverter.getMP3Object(contentResolver, uri)

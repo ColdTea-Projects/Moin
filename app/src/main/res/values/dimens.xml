@@ -3,8 +3,8 @@
     <dimen name="margin_xl">60dp</dimen>
     <dimen name="margin_l">45dp</dimen>
     <dimen name="margin_m">30dp</dimen>
-    <dimen name="margin_s">15dp</dimen>
-    <dimen name="margin_xs">7dp</dimen>
+    <dimen name="margin_s">16dp</dimen>
+    <dimen name="margin_xs">8dp</dimen>
     <dimen name="margin_xxs">5dp</dimen>
     <dimen name="weather_icon_size">150dp</dimen>
     <dimen name="alarm_control_icon_size">30dp</dimen>
