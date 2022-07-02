@@ -98,10 +98,16 @@ class RingerService(
             FilePickerConverter.stringToUri(ringerScreenInfo?.song?.source.orEmpty())
         )
 
-        mp3PlayerService?.play()
+        isStartedPlaying = mp3PlayerService?.play() == true
+
+        if (!isStartedPlaying) {
+            ringDefaultAlarm()
+            return
+        }
+
         adjustVolume()
         startVibrating()
-        isStartedPlaying = true
+
     }
 
     //endregion
